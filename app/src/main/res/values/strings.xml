@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">InfiniList</string>
+    <string name="action_settings">Settings</string>
+    <string name="sublist_indicator">If present, indicates that a ListItem has a sub-list.</string>
+</resources>
