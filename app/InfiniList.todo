@@ -1,0 +1,38 @@
+[ Features
+    [ Add item ]
+    [ Launch Item menu
+        [ Delete Item ]
+    ]
+    [ Scroll long lists ]
+    [ Subitems
+        [ add (via item menu) ]
+        [ "Back" goes up one level. ]
+        [ Indicate sub-list ]
+        [ Open sub-list ]
+    ]
+    [ Status indicator
+        [ Show ]
+        [ Switch ]
+    ]
+    [ Ordering
+        [ Add manual order grab-icon ]
+        [ Allow manual ordering ]
+        [ Add toolbar menu ordering ]
+    ]
+    [ Launch ToolBar menu ]
+    [ Exporting
+        [ TODO ]
+        [ json ]
+    ]
+    [ SSH'ing sublists
+        ?[ How to indicate in exported/saved files? ]
+        ?[ How to access ssh/git? ]
+        ?[ schedule? ]
+    ]
+]
+
+[ Sources
+    [ Recycler View example
+      https://www.androidhive.info/2016/01/android-working-with-recycler-view/
+    ]
+]
