@@ -7,13 +7,19 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.app.Dialog;
+import android.app.AlertDialog;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+import java.util.ArrayList;
+
+
 public class ListView extends AppCompatActivity {
-    private java.util.List<ListItem> currentList = new java.util.ArrayList<>();
-    private java.util.List<ListItem> topLevelList = new java.util.ArrayList<>();
+    private java.util.List<ListItem> currentList = new ArrayList<>();
+    private java.util.List<ListItem> topLevelList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ListItemAdapter liAdapter;
 
@@ -61,10 +67,41 @@ public class ListView extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings :
+                break;
+
+            case R.id.action_add :
+                actionAddItem(currentList);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Launches the "Add Item" dialog. Returns true if list is modified, false otherwise.
+    private boolean actionAddItem(List<ListItem> list) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add Item");
+
+        // Set the custom layout
+        FrameLayout fl = findViewById(android.R.id.add_item_dialog);
+        fl.addView(myView, new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                list.addItem (inputTitle.getText().toString(), inputDescription.getText().toString());
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 }

@@ -1,5 +1,5 @@
 [ Features
-    [ Add item ]
+    ![ Add item ]
     [ Launch Item menu
         [ Delete Item ]
     ]
@@ -19,7 +19,9 @@
         [ Allow manual ordering ]
         [ Add toolbar menu ordering ]
     ]
-    [ Launch ToolBar menu ]
+    [ Launch ToolBar menu
+        [ Add search ]
+    ]
     [ Exporting
         [ TODO ]
         [ json ]
