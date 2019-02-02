@@ -1,15 +1,11 @@
 package uk.sensoryunderload.infinilist;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.app.Dialog;
-import android.app.AlertDialog;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -80,28 +76,17 @@ public class ListView extends AppCompatActivity {
     }
 
     // Launches the "Add Item" dialog. Returns true if list is modified, false otherwise.
-    private boolean actionAddItem(List<ListItem> list) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Add Item");
-
-        // Set the custom layout
-        FrameLayout fl = findViewById(android.R.id.add_item_dialog);
-        fl.addView(myView, new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
-
-        // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                list.addItem (inputTitle.getText().toString(), inputDescription.getText().toString());
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
+    // https://developer.android.com/guide/topics/ui/dialogs#java
+    public void actionAddItem(final List<ListItem> list) {
+        Bundle bundle = new Bundle();
+        AddItemDialog dialog = new AddItemDialog();
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), "add item dialog");
+        boolean success = bundle.getBoolean("okay", false);
+        if (success) {
+            String title = bundle.getString("title","");
+            String desc  = bundle.getString("description", "");
+            list.add(new ListItem(title,desc));
+        }
     }
 }
