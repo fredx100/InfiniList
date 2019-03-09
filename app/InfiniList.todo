@@ -52,6 +52,16 @@
     ]
 ]
 
+[ Interaction
+    [ Add new item - toolbar button ]
+    [ Context menu - press and hold ]
+    [ Delete item - context menu item ]
+    [ Set flag = togglable graphic in row ]
+    [ Move - drag grabable area in row (shared with flag status?) ]
+    [ Open sub list - clickable icon on row for items with sub-list ]
+    [ Display full description - single tap ]
+]
+
 [ Sources
     [ Recycler View example
       https://www.androidhive.info/2016/01/android-working-with-recycler-view/
