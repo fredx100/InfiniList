@@ -82,11 +82,39 @@ public class ListView extends AppCompatActivity {
         AddItemDialog dialog = new AddItemDialog();
         dialog.setArguments(bundle);
         dialog.show(getSupportFragmentManager(), "add item dialog");
+        bundle = dialog.getArguments();
         boolean success = bundle.getBoolean("okay", false);
         if (success) {
             String title = bundle.getString("title","");
             String desc  = bundle.getString("description", "");
             list.add(new ListItem(title,desc));
+            liAdapter.notifyItemInserted(list.size() - 1);
         }
+    }
+
+    public void appendItem (String title, String description) {
+        currentList.add(new ListItem(title,description));
+        liAdapter.notifyItemInserted(currentList.size() - 1);
+    }
+
+    @Override
+    public void onSaveInstanceState (Bundle state) {
+        // TODO: save list data.
+        // All of it?
+        // Which lists?
+        // How to demark which list we're on?
+        super.onSaveInstanceState(state);
+    }
+
+    @Override
+    public void onStart() {
+        // TODO: Load lists from disk
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        // TODO: save lists to disk.
+        super.onStop();
     }
 }

@@ -25,12 +25,6 @@
             android:theme="?attr/actionBarTheme"
             app:title="@string/app_name" />
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_input_add" />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"

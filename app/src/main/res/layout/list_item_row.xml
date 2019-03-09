@@ -21,13 +21,14 @@
     <LinearLayout
         android:id="@+id/rowText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:textColor="@color/colorTitle"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -36,6 +37,7 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:textColor="@color/colorContent" />
     </LinearLayout>
 

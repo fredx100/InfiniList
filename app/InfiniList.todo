@@ -1,9 +1,25 @@
 [ Features
-    ![ Add item ]
-    [ Launch Item menu
+    v[ Add item ]
+    v[ Scroll long lists ]
+    [ Complete saving and loading
+        [ onStart/Stop
+            [ Save to "disk" ]
+        ]
+        [ onSaveInstanceState
+            ?[ Save to bundle? ]
+            [ Must save
+                [ current list ]
+                [ current scroll position ]
+            ]
+        ]
+        [ OnLoadInstanceState??? ]
+    ]
+    [ Item menu
         [ Delete Item ]
     ]
-    [ Scroll long lists ]
+    [ Expand description on single click
+        [ Modify the TextView's maxlines attribute ]
+    ]
     [ Subitems
         [ add (via item menu) ]
         [ "Back" goes up one level. ]
@@ -12,19 +28,22 @@
     ]
     [ Status indicator
         [ Show ]
-        [ Switch ]
+        [ Toggle ]
     ]
     [ Ordering
         [ Add manual order grab-icon ]
         [ Allow manual ordering ]
         [ Add toolbar menu ordering ]
     ]
-    [ Launch ToolBar menu
+    [ ToolBar menu
         [ Add search ]
     ]
     [ Exporting
         [ TODO ]
         [ json ]
+    ]
+    [ Widget
+        [ Allow selecting list-root ]
     ]
     [ SSH'ing sublists
         ?[ How to indicate in exported/saved files? ]
