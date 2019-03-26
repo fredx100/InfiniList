@@ -9,7 +9,8 @@ enum STATUS {
     NONE(0),
     SUCCESS(1),
     FAIL(2),
-    IMPORTANT(3);
+    IMPORTANT(3),
+    QUERY(4);
 
     STATUS(int i) { value = i; }
     private int value;
@@ -22,6 +23,7 @@ enum STATUS {
 //     success(1)
 //     fail(2)
 //     important(3)
+//     query(4)
 class StatusFlag {
     private STATUS flag;
 
@@ -68,6 +70,7 @@ class ListItem {
         OutputStreamWriter target = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
         writeToWriter(target, "");
         fos.close();
+        target.close();
 //        finally {
 //           target.close();
 //        }
@@ -76,39 +79,50 @@ class ListItem {
     private void writeToWriter(OutputStreamWriter target, String indent) throws IOException {
         String nl = System.getProperty("line.separator");
         target.write(indent);
+        String newIndent = indent + "  "; // For inner content and children
         if (status.equalTo (STATUS.SUCCESS)) {
             target.write('v');
         } else if (status.equalTo (STATUS.FAIL)) {
             target.write('x');
         } else if (status.equalTo (STATUS.IMPORTANT)) {
             target.write('!');
+        } else if (status.equalTo (STATUS.QUERY)) {
+            target.write('?');
         }
         target.write("[ ");
         String tempTitle = title;
-        target.write(tempTitle.replaceAll("([\\[\\]])","\\\\\\1"));
-        if (!content.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            Scanner s = new Scanner(content).useDelimiter("nl");
-            while (s.hasNext()) {
-                sb.append(indent);
-                sb.append(s.next().replaceAll("([\\[\\]])","\\\\\\1"));
-                sb.append(nl);
+        tempTitle = tempTitle.replaceAll("([\\[\\]])","\\\\$1");
+        tempTitle = tempTitle.replaceAll("(\\r?\\n)","$1" + newIndent);
+        target.write(tempTitle.replaceAll("([\\[\\]])","$1"));
+
+        if (content.isEmpty() && children.isEmpty()) {
+            target.write(" ]" + nl);
+        } else {
+            // Write content
+            if (!content.isEmpty()) {
+                StringBuilder sb = new StringBuilder();
+                Scanner s = new Scanner(content).useDelimiter("nl");
+                while (s.hasNext()) {
+                    sb.append(newIndent);
+                    sb.append(s.next().replaceAll("([\\[\\]])","\\\\$1"));
+                    sb.append(nl);
+                }
+
+                target.write(nl + nl);
+                target.write(sb.toString());
+            } else {
+                target.write(nl);
             }
 
-            target.write(nl);
-            target.write(nl);
-            target.write(sb.toString());
-            target.write(indent);
-            target.write("]");
-        } else {
-            target.write(" ]");
-        }
+            // Recurse through children
+            for (int i = 0; i < children.size(); ++i) {
+                children.get(i).writeToWriter(target, newIndent);
+            }
 
-        // Recurse through children
-        String newindent = indent + "  ";
-        for (int i = 0; i < children.size(); ++i) {
-            children.get(i).writeToWriter(target, newindent);
+            target.write(indent);
+            target.write("]" + nl);
         }
+        target.flush();
     }
 
     public void readFromFile(File file) throws IOException {
@@ -154,9 +168,10 @@ class ListItem {
                             case 'v' : status.set(STATUS.SUCCESS);
                             case 'x' : status.set(STATUS.FAIL);
                             case '!' : status.set(STATUS.IMPORTANT);
+                            case '?' : status.set(STATUS.QUERY);
                         }
                         // Trim openning bracket
-                        line.replaceFirst("^[\\t ]*[vx!]?\\[ *", "");
+                        line.replaceFirst("^[\\t ]*[vx!?]?\\[ *", "");
                         builder = new StringBuilder();
                     } else {
                         // Found child-item.
