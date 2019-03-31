@@ -3,7 +3,7 @@ package uk.sensoryunderload.infinilist;
 import org.junit.Test;
 import java.io.*;
 
-//import static org.junit.Assert.*;
+import static org.junit.Assert.*;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -45,6 +45,48 @@ public class FilerTest {
             System.out.println(e.getMessage());
             e.printStackTrace();
             System.exit(-1);
+        }
+    }
+
+    @Test
+    public void ReadTest() {
+        String inputDirName = "TestOutput";
+        File file = new File(inputDirName, "WriteTest.todo");
+        if (file.exists()) {
+            ListItem top = new ListItem();
+            try {
+                top.readFromFile(file);
+
+                // Children sizes
+                assertTrue(top.getChildren().size() == 4);
+                assertTrue((top.getChildren()).get(0).getChildren().size() == 0);
+                assertTrue(top.getChildren().get(1).getChildren().size() == 3);
+                assertTrue(top.getChildren().get(2).getChildren().size() == 0);
+                assertTrue(top.getChildren().get(3).getChildren().size() == 3);
+
+                // Status flags
+                assertTrue(top.getStatus().equalTo (STATUS.NONE));
+                assertTrue(top.getChildren().get(1).getChildren().get(0).getStatus().equalTo (STATUS.FAIL));
+                assertTrue(top.getChildren().get(2).getStatus().equalTo (STATUS.SUCCESS));
+                assertTrue(top.getChildren().get(3).getChildren().get(0).getStatus().equalTo (STATUS.IMPORTANT));
+                assertTrue(top.getChildren().get(3).getChildren().get(1).getStatus().equalTo (STATUS.QUERY));
+
+                // Title contents
+                assertEquals(top.getTitle(),
+                             "Main list");
+                assertEquals(top.getChildren().get(0).getTitle(),
+                             "Item 1 [oh really?]");
+                assertEquals(top.getChildren().get(1).getTitle(),
+                             "Item 2");
+                assertEquals(top.getChildren().get(1).getChildren().get(0).getTitle(),
+                             "Multi-line\ntitle");
+
+                // Content... contents
+                assertEquals(top.getChildren().get(1).getContent(), "This one has children");
+                assertEquals(top.getChildren().get(1).getChildren().get(0).getContent(), "");
+                assertEquals(top.getChildren().get(1).getChildren().get(1).getContent(), "Yada [yada]");
+            } catch (IOException ex) {
+            }
         }
     }
 }

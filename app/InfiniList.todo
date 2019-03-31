@@ -2,15 +2,15 @@
   v[ Add item ]
   v[ Scroll long lists ]
   [ Complete saving and loading
-    [ Save list to disk
+    v[ Save list to disk
       v[ written routines ]
-      [ Test routines
-        ![ Currently write output is empty
+      v[ Test routines
+        v[ Currently write output is empty
           [ Look for an example of OutputFileStream, etc. ]
         ]
       ]
-      [ hookup routines to methods in Activity ]
     ]
+    v[ Load list from disk ]
     [ onStart/Stop
       [ Save to "disk" ]
     ]

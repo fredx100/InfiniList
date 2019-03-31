@@ -9,7 +9,7 @@ enum STATUS {
     NONE(0),
     SUCCESS(1),
     FAIL(2),
-    IMPORTANT(3),
+    FLAG(3),
     QUERY(4);
 
     STATUS(int i) { value = i; }
@@ -84,8 +84,8 @@ class ListItem {
             target.write('v');
         } else if (status.equalTo (STATUS.FAIL)) {
             target.write('x');
-        } else if (status.equalTo (STATUS.IMPORTANT)) {
-            target.write('!');
+        } else if (status.equalTo (STATUS.FLAG)) {
+            target.write('*');
         } else if (status.equalTo (STATUS.QUERY)) {
             target.write('?');
         }
@@ -127,9 +127,12 @@ class ListItem {
 
     public void readFromFile(File file) throws IOException {
         FileInputStream fis = new FileInputStream(file);
-        BufferedReader br = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
-        readFromBuffer("", br, 0);
-        fis.close();
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
+            readFromBuffer("", br, 0);
+        } finally {
+            fis.close();
+        }
     }
 
     // The following assumes the first unescaped '[' encountered is for
@@ -140,7 +143,7 @@ class ListItem {
         boolean titleStarted = false;
         boolean titleEnded = false;
         String line;
-        StringBuilder builder = new StringBuilder();
+        MyStringBuilder builder = new MyStringBuilder();
         String nl = System.getProperty("line.separator");
 
         try {
@@ -156,32 +159,41 @@ class ListItem {
                     } else if (line.codePointBefore(openIndex) != '\\') {
                         startIndex = openIndex;
                     }
-                    openIndex = line.indexOf("]", openIndex + 1);
+                    openIndex = line.indexOf("[", openIndex + 1);
                 }
-
                 // Act on item start.
                 if (startIndex >= 0) {
                     if (!itemStarted) {
                         itemStarted = true;
                         titleStarted = titleEnded = false;
-                        switch (line.codePointBefore(startIndex)) {
-                            case 'v' : status.set(STATUS.SUCCESS);
-                            case 'x' : status.set(STATUS.FAIL);
-                            case '!' : status.set(STATUS.IMPORTANT);
-                            case '?' : status.set(STATUS.QUERY);
+                        if (startIndex > 0) {
+                            switch (line.codePointBefore(startIndex)) {
+                                case 'V' :
+                                case 'v' : status.set(STATUS.SUCCESS);
+                                           break;
+                                case 'X' :
+                                case 'x' : status.set(STATUS.FAIL);
+                                           break;
+                                case '*' : status.set(STATUS.FLAG);
+                                           break;
+                                case '?' : status.set(STATUS.QUERY);
+                            }
                         }
                         // Trim openning bracket
-                        line.replaceFirst("^[\\t ]*[vx!?]?\\[ *", "");
-                        builder = new StringBuilder();
+                        line = line.replaceFirst("^[\\t ]*[vx*?]?\\[ *", "");
+                        builder.empty();
                     } else {
                         // Found child-item.
-                        if (titleStarted) {
+                        if (titleStarted && !titleEnded) {
                             titleEnded = true;
+                            builder.trimNewlines();
                             title = builder.toString();
                         }
                         ListItem li = new ListItem();
+                        li.setParent(this);
                         children.add(li);
                         li.readFromBuffer(line, reader, lineNum);
+                        continue;
                     }
                 }
 
@@ -204,35 +216,48 @@ class ListItem {
                     line = line.substring(0, endIndex).trim();
                 }
 
-                if (titleStarted && !titleEnded && line.matches("^[\\t ]*$")) {
-                    // Found blank line following title.
-                    titleEnded = true;
-                    title = builder.toString();
-                    builder = new StringBuilder();
+                // Act on remaining string
+                if (line.matches("^[\\t ]*$")) {
+                    if (titleStarted && !titleEnded) {
+                        // Found blank line following title.
+                        titleEnded = true;
+                        builder.trimNewlines();
+                        title = builder.toString();
+                        builder.empty();
+                    } else {
+                        // Blank line, just append \n
+                        builder.append(nl);
+                    }
                 } else {
-                    titleStarted = true;
-                    // Standard line. Unescape and append.
-                    line.replaceAll("\\\\([\\]\\[])", "\\1");
-                    builder.append(line);
-                    builder.append(nl);
+                    // Non-empty normal line
+                    if (itemStarted) {
+                        titleStarted = true;
+                        // Standard line. Unescape and append.
+                        line = line.replaceAll("\\\\([\\]\\[])", "$1");
+                        builder.append(line.trim());
+                        builder.append(nl);
+                    }
                 }
 
                 if (endIndex >= 0) {
                     // Ended this item.
+                    builder.trimNewlines();
                     if (titleEnded) {
                         content = builder.toString();
                     } else {
                         title = builder.toString();
                     }
                     itemEnded = true;
+                    break;
                 }
             }
         } catch (IOException e) {
+            builder.trimNewlines();
             if (!itemStarted) {
-            } else if (!titleEnded) {
-                title = builder.toString();
-            } else {
+            } else if (titleEnded) {
                 content = builder.toString();
+            } else {
+                title = builder.toString();
             }
         }
 
