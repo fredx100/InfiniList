@@ -11,28 +11,35 @@
       ]
     ]
     v[ Load list from disk ]
-    [ onStart/Stop
-      [ Save to "disk" ]
+    v[ Save to "disk"
+      ?[ When?
+        v[ When list modified ]
+      ]
     ]
     [ onSaveInstanceState
       [ Must save
         [ current list
           v[ ListItem::writeAddress ]
         ]
-        [ current scroll position ]
+        [ current scroll position
+          x[ The default version does this for us. Call
+            super.onSaveInstanceState for this. ]
+        ]
       ]
-    ]
-    [ OnLoadInstanceState
-      [ load lists ]
-      [ load address ]
-      [ got to address ]
+      [ onStart or onRestoreInstanceState must act on this
+        [ Call super.onRestoreInstanceState to restore scroll pos ]
+        [ load address ]
+        v[ got to address ]
+      ]
     ]
   ]
   [ Item context menu
     [ Delete Item ]
   ]
-  [ Expand description on single click
-    [ Modify the TextView's maxlines attribute ]
+  [ Ordering
+    [ Add manual order grab-icon ]
+    [ Allow manual ordering ]
+    [ Add toolbar menu ordering ]
   ]
   [ Subitems
     [ add (via item context menu) ]
@@ -44,10 +51,8 @@
     [ Show ]
     [ Toggle ]
   ]
-  [ Ordering
-    [ Add manual order grab-icon ]
-    [ Allow manual ordering ]
-    [ Add toolbar menu ordering ]
+  [ Expand description on single click
+    [ Modify the TextView's maxlines attribute ]
   ]
   [ ToolBar menu
     [ Add search ]

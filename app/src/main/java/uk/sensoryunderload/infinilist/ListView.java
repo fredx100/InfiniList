@@ -11,16 +11,24 @@ import android.view.MenuItem;
 
 import java.util.List;
 import java.util.ArrayList;
-
+import java.io.File;
 
 public class ListView extends AppCompatActivity {
-    private java.util.List<ListItem> currentList = new ArrayList<>();
-    private java.util.List<ListItem> topLevelList = new ArrayList<>();
+    private ListItem topLevelList = new ListItem("InfiniList","");
+    private ListItem currentList;
     private RecyclerView recyclerView;
     private ListItemAdapter liAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        loadLists(); // Sets topLevelList
+        // Set current list to appropriate sub-list, if appropriate.
+        ArrayList<Integer> address = new ArrayList<Integer>();
+        if (savedInstanceState != null) {
+            // TODO: get the address from the bundle.
+        }
+        currentList = topLevelList.goToAddress(address);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -33,8 +41,15 @@ public class ListView extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(liAdapter);
+    }
 
-        prepareListData();
+    private void loadLists() { loadLists("Main.todo"); }
+    private void loadLists(String name) {
+        File path = getApplicationContext().getFilesDir();
+        File file = new File(path, name);
+        if (file.exists()) {
+            topLevelList.readFromFile(file);
+        }
     }
 
     private void prepareListData() {
@@ -77,44 +92,28 @@ public class ListView extends AppCompatActivity {
 
     // Launches the "Add Item" dialog. Returns true if list is modified, false otherwise.
     // https://developer.android.com/guide/topics/ui/dialogs#java
-    public void actionAddItem(final List<ListItem> list) {
-        Bundle bundle = new Bundle();
+    public void actionAddItem(final ListItem list) {
         AddItemDialog dialog = new AddItemDialog();
-        dialog.setArguments(bundle);
         dialog.show(getSupportFragmentManager(), "add item dialog");
-        bundle = dialog.getArguments();
-        boolean success = bundle.getBoolean("okay", false);
-        if (success) {
-            String title = bundle.getString("title","");
-            String desc  = bundle.getString("description", "");
-            list.add(new ListItem(title,desc));
-            liAdapter.notifyItemInserted(list.size() - 1);
-        }
     }
 
-    public void appendItem (String title, String description) {
-        currentList.add(new ListItem(title,description));
+    public void addItem(String title, String content) {
+        currentList.add(new ListItem (title, content));
         liAdapter.notifyItemInserted(currentList.size() - 1);
+        saveLists();
+    }
+
+    private void saveLists() { saveLists("Main.todo"); }
+    private void saveLists(String name) {
+        File path = getApplicationContext().getFilesDir();
+        File file = new File(path, name);
+        topLevelList.writeToFile(file);
     }
 
     @Override
     public void onSaveInstanceState (Bundle state) {
         // TODO: save list data.
-        // All of it?
-        // Which lists?
         // How to demark which list we're on?
         super.onSaveInstanceState(state);
-    }
-
-    @Override
-    public void onStart() {
-        // TODO: Load lists from disk
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        // TODO: save lists to disk.
-        super.onStop();
     }
 }

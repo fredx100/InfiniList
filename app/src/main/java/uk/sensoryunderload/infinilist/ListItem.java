@@ -1,5 +1,7 @@
 package uk.sensoryunderload.infinilist;
 
+import android.util.Log;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -40,7 +42,7 @@ class ListItem {
     private String content;
     private StatusFlag status;
     private ListItem parent;
-    private List<ListItem> children;
+    private ArrayList<ListItem> children;
 
     public ListItem(String _title, String _content, StatusFlag _sFlag) {
         title = _title;
@@ -48,14 +50,12 @@ class ListItem {
         status = _sFlag;
         children = new java.util.ArrayList<>();
     }
-
     public ListItem(String _title, String _content) {
         title = _title;
         content = _content;
         status = new StatusFlag();
         children = new java.util.ArrayList<>();
     }
-
     public ListItem() {
         title = "";
         content = "";
@@ -63,17 +63,23 @@ class ListItem {
         children = new java.util.ArrayList<>();
     }
 
-    void writeToFile(File file) throws IOException {
-//        File path = context.getFilesDir();
-//        File file = new File(path, "infinilist.todo");
-        FileOutputStream fos = new FileOutputStream(file);
-        OutputStreamWriter target = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
-        writeToWriter(target, "");
-        fos.close();
-        target.close();
-//        finally {
-//           target.close();
-//        }
+    void writeToFile(File file) {
+        FileOutputStream fos = null;
+        OutputStreamWriter target = null;
+        try {
+            fos = new FileOutputStream(file);
+            target = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+            writeToWriter(target, "");
+        } catch (IOException e) {
+            Log.e("INFLIST-LOG", "Error writing lists to disk", e);
+        } finally {
+            try {
+                fos.close();
+                target.close();
+            } catch (IOException e) {
+                Log.e("INFLIST-LOG", "Error writing lists to disk (closing)", e);
+            }
+        }
     }
 
     private void writeToWriter(OutputStreamWriter target, String indent) throws IOException {
@@ -125,13 +131,22 @@ class ListItem {
         target.flush();
     }
 
-    public void readFromFile(File file) throws IOException {
-        FileInputStream fis = new FileInputStream(file);
+    public void readFromFile(File file) {
+        FileInputStream fis = null;
+        BufferedReader br = null;
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
+            fis = new FileInputStream(file);
+            br = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
             readFromBuffer("", br, 0);
+        } catch (IOException e) {
+            Log.e("INFLIST-LOG", "Error reading lists from disk", e);
         } finally {
-            fis.close();
+            try {
+                br.close();
+                fis.close();
+            } catch (IOException e) {
+                Log.e("INFLIST-LOG", "Error reading lists from disk (closing)", e);
+            }
         }
     }
 
@@ -190,8 +205,7 @@ class ListItem {
                             title = builder.toString();
                         }
                         ListItem li = new ListItem();
-                        li.setParent(this);
-                        children.add(li);
+                        add(li);
                         li.readFromBuffer(line, reader, lineNum);
                         continue;
                     }
@@ -296,7 +310,10 @@ class ListItem {
         return status;
     }
 
-    public List<ListItem> getChildren() { return children; }
+    public ArrayList<ListItem> getChildren() { return children; }
+    public ListItem getChild(int i) { return children.get(i); }
+
+    public int size() { return children.size(); }
 
     public void setParent(ListItem li) { parent = li; }
 

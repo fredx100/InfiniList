@@ -12,7 +12,7 @@ import java.util.List;
 
 final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyViewHolder> {
 
-    private List<ListItem> itemList;
+    private ListItem itemList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, content;
@@ -28,7 +28,7 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyViewH
         }
     }
 
-    public ListItemAdapter(List<ListItem> itemList) {
+    public ListItemAdapter(ListItem itemList) {
         this.itemList = itemList;
     }
 
@@ -42,7 +42,7 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.MyViewH
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        ListItem item = itemList.get(position);
+        ListItem item = itemList.getChild(position);
         holder.title.setText(item.getTitle());
         holder.content.setText(item.getContent());
         // TODO: Populate status flag

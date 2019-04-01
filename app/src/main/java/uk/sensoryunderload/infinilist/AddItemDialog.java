@@ -26,8 +26,8 @@ public class AddItemDialog extends DialogFragment {
         builder.setPositiveButton("Add", new android.content.DialogInterface.OnClickListener() {
             @Override
             public void onClick(android.content.DialogInterface dialog, int which) {
-                ((ListView)getActivity()).appendItem (inputTitle.getText().toString(),
-                                                      inputDescription.getText().toString());
+                ((ListView)getActivity()).addItem(inputTitle.getText().toString(),
+                                                  inputDescription.getText().toString());
             }
         });
         builder.setNegativeButton("Cancel", new android.content.DialogInterface.OnClickListener() {
