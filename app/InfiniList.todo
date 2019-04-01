@@ -1,7 +1,7 @@
 [ Features
   v[ Add item ]
   v[ Scroll long lists ]
-  [ Complete saving and loading
+  v[ Complete saving and loading
     v[ Save list to disk
       v[ written routines ]
       v[ Test routines
@@ -14,22 +14,6 @@
     v[ Save to "disk"
       ?[ When?
         v[ When list modified ]
-      ]
-    ]
-    [ onSaveInstanceState
-      [ Must save
-        [ current list
-          v[ ListItem::writeAddress ]
-        ]
-        [ current scroll position
-          x[ The default version does this for us. Call
-            super.onSaveInstanceState for this. ]
-        ]
-      ]
-      [ onStart or onRestoreInstanceState must act on this
-        [ Call super.onRestoreInstanceState to restore scroll pos ]
-        [ load address ]
-        v[ got to address ]
       ]
     ]
   ]
@@ -53,6 +37,22 @@
   ]
   [ Expand description on single click
     [ Modify the TextView's maxlines attribute ]
+  ]
+  [ On force close save state in onSaveInstanceState
+    [ Must save
+      [ current list
+        v[ ListItem::writeAddress ]
+      ]
+      v[ current scroll position
+        x[ The default version does this for us. Call
+          super.onSaveInstanceState for this. ]
+      ]
+    ]
+    [ onStart or onRestoreInstanceState must act on this
+      v[ Call super.onRestoreInstanceState to restore scroll pos ]
+      [ load address ]
+      v[ got to address ]
+    ]
   ]
   [ ToolBar menu
     [ Add search ]
