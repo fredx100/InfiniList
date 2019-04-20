@@ -19,6 +19,7 @@
   ]
   [ Item context menu
     [ Delete Item ]
+    [ Add subitem ]
   ]
   [ Ordering
     [ Add manual order grab-icon ]
