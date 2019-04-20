@@ -18,6 +18,7 @@
     ]
   ]
   [ Item context menu
+    [ from https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview ]
     [ Delete Item ]
     [ Add subitem ]
   ]
