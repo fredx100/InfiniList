@@ -2,16 +2,15 @@ package uk.sensoryunderload.infinilist;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.io.File;
+import java.util.ArrayList;
 
 public class ListView extends AppCompatActivity {
     private ListItem topLevelList = new ListItem("InfiniList","");
@@ -41,6 +40,8 @@ public class ListView extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(liAdapter);
+
+        registerForContextMenu(recyclerView);
     }
 
     private void loadLists() { loadLists("Main.todo"); }
@@ -50,17 +51,6 @@ public class ListView extends AppCompatActivity {
         if (file.exists()) {
             topLevelList.readFromFile(file);
         }
-    }
-
-    private void prepareListData() {
-        ListItem item = new ListItem("Finish InfiniList", "Asap");
-        currentList.add(item);
-
-        item = new ListItem("Plan InfiniList", "Prior to anything else");
-        currentList.add(item);
-
-        item = new ListItem("Stop eating biscuits", "After you've finished this pack.");
-        currentList.add(item);
     }
 
     @Override
@@ -90,6 +80,22 @@ public class ListView extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        ListItemAdapter liA = (ListItemAdapter)recyclerView.getAdapter();
+        if (liA != null) {
+            int pos = liA.retrievePosition();
+            switch (item.getItemId()) {
+                case R.id.delete:
+                    removeItem(pos);
+                    break;
+                case R.id.addsub:
+                    // TODO
+                    break;
+            }
+        }
+        return super.onContextItemSelected(item);
+    }
     // Launches the "Add Item" dialog. Returns true if list is modified, false otherwise.
     // https://developer.android.com/guide/topics/ui/dialogs#java
     public void actionAddItem(final ListItem list) {
@@ -100,6 +106,12 @@ public class ListView extends AppCompatActivity {
     public void addItem(String title, String content) {
         currentList.add(new ListItem (title, content));
         liAdapter.notifyItemInserted(currentList.size() - 1);
+        saveLists();
+    }
+
+    public void removeItem(int position) {
+        currentList.remove(position);
+        liAdapter.notifyItemRemoved(position);
         saveLists();
     }
 

@@ -319,6 +319,8 @@ class ListItem {
 
     public void add(ListItem li) { li.setParent(this); children.add(li); }
 
+    public void remove(int pos) { if ((pos >= 0) && (pos < children.size())) children.remove(pos); }
+
     public void changeStatus() {
         status.cycle();
     }

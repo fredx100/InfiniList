@@ -18,20 +18,20 @@
     ]
   ]
   [ Item context menu
-    [ from https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview ]
-    [ Delete Item ]
+    v[ from https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview ]
+    v[ Delete Item ]
     [ Add subitem ]
-  ]
-  [ Ordering
-    [ Add manual order grab-icon ]
-    [ Allow manual ordering ]
-    [ Add toolbar menu ordering ]
   ]
   [ Subitems
     [ add (via item context menu) ]
     [ "Back" goes up one level. ]
     [ Indicate sub-list ]
     [ Open sub-list ]
+  ]
+  [ Ordering
+    [ Add manual order grab-icon ]
+    [ Allow manual ordering ]
+    [ Add toolbar menu ordering ]
   ]
   [ Status indicator
     [ Show ]
