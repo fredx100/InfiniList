@@ -6,12 +6,33 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.AppCompatEditText;
 import android.view.View;
 import android.os.Bundle;
+import java.util.ArrayList;
 
-public class AddItemDialog extends DialogFragment {
+public class AddItemFragment extends DialogFragment {
     // https://developer.android.com/guide/topics/ui/dialogs#java
+    //
+    static AddItemFragment newInstance(ListItem list) {
+        AddItemFragment f = new AddItemFragment();
+
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        args.putString("itemAddress", list.getAddressString());
+        f.setArguments(args);
+
+        return f;
+    }
+
     @Override
     //public Dialog onCreateDialog(final ListView lv) {
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        String addressString = getArguments().getString("itemAddress");
+        String[] addressStringArray = addressString.split(",");
+        ArrayList<Integer> address = new ArrayList<Integer>();
+        for (int i = 0; i < addressStringArray.length; ++i) {
+            address.add(java.lang.Integer.parseInt(addressStringArray[i]));
+        }
+        final ListItem list = ((ListView)getActivity()).goToAddress(address);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add Item");
 
@@ -26,7 +47,8 @@ public class AddItemDialog extends DialogFragment {
         builder.setPositiveButton("Add", new android.content.DialogInterface.OnClickListener() {
             @Override
             public void onClick(android.content.DialogInterface dialog, int which) {
-                ((ListView)getActivity()).addItem(inputTitle.getText().toString(),
+                ((ListView)getActivity()).addItem(list,
+                                                  inputTitle.getText().toString(),
                                                   inputDescription.getText().toString());
             }
         });

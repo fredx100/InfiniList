@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">InfiniList</string>
-    <string name="action_settings">Settings</string>
-    <string name="sublist_indicator">If present, indicates that a ListItem has a sub-list.</string>
 
+    <!-- menu items -->
+    <string name="action_settings">Settings</string>
     <string name="item_delete">Delete Item</string>
     <string name="item_addsub">Add Sub-Item</string>
+
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+
+    <string name="downArrowDesc">Arrow indicating that the item has a hidden description.</string>
 </resources>

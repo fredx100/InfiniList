@@ -287,6 +287,9 @@ class ListItem {
             return address;
         }
     }
+    public String getAddressString() {
+        return String.join(',', getAddress());
+    }
 
     public ListItem goToAddress(ArrayList<Integer> address) {
         if (address.isEmpty()) {
@@ -296,6 +299,14 @@ class ListItem {
             address.remove(0);
             return child.goToAddress(address);
         }
+    }
+
+    public boolean hasParent() {
+        return (parent != null);
+    }
+
+    public ListItem getParent() {
+        return parent;
     }
 
     public String getTitle() {
@@ -312,6 +323,7 @@ class ListItem {
 
     public ArrayList<ListItem> getChildren() { return children; }
     public ListItem getChild(int i) { return children.get(i); }
+    public int indexOf(ListItem li) { return children.indexOf(li); }
 
     public int size() { return children.size(); }
 

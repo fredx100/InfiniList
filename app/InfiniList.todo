@@ -20,12 +20,12 @@
   [ Item context menu
     v[ from https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview ]
     v[ Delete Item ]
-    [ Add subitem ]
+    ?[ Add subitem ]
   ]
   [ Subitems
-    [ add (via item context menu) ]
+    ?[ add (via item context menu) ]
     [ "Back" goes up one level. ]
-    [ Indicate sub-list ]
+    ?[ Indicate sub-list ]
     [ Open sub-list ]
   ]
   [ Ordering
@@ -57,6 +57,9 @@
     ]
   ]
   [ ToolBar menu
+    [ Top/home ]
+    [ up button ]
+    [ export ]
     [ Add search ]
   ]
   [ Exporting

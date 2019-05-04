@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="@color/colorItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/row_padding_vertical"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/row_padding_vertical">
+    android:orientation="horizontal">
 
     <CheckBox
         android:id="@+id/rowStatus"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding"
+        android:layout_marginTop="@dimen/padding"
+        android:layout_marginBottom="@dimen/padding" />
 
     <LinearLayout
         android:id="@+id/rowText"
@@ -28,24 +28,40 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding"
+            android:background="@color/colorItemBackground"
             android:maxLines="1"
-            android:textColor="@color/colorTitle"
-            android:textSize="14sp"
+            android:textColor="@color/colorItemStrong"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:textColor="@color/colorContent" />
+            android:background="@color/colorItemBackground"
+            android:lines="0"
+            android:maxLines="0"
+            android:textColor="@color/colorItemWeak" />
+
+        <ImageView
+            android:id="@+id/descriptionIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/downArrowDesc"
+            app:srcCompat="@android:drawable/arrow_down_float" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/rowHasChildren"
-        android:layout_width="0px"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/sublist_indicator"
-        app:srcCompat="@android:drawable/ic_media_play" />
+    <TextView
+        android:id="@+id/subitemCount"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="0dp"
+        android:layout_weight="1"
+        android:width="32sp"
+        android:background="@color/colorItemStrong"
+        android:clickable="true"
+        android:text="0"
+        android:textColor="@color/colorItemBackground" />
 
 </LinearLayout>

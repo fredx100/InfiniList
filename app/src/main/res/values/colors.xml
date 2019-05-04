@@ -4,8 +4,9 @@
     <color name="colorPrimaryDark">#424242</color>
     <color name="colorAccent">#06890c</color>
 
-    <color name="colorTitle">#cccccc</color>
-    <color name="colorContent">#888888</color>
+    <color name="colorItemBackground">#fff</color>
+    <color name="colorItemWeak">#cccccc</color>
+    <color name="colorItemStrong">#888888</color>
     <color name="colorComplete">#007000</color>
     <color name="colorFail">#900000</color>
 </resources>

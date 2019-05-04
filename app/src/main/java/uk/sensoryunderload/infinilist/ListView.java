@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ListView extends AppCompatActivity {
+public class ListView extends AppCompatActivity implements ListItemAdapter.DescendClickListener {
     private ListItem topLevelList = new ListItem("InfiniList","");
     private ListItem currentList;
     private RecyclerView recyclerView;
@@ -27,6 +27,7 @@ public class ListView extends AppCompatActivity {
             // TODO: get the address from the bundle.
         }
         currentList = topLevelList.goToAddress(address);
+        setTitle();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view);
@@ -35,7 +36,7 @@ public class ListView extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view);
 
-        liAdapter = new ListItemAdapter(currentList);
+        liAdapter = new ListItemAdapter(currentList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -58,6 +59,30 @@ public class ListView extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_list_view, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (currentList.hasParent()) {
+            currentList = currentList.getParent();
+            liAdapter.notifyDataSetChanged();
+            setTitle();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void descendClick(int position) {
+        currentList = currentList.getChild(position);
+        liAdapter.notifyDataSetChanged();
+        setTitle();
+    }
+
+    private void setTitle() {
+        if (getActionBar() != null) {
+            getActionBar().setTitle(currentList.getTitle());
+        }
     }
 
     @Override
@@ -90,7 +115,15 @@ public class ListView extends AppCompatActivity {
                     removeItem(pos);
                     break;
                 case R.id.addsub:
-                    // TODO
+                    ListItem temp = currentList;
+                    currentList = currentList.getChild(pos);
+                    int currentListSize = currentList.size();
+                    actionAddItem(currentList);
+                    boolean added = (currentListSize != currentList.size());
+                    currentList = temp;
+                    if (added) {
+                        liAdapter.notifyItemChanged(pos);
+                    }
                     break;
             }
         }
@@ -98,14 +131,18 @@ public class ListView extends AppCompatActivity {
     }
     // Launches the "Add Item" dialog. Returns true if list is modified, false otherwise.
     // https://developer.android.com/guide/topics/ui/dialogs#java
-    public void actionAddItem(final ListItem list) {
-        AddItemDialog dialog = new AddItemDialog();
+    public void actionAddItem(ListItem list) {
+        AddItemFragment dialog = new uk.sensoryunderload.infinilist.AddItemFragment.newInstance(list);
         dialog.show(getSupportFragmentManager(), "add item dialog");
     }
 
-    public void addItem(String title, String content) {
-        currentList.add(new ListItem (title, content));
-        liAdapter.notifyItemInserted(currentList.size() - 1);
+    public void addItem(ListItem list, String title, String content) {
+        list.add(new ListItem (title, content));
+        if (list == currentList) {
+            liAdapter.notifyItemInserted(currentList.size() - 1);
+        } else if (list.getParent() == currentList) {
+            liAdapter.notifyItemInserted(currentList.indexOf(list));
+        }
         saveLists();
     }
 
@@ -123,9 +160,13 @@ public class ListView extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState (Bundle state) {
+    public void onSaveInstanceState(Bundle state) {
         // TODO: save list data.
         // How to demark which list we're on?
         super.onSaveInstanceState(state);
+    }
+
+    public ListItem goToAddress(ArrayList<Integer> address) {
+        return topLevelList.goToAddress(address);
     }
 }
