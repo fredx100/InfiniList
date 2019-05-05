@@ -288,7 +288,14 @@ class ListItem {
         }
     }
     public String getAddressString() {
-        return String.join(',', getAddress());
+        ArrayList<Integer> address = getAddress();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < (address.size() - 1); ++i) {
+            sb.append(address.get(i).toString());
+            sb.append(",");
+        }
+        sb.append(address.get(address.size() - 1).toString());
+        return sb.toString();
     }
 
     public ListItem goToAddress(ArrayList<Integer> address) {

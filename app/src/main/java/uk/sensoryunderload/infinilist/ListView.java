@@ -132,7 +132,7 @@ public class ListView extends AppCompatActivity implements ListItemAdapter.Desce
     // Launches the "Add Item" dialog. Returns true if list is modified, false otherwise.
     // https://developer.android.com/guide/topics/ui/dialogs#java
     public void actionAddItem(ListItem list) {
-        AddItemFragment dialog = new uk.sensoryunderload.infinilist.AddItemFragment.newInstance(list);
+        AddItemFragment dialog = AddItemFragment.newInstance(list);
         dialog.show(getSupportFragmentManager(), "add item dialog");
     }
 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class AddItemFragment extends DialogFragment {
     // https://developer.android.com/guide/topics/ui/dialogs#java
     //
-    static AddItemFragment newInstance(ListItem list) {
+    public static AddItemFragment newInstance(ListItem list) {
         AddItemFragment f = new AddItemFragment();
 
         // Supply num input as an argument.
