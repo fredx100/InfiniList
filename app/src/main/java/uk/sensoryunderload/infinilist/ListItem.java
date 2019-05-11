@@ -294,7 +294,9 @@ class ListItem {
             sb.append(address.get(i).toString());
             sb.append(",");
         }
-        sb.append(address.get(address.size() - 1).toString());
+        if (!address.isEmpty()) {
+            sb.append(address.get(address.size() - 1).toString());
+        }
         return sb.toString();
     }
 

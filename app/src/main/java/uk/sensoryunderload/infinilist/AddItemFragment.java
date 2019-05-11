@@ -25,10 +25,12 @@ public class AddItemFragment extends DialogFragment {
     //public Dialog onCreateDialog(final ListView lv) {
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         String addressString = getArguments().getString("itemAddress");
-        String[] addressStringArray = addressString.split(",");
         ArrayList<Integer> address = new ArrayList<Integer>();
-        for (int i = 0; i < addressStringArray.length; ++i) {
-            address.add(java.lang.Integer.parseInt(addressStringArray[i]));
+        if (!addressString.isEmpty()) {
+            String[] addressStringArray = addressString.split(",");
+            for (int i = 0; i < addressStringArray.length; ++i) {
+                address.add(java.lang.Integer.parseInt(addressStringArray[i]));
+            }
         }
         final ListItem list = ((ListView)getActivity()).goToAddress(address);
 

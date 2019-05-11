@@ -29,6 +29,7 @@
     v[ Open sub-list ]
   ]
   *[ updateTitle() isn't working ]
+  *[ On AddItem dialog, focus "title" field on open. ]
   [ Exporting
     [ Automatic naming? ]
     [ From action bar ]
