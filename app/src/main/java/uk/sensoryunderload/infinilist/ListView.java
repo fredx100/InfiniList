@@ -109,25 +109,15 @@ public class ListView extends AppCompatActivity implements ListItemAdapter.Desce
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        int pos = liAdaptor.retrievePosition();
+        int pos = liAdapter.retrievePosition();
         switch (item.getItemId()) {
             case R.id.delete:
                 removeItem(pos);
                 break;
             case R.id.addsub:
-                ListItem temp = currentList;
                 currentList = currentList.getChild(pos);
-                int currentListSize = currentList.size();
                 actionAddItem(currentList);
-                // TODO: This is wrong! The dialog is asynchronous and
-                // so non-blocking. That is, we won't have the result of
-                // the dialog here and so will never update the adaptor
-                // correctly.
-                boolean added = (currentListSize != currentList.size());
-                currentList = temp;
-                if (added) {
-                    liAdapter.notifyItemChanged(pos);
-                }
+                currentList = currentList.getParent();
                 break;
         }
         return super.onContextItemSelected(item);
@@ -144,7 +134,7 @@ public class ListView extends AppCompatActivity implements ListItemAdapter.Desce
         if (list == currentList) {
             liAdapter.notifyItemInserted(currentList.size() - 1);
         } else if (list.getParent() == currentList) {
-            liAdapter.notifyItemInserted(currentList.indexOf(list));
+            liAdapter.notifyItemChanged(currentList.indexOf(list));
         }
         saveLists();
     }
