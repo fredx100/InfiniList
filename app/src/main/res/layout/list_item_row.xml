@@ -16,12 +16,14 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding"
         android:layout_marginTop="@dimen/padding"
-        android:layout_marginBottom="@dimen/padding" />
+        android:layout_marginBottom="@dimen/padding"
+        android:layout_weight="0" />
 
     <LinearLayout
         android:id="@+id/rowText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
@@ -42,13 +44,15 @@
             android:background="@color/colorItemBackground"
             android:lines="0"
             android:maxLines="0"
-            android:textColor="@color/colorItemWeak" />
+            android:textColor="@color/colorItemWeak"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/descriptionIndicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/downArrowDesc"
+            android:visibility="visible"
             app:srcCompat="@android:drawable/arrow_down_float" />
     </LinearLayout>
 
@@ -57,11 +61,14 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_margin="0dp"
-        android:layout_weight="1"
-        android:width="32sp"
+        android:layout_weight="0"
+        android:width="40sp"
         android:background="@color/colorItemStrong"
         android:clickable="true"
+        android:gravity="center"
         android:text="0"
-        android:textColor="@color/colorItemBackground" />
+        android:textColor="@color/colorItemBackground"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

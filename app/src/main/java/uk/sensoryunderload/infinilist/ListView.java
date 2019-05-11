@@ -65,6 +65,7 @@ public class ListView extends AppCompatActivity implements ListItemAdapter.Desce
     public void onBackPressed() {
         if (currentList.hasParent()) {
             currentList = currentList.getParent();
+            liAdapter.itemList = currentList;
             liAdapter.notifyDataSetChanged();
             setTitle();
         } else {
@@ -75,6 +76,7 @@ public class ListView extends AppCompatActivity implements ListItemAdapter.Desce
     @Override
     public void descendClick(int position) {
         currentList = currentList.getChild(position);
+        liAdapter.itemList = currentList;
         liAdapter.notifyDataSetChanged();
         setTitle();
     }
@@ -107,29 +109,30 @@ public class ListView extends AppCompatActivity implements ListItemAdapter.Desce
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        ListItemAdapter liA = (ListItemAdapter)recyclerView.getAdapter();
-        if (liA != null) {
-            int pos = liA.retrievePosition();
-            switch (item.getItemId()) {
-                case R.id.delete:
-                    removeItem(pos);
-                    break;
-                case R.id.addsub:
-                    ListItem temp = currentList;
-                    currentList = currentList.getChild(pos);
-                    int currentListSize = currentList.size();
-                    actionAddItem(currentList);
-                    boolean added = (currentListSize != currentList.size());
-                    currentList = temp;
-                    if (added) {
-                        liAdapter.notifyItemChanged(pos);
-                    }
-                    break;
-            }
+        int pos = liAdaptor.retrievePosition();
+        switch (item.getItemId()) {
+            case R.id.delete:
+                removeItem(pos);
+                break;
+            case R.id.addsub:
+                ListItem temp = currentList;
+                currentList = currentList.getChild(pos);
+                int currentListSize = currentList.size();
+                actionAddItem(currentList);
+                // TODO: This is wrong! The dialog is asynchronous and
+                // so non-blocking. That is, we won't have the result of
+                // the dialog here and so will never update the adaptor
+                // correctly.
+                boolean added = (currentListSize != currentList.size());
+                currentList = temp;
+                if (added) {
+                    liAdapter.notifyItemChanged(pos);
+                }
+                break;
         }
         return super.onContextItemSelected(item);
     }
-    // Launches the "Add Item" dialog. Returns true if list is modified, false otherwise.
+    // Launches the "Add Item" dialog.
     // https://developer.android.com/guide/topics/ui/dialogs#java
     public void actionAddItem(ListItem list) {
         AddItemFragment dialog = AddItemFragment.newInstance(list);

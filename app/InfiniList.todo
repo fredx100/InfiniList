@@ -78,17 +78,20 @@
 
 [ Interaction
   v[ Add new item - toolbar button ]
-  [ Context menu - press and hold ]
-  [ Delete item - context menu item ]
+  v[ Context menu - press and hold ]
+  v[ Delete item - context menu item ]
   [ Set flag = togglable graphic in row ]
   [ Move - drag grabable area in row (shared with flag status?) ]
   [ Open/Close sub list
-    [ Swipe left to open sublist ]
-    [ Swipe right to open parent list ]
-    [ Show an icon on an item with child-items ]
+    x[ Swipe left to open sublist ]
+    x[ Swipe right to open parent list ]
+    v[ Show an icon on an item with child-items
+      [ Click to descend into sub-list ]
+    ]
+    v[ Back button to go to super-list ]
   ]
   [ Display full description - single tap
-    [ Can also be used to "tag" multiple items ]
+    [ Could also be used to "tag" multiple items ]
   ]
 ]
 

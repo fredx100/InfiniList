@@ -16,13 +16,13 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
         void descendClick(int pos);
     }
 
-    private ListItem itemList;
+    public  ListItem itemList;
     private int position;
     private DescendClickListener descendClickListener;
 
     public class ListItemViewHolder extends RecyclerView.ViewHolder
                               implements OnCreateContextMenuListener {
-//                              implements OnClickListener, OnCreateContextMenuListener {
+//                              implements OnClickListener {
         public TextView title,
                         content,
                         subitems;
@@ -83,13 +83,13 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
                 subitems.setVisibility(View.GONE);
             } else {
                 subitems.setVisibility(View.VISIBLE);
-                subitems.setText(item.size());
+                subitems.setText(Integer.toString(item.size()));
             }
         }
         public void setupDescriptionIndicator() {
             if (item.getContent().length() == 0) {
                 descriptionIndicator.setVisibility(View.INVISIBLE);
-            } else if (content.getMaxLines() == 0) {
+            } else if (content.getVisibility() == View.GONE) {
                 descriptionIndicator.setVisibility(View.VISIBLE);
             } else {
                 descriptionIndicator.setVisibility(View.GONE);
