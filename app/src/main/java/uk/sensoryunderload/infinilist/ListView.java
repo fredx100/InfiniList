@@ -1,15 +1,22 @@
 package uk.sensoryunderload.infinilist;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ListView extends AppCompatActivity implements ListItemAdapter.DescendClickListener {
@@ -99,6 +106,10 @@ public class ListView extends AppCompatActivity implements ListItemAdapter.Desce
             case R.id.action_settings :
                 break;
 
+            case R.id.action_export :
+                exportLists();
+                break;
+
             case R.id.action_add :
                 actionAddItem(currentList);
                 break;
@@ -115,9 +126,7 @@ public class ListView extends AppCompatActivity implements ListItemAdapter.Desce
                 removeItem(pos);
                 break;
             case R.id.addsub:
-                currentList = currentList.getChild(pos);
-                actionAddItem(currentList);
-                currentList = currentList.getParent();
+                actionAddItem(currentList.getChild(pos));
                 break;
         }
         return super.onContextItemSelected(item);
@@ -149,6 +158,26 @@ public class ListView extends AppCompatActivity implements ListItemAdapter.Desce
     private void saveLists(String name) {
         File path = getApplicationContext().getFilesDir();
         File file = new File(path, name);
+        topLevelList.writeToFile(file);
+    }
+
+    void exportLists() {
+        File exDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        File path = new File(exDir, "InfiniList");
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        Date date = new Date();
+        String dateString = dateFormat.format(date);
+
+        int i = 0;
+        File file = new File(path, "exported-" + dateString + "-" + i + ".todo");
+        while (file.exists()) {
+            ++i;
+            file = new File(path, "exported-" + dateString + "-" + i + ".todo");
+        }
+
+        // Make sure the InfiniList directory exists.
+        path.mkdirs();
         topLevelList.writeToFile(file);
     }
 

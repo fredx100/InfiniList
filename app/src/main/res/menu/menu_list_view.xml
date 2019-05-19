@@ -9,10 +9,12 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_order"
-        android:title="@order" />
+        android:title="@order"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_export"
-        android:title="@export" />
+        android:title="@string/action_export"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

@@ -28,23 +28,16 @@
     v[ Indicate sub-list ]
     v[ Open sub-list ]
   ]
-  *[ updateTitle() isn't working ]
-  *[ On AddItem dialog, focus "title" field on open. ]
-  [ Exporting
-    [ Automatic naming? ]
-    [ From action bar ]
+  ?[ Exporting
+    v[ Automatic naming? ]
+    v[ From action bar ]
     v[ TODO ]
     x[ json
       [ Why bother with another format? ]
     ]
   ]
-  [ Ordering
-    x[ Add manual order grab-icon
-      [ Just use status indicator as dual purpose ]
-    ]
-    [ Allow manual ordering ]
-    [ Add toolbar menu ordering ]
-  ]
+  *[ updateTitle() isn't working ]
+  *[ On AddItem dialog, focus "title" field on open. ]
   [ Status indicator
     [ Show ]
     [ Toggle ]
@@ -52,6 +45,13 @@
   [ Expand description on single click
     x[ Modify the TextView's maxlines attribute ]
     [ Set visibility ]
+  ]
+  [ Ordering
+    x[ Add manual order grab-icon
+      [ Just use status indicator as dual purpose ]
+    ]
+    [ Allow manual ordering ]
+    [ Add toolbar menu ordering ]
   ]
   [ On force close save state in onSaveInstanceState
     [ Must save
