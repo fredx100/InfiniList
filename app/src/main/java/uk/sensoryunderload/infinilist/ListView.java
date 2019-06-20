@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ListView extends AppCompatActivity implements ListItemAdapter.DescendClickListener {
+public class ListView extends AppCompatActivity implements uk.sensoryunderload.infinilist.ListItemAdapter.ListControlListener {
     private ListItem topLevelList = new ListItem("InfiniList","");
     private ListItem currentList;
     private RecyclerView recyclerView;
@@ -80,12 +80,17 @@ public class ListView extends AppCompatActivity implements ListItemAdapter.Desce
         }
     }
 
+    // ListControlListener implementation
     @Override
-    public void descendClick(int position) {
+    public void descend(int position) {
         currentList = currentList.getChild(position);
         liAdapter.itemList = currentList;
         liAdapter.notifyDataSetChanged();
         setTitle();
+    }
+    @Override
+    public void save() {
+        saveLists();
     }
 
     private void setTitle() {
@@ -177,8 +182,8 @@ public class ListView extends AppCompatActivity implements ListItemAdapter.Desce
         }
 
         // Make sure the InfiniList directory exists.
-        path.mkdirs();
-        topLevelList.writeToFile(file);
+        if (path.mkdirs())
+            topLevelList.writeToFile(file);
     }
 
     @Override

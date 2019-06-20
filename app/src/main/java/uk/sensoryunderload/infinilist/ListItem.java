@@ -6,7 +6,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-// Possible status values for a ListItem
 enum STATUS {
     NONE(0),
     SUCCESS(1),
@@ -14,27 +13,23 @@ enum STATUS {
     FLAG(3),
     QUERY(4);
 
-    STATUS(int i) { value = i; }
-    private int value;
-    public void cycle() { value = ((value + 1) % 4); }
+    STATUS(int i) { val = i; }
+    private int val;
+    public int getValue() { return val; }
 }
 
 // StatusFlag
-// Records a status from
-//     none(0)
-//     success(1)
-//     fail(2)
-//     important(3)
-//     query(4)
+// Records a status from STATUS
 class StatusFlag {
-    private STATUS flag;
+    private int val;
 
-    StatusFlag(STATUS s) { flag = s; }
-    StatusFlag() { flag = STATUS.NONE; }
+    StatusFlag(STATUS s) { set(s); }
+    StatusFlag() { val = STATUS.NONE.getValue(); }
 
-    public void set(STATUS s) { flag = s; }
-    void cycle() { flag.cycle(); }
-    boolean equalTo(STATUS s) { return (flag == s); }
+    void cycle() { val = ((val + 1) % STATUS.values().length); }
+    void set(STATUS s) { val = s.getValue(); }
+    void set(StatusFlag s) { val = s.val; }
+    boolean isEqual(STATUS s) { return (val == s.getValue()); }
 }
 
 class ListItem {
@@ -86,13 +81,13 @@ class ListItem {
         String nl = System.getProperty("line.separator");
         target.write(indent);
         String newIndent = indent + "  "; // For inner content and children
-        if (status.equalTo (STATUS.SUCCESS)) {
+        if (status.isEqual(STATUS.SUCCESS)) {
             target.write('v');
-        } else if (status.equalTo (STATUS.FAIL)) {
+        } else if (status.isEqual(STATUS.FAIL)) {
             target.write('x');
-        } else if (status.equalTo (STATUS.FLAG)) {
+        } else if (status.isEqual(STATUS.FLAG)) {
             target.write('*');
-        } else if (status.equalTo (STATUS.QUERY)) {
+        } else if (status.isEqual(STATUS.QUERY)) {
             target.write('?');
         }
         target.write("[ ");
@@ -344,5 +339,11 @@ class ListItem {
 
     public void changeStatus() {
         status.cycle();
+    }
+    public void setStatus(STATUS s) {
+        status.set(s);
+    }
+    public void setStatus(StatusFlag s) {
+        status.set(s);
     }
 }

@@ -10,14 +10,18 @@
     android:focusable="true"
     android:orientation="horizontal">
 
-    <CheckBox
+    <uk.sensoryunderload.infinilist.StatusIndicator
         android:id="@+id/rowStatus"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/padding"
-        android:layout_marginTop="@dimen/padding"
-        android:layout_marginBottom="@dimen/padding"
-        android:layout_weight="0" />
+        android:layout_height="match_parent"
+        android:layout_margin="0dp"
+        android:layout_weight="0"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:paddingStart="@dimen/padding"
+        android:paddingEnd="@dimen/padding"
+        android:background="?android:selectableItemBackground"
+        />
 
     <LinearLayout
         android:id="@+id/rowText"

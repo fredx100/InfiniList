@@ -7,41 +7,44 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import uk.sensoryunderload.infinilist.StatusIndicator.StatusIndicatorListener;
 
 final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListItemViewHolder> {
-    public interface DescendClickListener {
-        void descendClick(int pos);
+    public interface ListControlListener {
+        void descend(int pos);
+        void save();
     }
 
-    public  ListItem itemList;
-    private int position;
-    private DescendClickListener descendClickListener;
+    public  ListItem itemList; // The list being displayed
+    private int position; // The position of itemList within it's parent.
+    private ListControlListener listControlListener;
 
     public class ListItemViewHolder extends RecyclerView.ViewHolder
-                              implements OnCreateContextMenuListener {
+                              implements OnCreateContextMenuListener,
+                                         StatusIndicatorListener {
 //                              implements OnClickListener {
         public TextView title,
                         content,
                         subitems;
-        public CheckBox flag;
+        public StatusIndicator statusIndicator;
         public ImageView descriptionIndicator;
         private ListItem item;
-        private DescendClickListener descendClickListener;
+        private ListControlListener listControlListener;
 
-        ListItemViewHolder(View view, DescendClickListener dCL) {
+        ListItemViewHolder(View view, ListControlListener lCL) {
             super(view);
-            this.descendClickListener = dCL;
+            this.listControlListener = lCL;
             title = view.findViewById(R.id.title);
             content = view.findViewById(R.id.content);
-            flag = view.findViewById(R.id.rowStatus);
             subitems = view.findViewById(R.id.subitemCount);
             descriptionIndicator = view.findViewById(R.id.descriptionIndicator);
+            statusIndicator = view.findViewById(R.id.rowStatus);
 
 //            view.setOnClickListener(this);
             view.setOnCreateContextMenuListener(this);
+            statusIndicator.setStatusIndicatorListener(this);
         }
 
 //        @Override
@@ -61,11 +64,25 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
             menu.add(Menu.NONE, R.id.addsub, Menu.NONE, R.string.item_addsub);
         }
 
+        // StatusIndicatorListener
+        @Override
+        public void incrementStatus() {
+            item.getStatus().cycle();
+            listControlListener.save();
+        }
+        @Override
+        public StatusFlag getStatus() {
+            if (item == null)
+                return new StatusFlag();
+            else
+                return item.getStatus();
+        }
+
         public void setup() {
             setupText();
             setupSubitemCount();
             setupDescriptionIndicator();
-            // TODO: Populate status flag
+            setupStatusIndicator();
         }
 
         public void setupText() {
@@ -76,7 +93,7 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
             subitems.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    descendClickListener.descendClick (getAdapterPosition());
+                    listControlListener.descend (getAdapterPosition());
                 }
             });
             if (item.size() == 0) {
@@ -95,11 +112,14 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
                 descriptionIndicator.setVisibility(View.GONE);
             }
         }
+        public void setupStatusIndicator() {
+            statusIndicator.refresh();
+        }
     }
 
-    ListItemAdapter(ListItem itemList, DescendClickListener dCL) {
+    ListItemAdapter(ListItem itemList, ListControlListener lCL) {
         this.itemList = itemList;
-        this.descendClickListener = dCL;
+        this.listControlListener = lCL;
     }
 
     @Override
@@ -107,7 +127,7 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_row, parent, false);
 
-        return new ListItemViewHolder(itemView, descendClickListener);
+        return new ListItemViewHolder(itemView, listControlListener);
     }
 
     @Override

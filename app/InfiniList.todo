@@ -17,34 +17,44 @@
       ]
     ]
   ]
-  v[ Item context menu
-    v[ from https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview ]
-    v[ Delete Item ]
-    v[ Add subitem ]
-  ]
   v[ Subitems
     v[ add (via item context menu) ]
     v[ "Back" goes up one level. ]
     v[ Indicate sub-list ]
     v[ Open sub-list ]
   ]
-  ?[ Exporting
+  v[ Status indicator
+    v[ Show ]
+    v[ Toggle
+      [ Code in place. How to hook up? ]
+    ]
+    v[ Scale image to fit ]
+    v[ Need to trigger save on increment.
+      v[ Change descendClickListener -> Control with Control::descend
+        and Control::save? ]
+    ]
+  ]
+  *[ updateTitle() isn't working ]
+  *[ On AddItem dialog, focus "title" field on open. ]
+  [ Exporting
     v[ Automatic naming? ]
     v[ From action bar ]
     v[ TODO ]
     x[ json
       [ Why bother with another format? ]
     ]
-  ]
-  *[ updateTitle() isn't working ]
-  *[ On AddItem dialog, focus "title" field on open. ]
-  [ Status indicator
-    [ Show ]
-    [ Toggle ]
+    *[ mkdirs() returns false ]
+    [ Put up toast showing where saved or error. ]
   ]
   [ Expand description on single click
     x[ Modify the TextView's maxlines attribute ]
     [ Set visibility ]
+  ]
+  [ Item context menu
+    v[ from https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview ]
+    v[ Delete Item ]
+    v[ Add subitem ]
+    [ Edit Item ]
   ]
   [ Ordering
     x[ Add manual order grab-icon
@@ -89,7 +99,7 @@
   v[ Add new item - toolbar button ]
   v[ Context menu - press and hold ]
   v[ Delete item - context menu item ]
-  [ Set flag = togglable graphic in row ]
+  v[ Set flag = togglable graphic in row ]
   [ Move - drag grabable area in row (shared with flag status?) ]
   [ Open/Close sub list
     x[ Swipe left to open sublist ]
