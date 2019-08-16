@@ -51,13 +51,13 @@
             android:textColor="@color/colorItemWeak"
             android:visibility="gone" />
 
-        <ImageView
+        <TextView
             android:id="@+id/descriptionIndicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/downArrowDesc"
-            android:visibility="visible"
-            app:srcCompat="@android:drawable/arrow_down_float" />
+            android:text="@string/description_indicator_text"
+            android:textAlignment="center" />
+
     </LinearLayout>
 
     <TextView

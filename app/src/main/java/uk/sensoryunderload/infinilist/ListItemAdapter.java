@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,13 +24,13 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
 
     public class ListItemViewHolder extends RecyclerView.ViewHolder
                               implements OnCreateContextMenuListener,
-                                         StatusIndicatorListener {
-//                              implements OnClickListener {
+                                         StatusIndicatorListener,
+                                         OnClickListener {
         public TextView title,
                         content,
-                        subitems;
+                        subitems,
+                        descriptionIndicator;
         public StatusIndicator statusIndicator;
-        public ImageView descriptionIndicator;
         private ListItem item;
         private ListControlListener listControlListener;
 
@@ -42,21 +43,23 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
             descriptionIndicator = view.findViewById(R.id.descriptionIndicator);
             statusIndicator = view.findViewById(R.id.rowStatus);
 
-//            view.setOnClickListener(this);
+            view.setOnClickListener(this);
             view.setOnCreateContextMenuListener(this);
             statusIndicator.setStatusIndicatorListener(this);
         }
 
-//        @Override
-//        public void onClick(View v) {
-//            String location = name.getText().toString();
-//            Intent goFlip = new Intent(RecyclerAdapter.context, FlipActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putString("name", location);
-//            bundle.putInt("pos", getAdapterPosition());
-//            goFlip.putExtras(bundle);
-//            context.startActivity(goFlip);
-//        }
+        @Override
+        public void onClick(View v) {
+            if (descriptionIndicator.getVisibility() == View.VISIBLE) {
+                descriptionIndicator.setVisibility(View.GONE);
+                title.setMaxLines(0);
+                content.setVisibility(View.VISIBLE);
+            } else if (item.getContent().length() != 0) {
+                descriptionIndicator.setVisibility(View.VISIBLE);
+                title.setMaxLines(1);
+                content.setVisibility(View.GONE);
+            }
+        }
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

@@ -13,5 +13,5 @@
     <string name="title">Title</string>
     <string name="description">Description</string>
 
-    <string name="downArrowDesc">Arrow indicating that the item has a hidden description.</string>
+    <string name="description_indicator_text">more</string>
 </resources>

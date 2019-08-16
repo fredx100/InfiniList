@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -182,8 +183,12 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
         }
 
         // Make sure the InfiniList directory exists.
-        if (path.mkdirs())
+        if (path.mkdirs()) {
+            Toast.makeText(this, "Exporting to " + path, Toast.LENGTH_LONG).show();
             topLevelList.writeToFile(file);
+        } else {
+            Toast.makeText(this, "Failed to make export dir : " + path, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
