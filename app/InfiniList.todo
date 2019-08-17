@@ -34,6 +34,10 @@
         and Control::save? ]
     ]
   ]
+  x[ Expand description on single click
+    x[ Modify the TextView's maxlines attribute ]
+    [ Set visibility ]
+  ]
   *[ updateTitle() isn't working ]
   *[ On AddItem dialog, focus "title" field on open. ]
   [ Exporting
@@ -44,11 +48,7 @@
       [ Why bother with another format? ]
     ]
     *[ mkdirs() returns false ]
-    [ Put up toast showing where saved or error. ]
-  ]
-  [ Expand description on single click
-    x[ Modify the TextView's maxlines attribute ]
-    [ Set visibility ]
+    v[ Put up toast showing where saved or error. ]
   ]
   [ Item context menu
     v[ from https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview ]
@@ -62,6 +62,9 @@
     ]
     [ Allow manual ordering ]
     [ Add toolbar menu ordering ]
+  ]
+  [ Widget
+    [ Allow selecting list-root ]
   ]
   [ On force close save state in onSaveInstanceState
     [ Must save
@@ -81,12 +84,9 @@
   ]
   [ ToolBar menu
     [ Top/home ]
-    [ up button ]
-    [ export ]
+    v[ up button ]
+    v[ export ]
     [ Add search ]
-  ]
-  [ Widget
-    [ Allow selecting list-root ]
   ]
   [ SSH'ing sublists
     ?[ How to indicate in exported/saved files? ]
