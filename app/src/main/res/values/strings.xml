@@ -12,6 +12,4 @@
     <!-- Add/Edit dialog labels -->
     <string name="title">Title</string>
     <string name="description">Description</string>
-
-    <string name="description_indicator_text">more</string>
 </resources>

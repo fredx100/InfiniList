@@ -21,6 +21,7 @@
         android:paddingStart="@dimen/padding"
         android:paddingEnd="@dimen/padding"
         android:background="?android:selectableItemBackground"
+        android:gravity="top"
         />
 
     <LinearLayout
@@ -36,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding"
             android:background="@color/colorItemBackground"
-            android:maxLines="1"
+            android:maxLines="0"
             android:textColor="@color/colorItemStrong"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -49,14 +50,7 @@
             android:lines="0"
             android:maxLines="0"
             android:textColor="@color/colorItemWeak"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/descriptionIndicator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/description_indicator_text"
-            android:textAlignment="center" />
+            android:visibility="visible" />
 
     </LinearLayout>
 

@@ -24,12 +24,11 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
 
     public class ListItemViewHolder extends RecyclerView.ViewHolder
                               implements OnCreateContextMenuListener,
-                                         StatusIndicatorListener,
-                                         OnClickListener {
+                                         StatusIndicatorListener {
+//                                         OnClickListener {
         public TextView title,
                         content,
-                        subitems,
-                        descriptionIndicator;
+                        subitems;
         public StatusIndicator statusIndicator;
         private ListItem item;
         private ListControlListener listControlListener;
@@ -40,26 +39,25 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
             title = view.findViewById(R.id.title);
             content = view.findViewById(R.id.content);
             subitems = view.findViewById(R.id.subitemCount);
-            descriptionIndicator = view.findViewById(R.id.descriptionIndicator);
             statusIndicator = view.findViewById(R.id.rowStatus);
 
-            view.setOnClickListener(this);
+//            view.setOnClickListener(this);
             view.setOnCreateContextMenuListener(this);
             statusIndicator.setStatusIndicatorListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
-            if (descriptionIndicator.getVisibility() == View.VISIBLE) {
-                descriptionIndicator.setVisibility(View.GONE);
-                title.setMaxLines(0);
-                content.setVisibility(View.VISIBLE);
-            } else if (item.getContent().length() != 0) {
-                descriptionIndicator.setVisibility(View.VISIBLE);
-                title.setMaxLines(1);
-                content.setVisibility(View.GONE);
-            }
-        }
+//        @Override
+//        public void onClick(View v) {
+//            if (descriptionIndicator.getVisibility() == View.VISIBLE) {
+//                descriptionIndicator.setVisibility(View.GONE);
+//                title.setMaxLines(0);
+//                content.setVisibility(View.VISIBLE);
+//            } else if (item.getContent().length() != 0) {
+//                descriptionIndicator.setVisibility(View.VISIBLE);
+//                title.setMaxLines(1);
+//                content.setVisibility(View.GONE);
+//            }
+//        }
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -84,7 +82,6 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
         public void setup() {
             setupText();
             setupSubitemCount();
-            setupDescriptionIndicator();
             setupStatusIndicator();
         }
 
@@ -104,15 +101,6 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
             } else {
                 subitems.setVisibility(View.VISIBLE);
                 subitems.setText(Integer.toString(item.size()));
-            }
-        }
-        public void setupDescriptionIndicator() {
-            if (item.getContent().length() == 0) {
-                descriptionIndicator.setVisibility(View.INVISIBLE);
-            } else if (content.getVisibility() == View.GONE) {
-                descriptionIndicator.setVisibility(View.VISIBLE);
-            } else {
-                descriptionIndicator.setVisibility(View.GONE);
             }
         }
         public void setupStatusIndicator() {
