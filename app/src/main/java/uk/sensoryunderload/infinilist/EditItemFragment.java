@@ -8,22 +8,27 @@ import android.view.View;
 import android.os.Bundle;
 import java.util.ArrayList;
 
-public class AddItemFragment extends DialogFragment {
+public class EditItemFragment extends DialogFragment {
     // https://developer.android.com/guide/topics/ui/dialogs#java
-    public static AddItemFragment newInstance(ListItem list) {
-        AddItemFragment f = new AddItemFragment();
+    // Here, if "append" is true, then list is the list to be appended
+    // to, else, "list" is the item to be edited.
+    public static EditItemFragment newInstance(ListItem list, boolean append) {
+        EditItemFragment f = new EditItemFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
+        args.putChar("mode", append ? 'A' : 'E');
         args.putString("itemAddress", list.getAddressString());
         f.setArguments(args);
 
         return f;
     }
 
-    @Override
     //public Dialog onCreateDialog(final ListView lv) {
+    @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        char appendChar = getArguments().getChar("mode"); // "A" => append, "E" => edit
+        final boolean append = (appendChar == 'A'); // true => append, false => edit
         String addressString = getArguments().getString("itemAddress");
         ArrayList<Integer> address = new ArrayList<Integer>();
         if (!addressString.isEmpty()) {
@@ -35,7 +40,11 @@ public class AddItemFragment extends DialogFragment {
         final ListItem list = ((ListView)getActivity()).goToAddress(address);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add Item");
+        if (append) {
+            builder.setTitle(R.string.editTitle_add);
+        } else {
+            builder.setTitle(R.string.editTitle_edit);
+        }
 
         // Set the custom layout
         android.view.LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -44,16 +53,28 @@ public class AddItemFragment extends DialogFragment {
         final AppCompatEditText inputTitle = view.findViewById(R.id.inputTitle);
         final AppCompatEditText inputDescription = view.findViewById(R.id.inputDescription);
 
+        int okButtonText = R.string.editPositiveButton_add;
+        if (append) {
+            // An Add dialog
+            inputTitle.requestFocus();
+        } else {
+            // An Edit dialog
+            okButtonText = R.string.editPositiveButton_edit;
+            inputTitle.setText(list.getTitle());
+            inputDescription.setText(list.getContent());
+        }
+
         // Set up the buttons
-        builder.setPositiveButton("Add", new android.content.DialogInterface.OnClickListener() {
+        builder.setPositiveButton(okButtonText, new android.content.DialogInterface.OnClickListener() {
             @Override
             public void onClick(android.content.DialogInterface dialog, int which) {
-                ((ListView)getActivity()).addItem(list,
-                                                  inputTitle.getText().toString(),
-                                                  inputDescription.getText().toString());
+                ((ListView)getActivity()).editItem(list,
+                                                   inputTitle.getText().toString(),
+                                                   inputDescription.getText().toString(),
+                                                   append);
             }
         });
-        builder.setNegativeButton("Cancel", new android.content.DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.editNegativeButton, new android.content.DialogInterface.OnClickListener() {
             @Override
             public void onClick(android.content.DialogInterface dialog, int which) {
                 dialog.cancel();

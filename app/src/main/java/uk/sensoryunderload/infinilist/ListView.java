@@ -134,20 +134,38 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
             case R.id.addsub:
                 actionAddItem(currentList.getChild(pos));
                 break;
+            case R.id.editsub:
+                actionEditItem(currentList.getChild(pos));
+                break;
         }
         return super.onContextItemSelected(item);
     }
-    // Launches the "Add Item" dialog.
     // https://developer.android.com/guide/topics/ui/dialogs#java
+    // Launches the "Add Item" dialog.
     public void actionAddItem(ListItem list) {
-        AddItemFragment dialog = AddItemFragment.newInstance(list);
+        EditItemFragment dialog = EditItemFragment.newInstance(list, true);
         dialog.show(getSupportFragmentManager(), "add item dialog");
     }
+    public void actionEditItem(ListItem list) {
+        EditItemFragment dialog = EditItemFragment.newInstance(list, false);
+        dialog.show(getSupportFragmentManager(), "edit item dialog");
+    }
 
-    public void addItem(ListItem list, String title, String content) {
-        list.add(new ListItem (title, content));
+    // If append then append a new ListItem to list, else modify list.
+    public void editItem(ListItem list, String title, String content, boolean append) {
+        if (append) {
+            list.add(new ListItem (title, content));
+        } else {
+            list.setTitle(title);
+            list.setContent(content);
+        }
+
         if (list == currentList) {
-            liAdapter.notifyItemInserted(currentList.size() - 1);
+            if (append) {
+                liAdapter.notifyItemInserted(currentList.size() - 1);
+            } else {
+                setTitle();
+            }
         } else if (list.getParent() == currentList) {
             liAdapter.notifyItemChanged(currentList.indexOf(list));
         }

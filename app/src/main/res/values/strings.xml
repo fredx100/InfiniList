@@ -6,10 +6,16 @@
     <string name="action_export">Export</string>
 
     <!-- context menu items -->
-    <string name="item_delete">Delete Item</string>
+    <string name="item_editsub">Edit Item</string>
     <string name="item_addsub">Add Sub-Item</string>
+    <string name="item_delete">Delete Item</string>
 
     <!-- Add/Edit dialog labels -->
     <string name="title">Title</string>
     <string name="description">Description</string>
+    <string name="editTitle_add">Add Item</string>
+    <string name="editTitle_edit">Edit Item</string>
+    <string name="editPositiveButton_add">Add</string>
+    <string name="editPositiveButton_edit">Ok</string>
+    <string name="editNegativeButton">Cancel</string>
 </resources>

@@ -38,8 +38,16 @@
     x[ Modify the TextView's maxlines attribute ]
     [ Set visibility ]
   ]
+  v[ Item context menu
+    v[ from https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview ]
+    v[ Delete Item ]
+    v[ Add subitem ]
+    v[ Edit Item ]
+  ]
   *[ updateTitle() isn't working ]
-  *[ On AddItem dialog, focus "title" field on open. ]
+  *[ On AddItem dialog, focus "title" field on open.
+    [ Is now focussed, but keyboard doesn't appear until press ]
+  ]
   [ Exporting
     v[ Automatic naming? ]
     v[ From action bar ]
@@ -49,12 +57,6 @@
     ]
     *[ mkdirs() returns false ]
     v[ Put up toast showing where saved or error. ]
-  ]
-  [ Item context menu
-    v[ from https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview ]
-    v[ Delete Item ]
-    v[ Add subitem ]
-    [ Edit Item ]
   ]
   [ Ordering
     x[ Add manual order grab-icon
@@ -79,7 +81,7 @@
     [ onStart or onRestoreInstanceState must act on this
       v[ Call super.onRestoreInstanceState to restore scroll pos ]
       [ load address ]
-      v[ got to address ]
+      v[ go to address ]
     ]
   ]
   [ ToolBar menu

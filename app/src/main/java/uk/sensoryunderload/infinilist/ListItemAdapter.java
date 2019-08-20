@@ -61,8 +61,9 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            menu.add(Menu.NONE, R.id.delete, Menu.NONE, R.string.item_delete);
+            menu.add(Menu.NONE, R.id.editsub, Menu.NONE, R.string.item_editsub);
             menu.add(Menu.NONE, R.id.addsub, Menu.NONE, R.string.item_addsub);
+            menu.add(Menu.NONE, R.id.delete, Menu.NONE, R.string.item_delete);
         }
 
         // StatusIndicatorListener
