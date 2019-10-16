@@ -60,19 +60,48 @@ class ListItem {
 
     void writeToFile(File file) {
         FileOutputStream fos = null;
-        OutputStreamWriter target = null;
         try {
             fos = new FileOutputStream(file);
+            writeToStream (fos);
+        } catch (IOException e) {
+            Log.e("INFLIST-LOG", "Error opening FileOutputStream from File.", e);
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                Log.e("INFLIST-LOG", "Error writing lists to disk (closing)", e);
+            }
+        }
+    }
+
+    void writeToDescriptor(FileDescriptor fileDesc) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(fileDesc);
+            writeToStream (fos);
+        } catch (IOException e) {
+            Log.e("INFLIST-LOG", "Error opening FileOutputStream from FileDescriptor.", e);
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                Log.e("INFLIST-LOG", "Error writing lists to disk (closing)", e);
+            }
+        }
+    }
+
+    private void writeToStream (FileOutputStream fos) throws IOException {
+        OutputStreamWriter target = null;
+        try {
             target = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
             writeToWriter(target, "");
         } catch (IOException e) {
             Log.e("INFLIST-LOG", "Error writing lists to disk", e);
         } finally {
             try {
-                fos.close();
                 target.close();
             } catch (IOException e) {
-                Log.e("INFLIST-LOG", "Error writing lists to disk (closing)", e);
+                Log.e("INFLIST-LOG", "Error closing OutputStreamWriter.", e);
             }
         }
     }

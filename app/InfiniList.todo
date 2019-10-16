@@ -55,8 +55,9 @@
     x[ json
       [ Why bother with another format? ]
     ]
-    *[ mkdirs() returns false ]
+    x[ mkdirs() returns false ]
     v[ Put up toast showing where saved or error. ]
+    *[ Toast message is garbage ]
   ]
   [ Ordering
     x[ Add manual order grab-icon

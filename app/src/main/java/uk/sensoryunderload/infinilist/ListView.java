@@ -2,6 +2,8 @@ package uk.sensoryunderload.infinilist;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +13,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.content.Intent;
+import android.net.Uri;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,6 +22,7 @@ import java.util.Date;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class ListView extends AppCompatActivity implements uk.sensoryunderload.infinilist.ListItemAdapter.ListControlListener {
@@ -185,6 +190,7 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
         topLevelList.writeToFile(file);
     }
 
+    /*
     void exportLists() {
         File exDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
         File path = new File(exDir, "InfiniList");
@@ -207,7 +213,59 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
         } else {
             Toast.makeText(this, "Failed to make export dir : " + path, Toast.LENGTH_LONG).show();
         }
+    }*/
+
+    private static final int READ_REQUEST_CODE = 9987; // random!
+
+    void exportLists() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        Date date = new Date();
+        String fileName = "exported-" + dateFormat.format(date) + ".todo";
+
+        // Create the text message with a string
+        Intent saveIntent = new Intent();
+        saveIntent.setAction(Intent.ACTION_CREATE_DOCUMENT);
+        saveIntent.setType("text/todo");
+        saveIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        saveIntent.putExtra(Intent.EXTRA_TITLE, fileName);
+
+        // Verify that the intent will resolve to an activity
+        if (saveIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(saveIntent, READ_REQUEST_CODE);
+        }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == READ_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                // The document selected by the user won't be returned in the intent.
+                // Instead, a URI to that document will be contained in the return intent
+                // provided to this method as a parameter.
+                // Pull that URI using resultData.getData().
+                Uri uri = null;
+                if (resultData != null) {
+                    uri = resultData.getData();
+                    Toast.makeText(this, "Exporting to " + uri.getLastPathSegment(), Toast.LENGTH_LONG).show();
+
+                    try {
+                        ParcelFileDescriptor pfd = getContentResolver().
+                                openFileDescriptor(uri, "w");
+                        topLevelList.writeToDescriptor(pfd.getFileDescriptor());
+                        // Let the document provider know you're done by closing the pfd.
+                        pfd.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                Toast.makeText(this, "File open intent failed.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle state) {
