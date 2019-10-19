@@ -121,6 +121,7 @@ class ListItem {
         }
         target.write("[ ");
         String tempTitle = title;
+        // Escape special characters in title.
         tempTitle = tempTitle.replaceAll("([\\[\\]])","\\\\$1");
         tempTitle = tempTitle.replaceAll("(\\r?\\n)","$1" + newIndent);
         target.write(tempTitle.replaceAll("([\\[\\]])","$1"));
@@ -218,7 +219,7 @@ class ListItem {
                                 case '?' : status.set(STATUS.QUERY);
                             }
                         }
-                        // Trim openning bracket
+                        // Trim opening bracket
                         line = line.replaceFirst("^[\\t ]*[vx*?]?\\[ *", "");
                         builder.empty();
                     } else {
@@ -227,6 +228,7 @@ class ListItem {
                             titleEnded = true;
                             builder.trimNewlines();
                             title = builder.toString();
+                            builder.empty();
                         }
                         ListItem li = new ListItem();
                         add(li);

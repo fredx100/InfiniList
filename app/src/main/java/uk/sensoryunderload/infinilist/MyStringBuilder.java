@@ -17,7 +17,7 @@ class MyStringBuilder {
     void trimNewlines() {
         String nl = System.lineSeparator();
         int i = nl.codePointAt(0);
-        while (codePointAt(length() - 1) == i) {
+        while ((length() > 0) && (codePointAt(length() - 1) == i)) {
             setLength(length() - 1);
         }
     }

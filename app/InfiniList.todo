@@ -1,63 +1,6 @@
 [ Features
-  v[ Add item ]
-  v[ Scroll long lists ]
-  v[ Complete saving and loading
-    v[ Save list to disk
-      v[ written routines ]
-      v[ Test routines
-        v[ Currently write output is empty
-          [ Look for an example of OutputFileStream, etc. ]
-        ]
-      ]
-    ]
-    v[ Load list from disk ]
-    v[ Save to "disk"
-      ?[ When?
-        v[ When list modified ]
-      ]
-    ]
-  ]
-  v[ Subitems
-    v[ add (via item context menu) ]
-    v[ "Back" goes up one level. ]
-    v[ Indicate sub-list ]
-    v[ Open sub-list ]
-  ]
-  v[ Status indicator
-    v[ Show ]
-    v[ Toggle
-      [ Code in place. How to hook up? ]
-    ]
-    v[ Scale image to fit ]
-    v[ Need to trigger save on increment.
-      v[ Change descendClickListener -> Control with Control::descend
-        and Control::save? ]
-    ]
-  ]
-  x[ Expand description on single click
-    x[ Modify the TextView's maxlines attribute ]
-    [ Set visibility ]
-  ]
-  v[ Item context menu
-    v[ from https://stackoverflow.com/questions/26466877/how-to-create-context-menu-for-recyclerview ]
-    v[ Delete Item ]
-    v[ Add subitem ]
-    v[ Edit Item ]
-  ]
-  *[ updateTitle() isn't working ]
   *[ On AddItem dialog, focus "title" field on open.
     [ Is now focussed, but keyboard doesn't appear until press ]
-  ]
-  [ Exporting
-    v[ Automatic naming? ]
-    v[ From action bar ]
-    v[ TODO ]
-    x[ json
-      [ Why bother with another format? ]
-    ]
-    x[ mkdirs() returns false ]
-    v[ Put up toast showing where saved or error. ]
-    *[ Toast message is garbage ]
   ]
   [ Ordering
     x[ Add manual order grab-icon
@@ -87,8 +30,9 @@
   ]
   [ ToolBar menu
     [ Top/home ]
-    v[ up button ]
+    [ up button ]
     v[ export ]
+    [ import ]
     [ Add search ]
   ]
   [ SSH'ing sublists

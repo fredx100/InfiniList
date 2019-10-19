@@ -100,8 +100,8 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
     }
 
     private void setTitle() {
-        if (getActionBar() != null) {
-            getActionBar().setTitle(currentList.getTitle());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(currentList.getTitle());
         }
     }
 
@@ -190,31 +190,6 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
         topLevelList.writeToFile(file);
     }
 
-    /*
-    void exportLists() {
-        File exDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        File path = new File(exDir, "InfiniList");
-
-        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        Date date = new Date();
-        String dateString = dateFormat.format(date);
-
-        int i = 0;
-        File file = new File(path, "exported-" + dateString + "-" + i + ".todo");
-        while (file.exists()) {
-            ++i;
-            file = new File(path, "exported-" + dateString + "-" + i + ".todo");
-        }
-
-        // Make sure the InfiniList directory exists.
-        if (path.mkdirs()) {
-            Toast.makeText(this, "Exporting to " + path, Toast.LENGTH_LONG).show();
-            topLevelList.writeToFile(file);
-        } else {
-            Toast.makeText(this, "Failed to make export dir : " + path, Toast.LENGTH_LONG).show();
-        }
-    }*/
-
     private static final int READ_REQUEST_CODE = 9987; // random!
 
     void exportLists() {
@@ -246,7 +221,8 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
                 Uri uri = null;
                 if (resultData != null) {
                     uri = resultData.getData();
-                    Toast.makeText(this, "Exporting to " + uri.getLastPathSegment(), Toast.LENGTH_LONG).show();
+                    String lps = uri.getLastPathSegment();
+                    Toast.makeText(this, "Exporting to " + lps.substring(lps.indexOf(':') + 1), Toast.LENGTH_LONG).show();
 
                     try {
                         ParcelFileDescriptor pfd = getContentResolver().
