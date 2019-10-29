@@ -25,7 +25,6 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
     public class ListItemViewHolder extends RecyclerView.ViewHolder
                               implements OnCreateContextMenuListener,
                                          StatusIndicatorListener {
-//                                         OnClickListener {
         public TextView title,
                         content,
                         subitems;
@@ -41,23 +40,9 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
             subitems = view.findViewById(R.id.subitemCount);
             statusIndicator = view.findViewById(R.id.rowStatus);
 
-//            view.setOnClickListener(this);
             view.setOnCreateContextMenuListener(this);
             statusIndicator.setStatusIndicatorListener(this);
         }
-
-//        @Override
-//        public void onClick(View v) {
-//            if (descriptionIndicator.getVisibility() == View.VISIBLE) {
-//                descriptionIndicator.setVisibility(View.GONE);
-//                title.setMaxLines(0);
-//                content.setVisibility(View.VISIBLE);
-//            } else if (item.getContent().length() != 0) {
-//                descriptionIndicator.setVisibility(View.VISIBLE);
-//                title.setMaxLines(1);
-//                content.setVisibility(View.GONE);
-//            }
-//        }
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

@@ -9,8 +9,16 @@
     [ Allow manual ordering ]
     [ Add toolbar menu ordering ]
   ]
+  [ Use F-droid build system. ]
   [ Widget
     [ Allow selecting list-root ]
+  ]
+  [ ToolBar menu
+    [ Top/home ]
+    [ up button ]
+    v[ export ]
+    [ import ]
+    [ Add search ]
   ]
   [ On force close save state in onSaveInstanceState
     [ Must save
@@ -27,13 +35,6 @@
       [ load address ]
       v[ go to address ]
     ]
-  ]
-  [ ToolBar menu
-    [ Top/home ]
-    [ up button ]
-    v[ export ]
-    [ import ]
-    [ Add search ]
   ]
   [ SSH'ing sublists
     ?[ How to indicate in exported/saved files? ]

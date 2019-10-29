@@ -8,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,11 +27,13 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class ListView extends AppCompatActivity implements uk.sensoryunderload.infinilist.ListItemAdapter.ListControlListener {
+public class ListView extends AppCompatActivity
+                      implements uk.sensoryunderload.infinilist.ListItemAdapter.ListControlListener {
     private ListItem topLevelList = new ListItem("InfiniList","");
     private ListItem currentList;
     private RecyclerView recyclerView;
     private ListItemAdapter liAdapter;
+    private ItemTouchHelper touchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,23 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(liAdapter);
+
+        // Setup ItemTouchHelper to handle item dragging
+        touchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+                    public boolean onMove(RecyclerView recyclerView,
+                            ViewHolder viewHolder, ViewHolder target) {
+                        final int from = viewHolder.getAdapterPosition();
+                        final int to = target.getAdapterPosition();
+                        if (from != to) {
+                            currentList.move(from, to);
+                            liAdapter.notifyItemMoved(from, to);
+                            return true; // true if moved, false otherwise
+                        } else
+                            return false;
+                    }
+                    public void onSwiped(ViewHolder vh, int amount) {}
+                });
 
         registerForContextMenu(recyclerView);
     }
