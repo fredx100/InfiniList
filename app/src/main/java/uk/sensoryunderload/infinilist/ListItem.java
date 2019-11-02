@@ -375,11 +375,15 @@ class ListItem {
     public void remove(int pos) { if ((pos >= 0) && (pos < children.size())) children.remove(pos); }
 
     public void move(int from, int to) {
-        if ((from >= 0) && (from < children.size()) &&
+        if ((from != to) &&
+            (from >= 0) && (from < children.size()) &&
             (to   >= 0) && (to   < children.size())) {
+            int removeFrom = from;
+            if (to > from)
+                to = to + 1;
+            else // if (to < from)
+                removeFrom = from + 1;
             children.add(to, children.get(from));
-            if (to < from)
-                from = from + 1;
             children.remove(from);
         }
     }

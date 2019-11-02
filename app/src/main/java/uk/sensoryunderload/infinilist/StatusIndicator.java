@@ -16,7 +16,7 @@ class StatusIndicator extends AppCompatImageButton {
 
     private StatusIndicatorListener mStatusIndicatorListener;
 
-    public StatusIndicator(Context context, AttributeSet attrs) {
+    StatusIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -32,7 +32,8 @@ class StatusIndicator extends AppCompatImageButton {
         return success;
     }
 
-    public void refresh() { createDrawableState(); }
+    void refresh() { createDrawableState(); }
+
     private void createDrawableState() {
         if (mStatusIndicatorListener == null)
             setImageResource(R.drawable.ic_dragcheck_none);
@@ -52,11 +53,11 @@ class StatusIndicator extends AppCompatImageButton {
         }
     }
 
-    public StatusIndicatorListener getStatusIndicatorListener() {
+    StatusIndicatorListener getStatusIndicatorListener() {
         return mStatusIndicatorListener;
     }
 
-    public void setStatusIndicatorListener(StatusIndicatorListener listener) {
+    void setStatusIndicatorListener(StatusIndicatorListener listener) {
         this.mStatusIndicatorListener = listener;
         createDrawableState();
     }

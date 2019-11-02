@@ -6,29 +6,30 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
-import android.view.View.OnClickListener;
+//import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.view.MotionEvent;
 import android.widget.TextView;
-import uk.sensoryunderload.infinilist.StatusIndicator.StatusIndicatorListener;
 
 final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListItemViewHolder> {
-    public interface ListControlListener {
+    interface ListControlListener {
         void descend(int pos);
         void save();
+        void move(int from, int to);
+        void startDrag(RecyclerView.ViewHolder viewHolder);
     }
 
-    public  ListItem itemList; // The list being displayed
+    ListItem itemList; // The list being displayed
     private int position; // The position of itemList within it's parent.
     private ListControlListener listControlListener;
 
-    public class ListItemViewHolder extends RecyclerView.ViewHolder
-                              implements OnCreateContextMenuListener,
-                                         StatusIndicatorListener {
-        public TextView title,
-                        content,
-                        subitems;
-        public StatusIndicator statusIndicator;
+    class ListItemViewHolder extends RecyclerView.ViewHolder
+                             implements OnCreateContextMenuListener,
+                                        StatusIndicator.StatusIndicatorListener {
+        TextView title,
+                 content,
+                 subitems;
+        StatusIndicator statusIndicator;
         private ListItem item;
         private ListControlListener listControlListener;
 
@@ -40,9 +41,25 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
             subitems = view.findViewById(R.id.subitemCount);
             statusIndicator = view.findViewById(R.id.rowStatus);
 
+            statusIndicator.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent motion) {
+                    boolean returnVal = false;
+
+                    switch (motion.getActionMasked()) {
+                        case MotionEvent.ACTION_DOWN:
+                            listControlListener.startDrag(getViewHolder());
+                            returnVal = true;
+                    }
+
+                    return returnVal;
+                }
+            });
+
             view.setOnCreateContextMenuListener(this);
             statusIndicator.setStatusIndicatorListener(this);
         }
+
+        private RecyclerView.ViewHolder getViewHolder() { return this; }
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -65,17 +82,17 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
                 return item.getStatus();
         }
 
-        public void setup() {
+        void setup() {
             setupText();
             setupSubitemCount();
             setupStatusIndicator();
         }
 
-        public void setupText() {
+        private void setupText() {
             title.setText(item.getTitle());
             content.setText(item.getContent());
         }
-        public void setupSubitemCount() {
+        private void setupSubitemCount() {
             subitems.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -89,7 +106,7 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
                 subitems.setText(Integer.toString(item.size()));
             }
         }
-        public void setupStatusIndicator() {
+        private void setupStatusIndicator() {
             statusIndicator.refresh();
         }
     }

@@ -1,17 +1,14 @@
 package uk.sensoryunderload.infinilist;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -28,10 +25,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class ListView extends AppCompatActivity
-                      implements uk.sensoryunderload.infinilist.ListItemAdapter.ListControlListener {
+                      implements ListItemAdapter.ListControlListener {
     private ListItem topLevelList = new ListItem("InfiniList","");
     private ListItem currentList;
-    private RecyclerView recyclerView;
     private ListItemAdapter liAdapter;
     private ItemTouchHelper touchHelper;
 
@@ -51,7 +47,7 @@ public class ListView extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
         liAdapter = new ListItemAdapter(currentList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -60,21 +56,8 @@ public class ListView extends AppCompatActivity
         recyclerView.setAdapter(liAdapter);
 
         // Setup ItemTouchHelper to handle item dragging
-        touchHelper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
-                    public boolean onMove(RecyclerView recyclerView,
-                            ViewHolder viewHolder, ViewHolder target) {
-                        final int from = viewHolder.getAdapterPosition();
-                        final int to = target.getAdapterPosition();
-                        if (from != to) {
-                            currentList.move(from, to);
-                            liAdapter.notifyItemMoved(from, to);
-                            return true; // true if moved, false otherwise
-                        } else
-                            return false;
-                    }
-                    public void onSwiped(ViewHolder vh, int amount) {}
-                });
+        touchHelper = new ItemTouchHelper(new ListCallback(this));
+        touchHelper.attachToRecyclerView(recyclerView);
 
         registerForContextMenu(recyclerView);
     }
@@ -118,6 +101,15 @@ public class ListView extends AppCompatActivity
     @Override
     public void save() {
         saveLists();
+    }
+    @Override
+    public void move(int from, int to) {
+        currentList.move(from, to);
+        liAdapter.notifyItemMoved(from, to);
+    }
+    @Override
+    public void startDrag(RecyclerView.ViewHolder viewHolder) {
+        touchHelper.startDrag (viewHolder);
     }
 
     private void setTitle() {
@@ -168,17 +160,17 @@ public class ListView extends AppCompatActivity
     }
     // https://developer.android.com/guide/topics/ui/dialogs#java
     // Launches the "Add Item" dialog.
-    public void actionAddItem(ListItem list) {
+    private void actionAddItem(ListItem list) {
         EditItemFragment dialog = EditItemFragment.newInstance(list, true);
         dialog.show(getSupportFragmentManager(), "add item dialog");
     }
-    public void actionEditItem(ListItem list) {
+    private void actionEditItem(ListItem list) {
         EditItemFragment dialog = EditItemFragment.newInstance(list, false);
         dialog.show(getSupportFragmentManager(), "edit item dialog");
     }
 
     // If append then append a new ListItem to list, else modify list.
-    public void editItem(ListItem list, String title, String content, boolean append) {
+    void editItem(ListItem list, String title, String content, boolean append) {
         if (append) {
             list.add(new ListItem (title, content));
         } else {
@@ -198,7 +190,7 @@ public class ListView extends AppCompatActivity
         saveLists();
     }
 
-    public void removeItem(int position) {
+    private void removeItem(int position) {
         currentList.remove(position);
         liAdapter.notifyItemRemoved(position);
         saveLists();
@@ -213,7 +205,7 @@ public class ListView extends AppCompatActivity
 
     private static final int READ_REQUEST_CODE = 9987; // random!
 
-    void exportLists() {
+    private void exportLists() {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         Date date = new Date();
         String fileName = "exported-" + dateFormat.format(date) + ".todo";
@@ -239,7 +231,7 @@ public class ListView extends AppCompatActivity
                 // Instead, a URI to that document will be contained in the return intent
                 // provided to this method as a parameter.
                 // Pull that URI using resultData.getData().
-                Uri uri = null;
+                Uri uri;
                 if (resultData != null) {
                     uri = resultData.getData();
                     String lps = uri.getLastPathSegment();
@@ -271,7 +263,7 @@ public class ListView extends AppCompatActivity
         super.onSaveInstanceState(state);
     }
 
-    public ListItem goToAddress(ArrayList<Integer> address) {
+    ListItem goToAddress(ArrayList<Integer> address) {
         return topLevelList.goToAddress(address);
     }
 }
