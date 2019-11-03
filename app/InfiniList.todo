@@ -6,7 +6,7 @@
     x[ Add manual order grab-icon
       [ Just use status indicator as dual purpose ]
     ]
-    *[ Allow manual ordering
+    ?[ Allow manual ordering
       [ Item decorations left after dragging ]
     ]
     [ Add toolbar menu ordering ]

@@ -384,7 +384,7 @@ class ListItem {
             else // if (to < from)
                 removeFrom = from + 1;
             children.add(to, children.get(from));
-            children.remove(from);
+            children.remove(removeFrom);
         }
     }
 
