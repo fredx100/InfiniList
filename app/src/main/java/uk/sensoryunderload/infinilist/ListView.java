@@ -1,7 +1,6 @@
 package uk.sensoryunderload.infinilist;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -25,11 +24,12 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class ListView extends AppCompatActivity implements uk.sensoryunderload.infinilist.ListItemAdapter.ListControlListener {
+public class ListView extends AppCompatActivity
+                      implements ListItemAdapter.ListControlListener {
     private ListItem topLevelList = new ListItem("InfiniList","");
     private ListItem currentList;
-    private RecyclerView recyclerView;
     private ListItemAdapter liAdapter;
+    private ItemTouchHelper touchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +47,17 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
         liAdapter = new ListItemAdapter(currentList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(liAdapter);
+
+        // Setup ItemTouchHelper to handle item dragging
+        touchHelper = new ItemTouchHelper(new ListCallback(this));
+        touchHelper.attachToRecyclerView(recyclerView);
 
         registerForContextMenu(recyclerView);
     }
@@ -97,6 +101,15 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
     @Override
     public void save() {
         saveLists();
+    }
+    @Override
+    public void move(int from, int to) {
+        currentList.move(from, to);
+        liAdapter.notifyItemMoved(from, to);
+    }
+    @Override
+    public void startDrag(RecyclerView.ViewHolder viewHolder) {
+        touchHelper.startDrag (viewHolder);
     }
 
     private void setTitle() {
@@ -151,17 +164,17 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
     }
     // https://developer.android.com/guide/topics/ui/dialogs#java
     // Launches the "Add Item" dialog.
-    public void actionAddItem(ListItem list) {
+    private void actionAddItem(ListItem list) {
         EditItemFragment dialog = EditItemFragment.newInstance(list, true);
         dialog.show(getSupportFragmentManager(), "add item dialog");
     }
-    public void actionEditItem(ListItem list) {
+    private void actionEditItem(ListItem list) {
         EditItemFragment dialog = EditItemFragment.newInstance(list, false);
         dialog.show(getSupportFragmentManager(), "edit item dialog");
     }
 
     // If append then append a new ListItem to list, else modify list.
-    public void editItem(ListItem list, String title, String content, boolean append) {
+    void editItem(ListItem list, String title, String content, boolean append) {
         if (append) {
             list.add(new ListItem (title, content));
         } else {
@@ -181,7 +194,7 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
         saveLists();
     }
 
-    public void removeItem(int position) {
+    private void removeItem(int position) {
         currentList.remove(position);
         liAdapter.notifyItemRemoved(position);
         saveLists();
@@ -209,7 +222,7 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
         }
     }
 
-    void exportLists() {
+    private void exportLists() {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         Date date = new Date();
         String fileName = "exported-" + dateFormat.format(date) + ".todo";
@@ -303,7 +316,7 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
         super.onSaveInstanceState(state);
     }
 
-    public ListItem goToAddress(ArrayList<Integer> address) {
+    ListItem goToAddress(ArrayList<Integer> address) {
         return topLevelList.goToAddress(address);
     }
 }
