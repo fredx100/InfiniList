@@ -3,6 +3,7 @@
 
     <!-- action bar menu items -->
     <string name="action_settings">Settings</string>
+    <string name="action_import">Import</string>
     <string name="action_export">Export</string>
 
     <!-- context menu items -->

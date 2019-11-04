@@ -117,6 +117,10 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
             case R.id.action_settings :
                 break;
 
+            case R.id.action_import :
+                importLists();
+                break;
+
             case R.id.action_export :
                 exportLists();
                 break;
@@ -190,7 +194,20 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
         topLevelList.writeToFile(file);
     }
 
-    private static final int READ_REQUEST_CODE = 9987; // random!
+    private static final int EXPORT_REQUEST_CODE = 9987; // random!
+    private static final int IMPORT_REQUEST_CODE = 9986; // random!
+
+    void importLists() {
+        // Create the text message with a string
+        Intent importIntent = new Intent();
+        importIntent.setAction(Intent.ACTION_GET_CONTENT);
+        importIntent.setType("*/*");
+
+        // Verify that the intent will resolve to an activity
+        if (importIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(importIntent, IMPORT_REQUEST_CODE);
+        }
+    }
 
     void exportLists() {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -206,42 +223,78 @@ public class ListView extends AppCompatActivity implements uk.sensoryunderload.i
 
         // Verify that the intent will resolve to an activity
         if (saveIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(saveIntent, READ_REQUEST_CODE);
+            startActivityForResult(saveIntent, EXPORT_REQUEST_CODE);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        if (requestCode == READ_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                // The document selected by the user won't be returned in the intent.
-                // Instead, a URI to that document will be contained in the return intent
-                // provided to this method as a parameter.
-                // Pull that URI using resultData.getData().
-                Uri uri = null;
-                if (resultData != null) {
-                    uri = resultData.getData();
-                    String lps = uri.getLastPathSegment();
-                    Toast.makeText(this, "Exporting to " + lps.substring(lps.indexOf(':') + 1), Toast.LENGTH_LONG).show();
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == EXPORT_REQUEST_CODE) {
+                exportToFile(resultData);
+            } else if (requestCode == IMPORT_REQUEST_CODE) {
+                importFromFile(resultData);
+            }
+        } else {
+            Toast.makeText(this, "File open intent failed.", Toast.LENGTH_LONG).show();
+        }
+    }
 
-                    try {
-                        ParcelFileDescriptor pfd = getContentResolver().
-                                openFileDescriptor(uri, "w");
-                        topLevelList.writeToDescriptor(pfd.getFileDescriptor());
+    private void importFromFile(Intent resultData) {
+        if (resultData != null) {
+            Uri uri = resultData.getData();
+            if (uri != null) {
+                try {
+                    ParcelFileDescriptor pfd = getContentResolver().
+                        openFileDescriptor(uri, "r");
+                    if (pfd != null) {
+                        ListItem li = new ListItem("InfiniList", "");
+                        li.readFromDescriptor(pfd.getFileDescriptor());
+                        topLevelList = li;
+                        currentList = li;
+                        saveLists();
+                        liAdapter.itemList = currentList;
+                        liAdapter.notifyDataSetChanged();
+                        setTitle();
                         // Let the document provider know you're done by closing the pfd.
                         pfd.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } else {
-                Toast.makeText(this, "File open intent failed.", Toast.LENGTH_LONG).show();
             }
         }
     }
 
+    private void exportToFile(Intent resultData) {
+        // The document selected by the user won't be returned in the intent.
+        // Instead, a URI to that document will be contained in the return intent
+        // provided to this method as a parameter.
+        // Pull that URI using resultData.getData().
+        if (resultData != null) {
+            Uri uri = resultData.getData();
+            if (uri != null) {
+                String lps = uri.getLastPathSegment();
+                if (lps != null) {
+                    Toast.makeText(this, "Exporting to " + lps.substring(lps.indexOf(':') + 1), Toast.LENGTH_LONG).show();
+                }
+
+                try {
+                    ParcelFileDescriptor pfd = getContentResolver().
+                        openFileDescriptor(uri, "w");
+                    if (pfd != null){
+                        topLevelList.writeToDescriptor(pfd.getFileDescriptor());
+                        // Let the document provider know you're done by closing the pfd.
+                        pfd.close();
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     @Override
     public void onSaveInstanceState(Bundle state) {

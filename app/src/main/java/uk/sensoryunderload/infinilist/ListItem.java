@@ -15,7 +15,7 @@ enum STATUS {
 
     STATUS(int i) { val = i; }
     private int val;
-    public int getValue() { return val; }
+    int getValue() { return val; }
 }
 
 // StatusFlag
@@ -39,19 +39,19 @@ class ListItem {
     private ListItem parent;
     private ArrayList<ListItem> children;
 
-    public ListItem(String _title, String _content, StatusFlag _sFlag) {
+    ListItem(String _title, String _content, StatusFlag _sFlag) {
         title = _title;
         content = _content;
         status = _sFlag;
         children = new java.util.ArrayList<>();
     }
-    public ListItem(String _title, String _content) {
+    ListItem(String _title, String _content) {
         title = _title;
         content = _content;
         status = new StatusFlag();
         children = new java.util.ArrayList<>();
     }
-    public ListItem() {
+    ListItem() {
         title = "";
         content = "";
         status = new StatusFlag();
@@ -156,28 +156,52 @@ class ListItem {
         target.flush();
     }
 
-    public void readFromFile(File file) {
+    void readFromFile(File file) {
         FileInputStream fis = null;
-        BufferedReader br = null;
         try {
             fis = new FileInputStream(file);
-            br = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
-            readFromBuffer("", br, 0);
+            readFromInputStream (fis);
         } catch (IOException e) {
             Log.e("INFLIST-LOG", "Error reading lists from disk", e);
         } finally {
             try {
-                br.close();
-                fis.close();
+                if (fis != null)
+                    fis.close();
             } catch (IOException e) {
                 Log.e("INFLIST-LOG", "Error reading lists from disk (closing)", e);
             }
         }
     }
 
+    void readFromDescriptor(FileDescriptor fd) {
+        FileInputStream fis = null;
+
+        fis = new FileInputStream(fd);
+        if (fis != null)
+            readFromInputStream (fis);
+
+        try {
+            if (fis != null)
+                fis.close();
+        } catch (IOException e) {
+            Log.e("INFLIST-LOG", "Error reading lists from disk (closing)", e);
+        }
+    }
+
+    private void readFromInputStream(FileInputStream fileInputStream) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8));
+        readFromBuffer("", br, 0);
+
+        try {
+            br.close();
+        } catch (IOException e) {
+            Log.e("INFLIST-LOG", "Error reading lists from disk (closing)", e);
+        }
+    }
+
     // The following assumes the first unescaped '[' encountered is for
     // this item.
-    private int readFromBuffer(String firstLine, BufferedReader reader, int lineNum) {
+    private void readFromBuffer(String firstLine, BufferedReader reader, int lineNum) {
         boolean itemStarted = false;
         boolean itemEnded = false;
         boolean titleStarted = false;
@@ -300,11 +324,9 @@ class ListItem {
                 title = builder.toString();
             }
         }
-
-        return lineNum;
     }
 
-    public ArrayList<Integer> getAddress() {
+    ArrayList<Integer> getAddress() {
         if (parent == null) {
             return new ArrayList<Integer>();
         } else {
@@ -313,7 +335,7 @@ class ListItem {
             return address;
         }
     }
-    public String getAddressString() {
+    String getAddressString() {
         ArrayList<Integer> address = getAddress();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < (address.size() - 1); ++i) {
@@ -326,7 +348,7 @@ class ListItem {
         return sb.toString();
     }
 
-    public ListItem goToAddress(ArrayList<Integer> address) {
+    ListItem goToAddress(ArrayList<Integer> address) {
         if (address.isEmpty()) {
             return this;
         } else {
@@ -336,51 +358,51 @@ class ListItem {
         }
     }
 
-    public boolean hasParent() {
+    boolean hasParent() {
         return (parent != null);
     }
 
-    public ListItem getParent() {
+    ListItem getParent() {
         return parent;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
-    public void setTitle(String _title) {
+    void setTitle(String _title) {
         title = _title;
     }
 
-    public String getContent() {
+    String getContent() {
         return content;
     }
-    public void setContent(String _content) {
+    void setContent(String _content) {
         content = _content;
     }
 
-    public StatusFlag getStatus() {
+    StatusFlag getStatus() {
         return status;
     }
 
-    public ArrayList<ListItem> getChildren() { return children; }
-    public ListItem getChild(int i) { return children.get(i); }
-    public int indexOf(ListItem li) { return children.indexOf(li); }
+    ArrayList<ListItem> getChildren() { return children; }
+    ListItem getChild(int i) { return children.get(i); }
+    int indexOf(ListItem li) { return children.indexOf(li); }
 
-    public int size() { return children.size(); }
+    int size() { return children.size(); }
 
-    public void setParent(ListItem li) { parent = li; }
+    void setParent(ListItem li) { parent = li; }
 
-    public void add(ListItem li) { li.setParent(this); children.add(li); }
+    void add(ListItem li) { li.setParent(this); children.add(li); }
 
-    public void remove(int pos) { if ((pos >= 0) && (pos < children.size())) children.remove(pos); }
+    void remove(int pos) { if ((pos >= 0) && (pos < children.size())) children.remove(pos); }
 
-    public void changeStatus() {
+    void changeStatus() {
         status.cycle();
     }
-    public void setStatus(STATUS s) {
+    void setStatus(STATUS s) {
         status.set(s);
     }
-    public void setStatus(StatusFlag s) {
+    void setStatus(StatusFlag s) {
         status.set(s);
     }
 }

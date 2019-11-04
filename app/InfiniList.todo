@@ -32,7 +32,11 @@
     [ Top/home ]
     [ up button ]
     v[ export ]
-    [ import ]
+    [ import
+      v[ Replace top level list ]
+      [ Replace current list ]
+      [ Add as sub-item ]
+    ]
     [ Add search ]
   ]
   [ SSH'ing sublists
