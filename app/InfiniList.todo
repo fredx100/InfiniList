@@ -8,6 +8,7 @@
     ]
     [ Allow manual ordering
       v[ Functionality ]
+      v[ Blocking status toggling ]
       [ Item decorations left after dragging ]
     ]
     [ Add toolbar menu ordering ]

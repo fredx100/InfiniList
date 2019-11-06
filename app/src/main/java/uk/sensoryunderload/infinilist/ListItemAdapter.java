@@ -48,7 +48,7 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
                     switch (motion.getActionMasked()) {
                         case MotionEvent.ACTION_DOWN:
                             listControlListener.startDrag(getViewHolder());
-                            returnVal = true;
+                            returnVal = false;
                     }
 
                     return returnVal;
