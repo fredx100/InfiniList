@@ -4,7 +4,7 @@
     tools:context="uk.sensoryunderload.infinilist.ListView">
     <item
         android:id="@+id/action_add"
-        android:icon="@android:drawable/ic_input_add"
+        android:icon="@drawable/ic_add_icon"
         android:title="@add"
         app:showAsAction="ifRoom" />
     <item

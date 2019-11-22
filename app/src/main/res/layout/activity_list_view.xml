@@ -23,7 +23,9 @@
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:title="@string/app_name" />
+            app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:title="@string/app_name"
+            app:titleTextAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
