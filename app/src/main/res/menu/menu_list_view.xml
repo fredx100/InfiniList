@@ -7,9 +7,17 @@
         android:icon="@drawable/ic_add_icon"
         android:title="@add"
         app:showAsAction="ifRoom" />
-    <item
+<!--    <item
         android:id="@+id/action_order"
         android:title="@order"
+            app:showAsAction="never" /> -->
+    <item
+        android:id="@+id/action_uncheck_all"
+        android:title="@string/action_uncheck_all"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete_all"
+        android:title="@string/action_delete_all"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_import"
@@ -19,9 +27,9 @@
         android:id="@+id/action_export"
         android:title="@string/action_export"
         app:showAsAction="never" />
-    <item
+<!--    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never" /> -->
 </menu>

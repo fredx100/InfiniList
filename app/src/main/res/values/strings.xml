@@ -2,9 +2,11 @@
     <string name="app_name">InfiniList</string>
 
     <!-- action bar menu items -->
-    <string name="action_settings">Settings</string>
+    <string name="action_uncheck_all">Uncheck All</string>
+    <string name="action_delete_all">Delete All</string>
     <string name="action_import">Import</string>
     <string name="action_export">Export</string>
+    <string name="action_settings">Settings</string>
 
     <!-- context menu items -->
     <string name="item_editsub">Edit Item</string>

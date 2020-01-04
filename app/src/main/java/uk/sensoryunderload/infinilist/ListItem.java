@@ -419,4 +419,9 @@ class ListItem {
     void setStatus(StatusFlag s) {
         status.set(s);
     }
+    void uncheckAllChildren() {
+        for(int i = 0; i < children.size(); ++i) {
+            children.get(i).setStatus(STATUS.NONE);
+        }
+    }
 }

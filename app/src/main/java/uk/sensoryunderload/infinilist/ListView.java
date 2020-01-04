@@ -3,6 +3,7 @@ package uk.sensoryunderload.infinilist;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import android.content.Intent;
+import android.content.DialogInterface;
 import android.net.Uri;
 
 import java.text.DateFormat;
@@ -138,6 +140,14 @@ public class ListView extends AppCompatActivity
                 exportLists();
                 break;
 
+            case R.id.action_uncheck_all :
+                actionUncheckAll();
+                break;
+
+            case R.id.action_delete_all :
+                actionDeleteAll();
+                break;
+
             case R.id.action_add :
                 actionAddItem(currentList);
                 break;
@@ -171,6 +181,33 @@ public class ListView extends AppCompatActivity
     private void actionEditItem(ListItem list) {
         EditItemFragment dialog = EditItemFragment.newInstance(list, false);
         dialog.show(getSupportFragmentManager(), "edit item dialog");
+    }
+    private void actionUncheckAll() {
+        currentList.uncheckAllChildren();
+        liAdapter.notifyDataSetChanged();
+        saveLists();
+    }
+    private void actionDeleteAll() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Delete ALL Items?");
+        alert.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                currentList.getChildren().clear();
+                liAdapter.notifyDataSetChanged();
+                saveLists();
+                dialog.dismiss();
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+            }
+        });
+
+        alert.show();
     }
 
     // If append then append a new ListItem to list, else modify list.
