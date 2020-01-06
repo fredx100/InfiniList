@@ -1,7 +1,4 @@
 [ Features
-  *[ On AddItem dialog, focus "title" field on open.
-    [ Is now focussed, but keyboard doesn't appear until press ]
-  ]
   [ Ordering
     x[ Add manual order grab-icon
       [ Just use status indicator as dual purpose ]
@@ -12,6 +9,15 @@
       [ Item decorations left after dragging ]
     ]
     [ Add toolbar menu ordering ]
+  ]
+  [ Prep for F-droid.org
+    v[ New icon ]
+    [ Help
+      [ From app menu ]
+      [ On first start ]
+    ]
+    [ screen shots ]
+    [ put description in source tree ]
   ]
   [ Use F-droid build system. ]
   [ Widget
@@ -28,7 +34,18 @@
     ]
     [ Add search ]
   ]
+  [ SSH'ing sublists
+    ?[ How to indicate in exported/saved files? ]
+    ?[ How to access ssh/git? ]
+    ?[ schedule? ]
+  ]
+
+  ?[ On AddItem dialog, focus "title" field on open.
+    [ Is now focussed, but keyboard doesn't appear until press ]
+  ]
   [ On force close save state in onSaveInstanceState
+    ?[ Not sure, current behaviour - returning to main list on restart
+    - seems fine. ]
     [ Must save
       [ current list
         v[ ListItem::writeAddress ]
@@ -43,11 +60,6 @@
       [ load address ]
       v[ go to address ]
     ]
-  ]
-  [ SSH'ing sublists
-    ?[ How to indicate in exported/saved files? ]
-    ?[ How to access ssh/git? ]
-    ?[ schedule? ]
   ]
 ]
 
