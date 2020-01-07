@@ -1,0 +1,3 @@
+A list app with infinitely nestable lists.
+
+Items have a title and description, and may have one of a number of "checked" states (or not). Any item may have an arbitrary number of sub-items.

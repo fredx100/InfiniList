@@ -10,43 +10,6 @@
     ]
     [ Add toolbar menu ordering ]
   ]
-  [ Prep for F-droid.org
-    v[ New icon ]
-    [ Help
-      v[ Contents
-        [ Sub-item count
-
-          Indicates that this item has sub-items, and how many. Tap to
-          descend into this sub-list.
-        ]
-        [ Item handle
-
-          Drag the item handle to manually reorder.
-          Tap the item handle to cycle the item flag.
-        ]
-        [ Item body
-
-          Displays the item title and description. Long-press for the
-          item's context menu.
-        ]
-        [ Create Sublist
-
-          To create a sub-list of an item, select "Add Sub-item" from
-          the item's context menu.
-        ]
-        [ Add new item
-
-          Select the plus icon from the action bar at the top of the
-          screen.
-        ]
-      ]
-
-      v[ From app menu ]
-      [ On first start ]
-    ]
-    [ screen shots ]
-    [ put description in source tree ]
-  ]
   [ Use F-droid build system. ]
   [ Widget
     [ Allow selecting list-root ]
