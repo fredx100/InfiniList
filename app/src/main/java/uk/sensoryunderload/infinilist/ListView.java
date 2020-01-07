@@ -35,7 +35,9 @@ public class ListView extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        loadLists(); // Sets topLevelList
+        if (!loadLists()) { // Sets topLevelList
+            showHelp();
+        }
         // Set current list to appropriate sub-list, if appropriate.
         ArrayList<Integer> address = new ArrayList<Integer>();
         if (savedInstanceState != null) {
@@ -64,13 +66,17 @@ public class ListView extends AppCompatActivity
         registerForContextMenu(recyclerView);
     }
 
-    private void loadLists() { loadLists("Main.todo"); }
-    private void loadLists(String name) {
+    private boolean loadLists() { return loadLists("Main.todo"); }
+    private boolean loadLists(String name) {
+        boolean exists = false;
         File path = getApplicationContext().getFilesDir();
         File file = new File(path, name);
         if (file.exists()) {
             topLevelList.readFromFile(file);
+            exists = true;
         }
+
+        return exists;
     }
 
     @Override
