@@ -129,8 +129,8 @@ public class ListView extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.action_settings :
-                break;
+//            case R.id.action_settings :
+//                break;
 
             case R.id.action_import :
                 importLists();
@@ -150,6 +150,10 @@ public class ListView extends AppCompatActivity
 
             case R.id.action_add :
                 actionAddItem(currentList);
+                break;
+
+            case R.id.action_help :
+                showHelp();
                 break;
         }
 
@@ -181,6 +185,10 @@ public class ListView extends AppCompatActivity
     private void actionEditItem(ListItem list) {
         EditItemFragment dialog = EditItemFragment.newInstance(list, false);
         dialog.show(getSupportFragmentManager(), "edit item dialog");
+    }
+    private void showHelp() {
+        HelpFragment dialog = new HelpFragment();
+        dialog.show(getSupportFragmentManager(), "help dialog");
     }
     private void actionUncheckAll() {
         currentList.uncheckAllChildren();

@@ -7,6 +7,7 @@
     <string name="action_import">Import</string>
     <string name="action_export">Export</string>
     <string name="action_settings">Settings</string>
+    <string name="action_help">Help</string>
 
     <!-- context menu items -->
     <string name="item_editsub">Edit Item</string>
@@ -21,4 +22,15 @@
     <string name="editPositiveButton_add">Add</string>
     <string name="editPositiveButton_edit">Ok</string>
     <string name="editNegativeButton">Cancel</string>
+
+    <!-- Help text -->
+    <string name="help_title">Help</string>
+    <string name="help_dismiss">Dismiss</string>
+    <string name="help_item_handle">1. Item handle: Drag to manually reorder the list. Tap to cycle the item flag.</string>
+    <string name="help_item_body">2. Item body: Displays the item title and description. Long-press for the item\'s context menu.</string>
+    <string name="help_sub_item">3. Sub-item count: Indicates that this item has sub-items, and how many. Tap to descend into this sub-list.</string>
+    <string name="help_add_item_title">Adding a new item</string>
+    <string name="help_add_item_body">To add a new item tap the plus icon on the action bar at the top of the screen.</string>
+    <string name="help_sub_list_title">Creating a Sub-list</string>
+    <string name="help_sub_list_body">To create a sub-list within an item select \"Add Sub-item\" from the item\'s context menu.</string>
 </resources>
