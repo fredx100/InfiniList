@@ -10,9 +10,11 @@
     ]
     [ Add toolbar menu ordering ]
   ]
-  [ Use F-droid build system. ]
   [ Widget
-    [ Allow selecting list-root ]
+    *[ Create basic implementation ]
+    [ Allow selecting list-root from app ]
+    [ Manage update triggering from app ]
+    [ Config UI ]
   ]
   [ ToolBar menu
     [ Top/home ]
