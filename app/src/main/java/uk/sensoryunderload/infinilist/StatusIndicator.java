@@ -16,7 +16,7 @@ class StatusIndicator extends AppCompatImageButton {
 
     private StatusIndicatorListener mStatusIndicatorListener;
 
-    StatusIndicator(Context context, AttributeSet attrs) {
+    public StatusIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
