@@ -32,12 +32,12 @@ public class ListView extends AppCompatActivity
     private ListItem currentList;
     private ListItemAdapter liAdapter;
     private ItemTouchHelper touchHelper;
+    private boolean shownHelp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (!loadLists()) { // Sets topLevelList
-            showHelp();
-        }
+        loadLists(); // Sets topLevelList
+        shownHelp = (topLevelList.size() != 0);
         // Set current list to appropriate sub-list, if appropriate.
         ArrayList<Integer> address = new ArrayList<Integer>();
         if (savedInstanceState != null) {
@@ -64,6 +64,15 @@ public class ListView extends AppCompatActivity
         touchHelper.attachToRecyclerView(recyclerView);
 
         registerForContextMenu(recyclerView);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!shownHelp) {
+            showHelp();
+            shownHelp = true;
+        }
     }
 
     private boolean loadLists() { return loadLists("Main.todo"); }
