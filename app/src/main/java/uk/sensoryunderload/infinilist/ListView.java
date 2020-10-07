@@ -51,7 +51,7 @@ public class ListView extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        ListRecyclerView recyclerView = findViewById(R.id.recycler_view);
 
         liAdapter = new ListItemAdapter(currentList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
