@@ -8,16 +8,16 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class ListRecyclerView extends RecyclerView {
-    boolean mThisEventNotOnStatusIndicator;
+    ListLayoutManager mListLayoutManager;
 
     public ListRecyclerView(Context context) {
-        super (context);
+        super(context);
     }
     public ListRecyclerView(Context context, AttributeSet attrs) {
-        super (context, attrs);
+        super(context, attrs);
     }
     public ListRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super (context, attrs, defStyleAttr);
+        super(context, attrs, defStyleAttr);
     }
 
     // We override touch handling so the RecyclerView doesn't handle
@@ -25,15 +25,22 @@ public class ListRecyclerView extends RecyclerView {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent e) {
         if (e.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            mThisEventNotOnStatusIndicator = true;
+            mListLayoutManager.unblockScrolling();
+
             View child = findChildViewUnder(e.getX(), e.getY());
             if (child != null) {
                 StatusIndicator statusInd = child.findViewById(R.id.rowStatus);
-                if (statusInd != null) {
-                    mThisEventNotOnStatusIndicator = (e.getX() > statusInd.getWidth());
+                if ((statusInd != null) &&
+                    (e.getX() <= statusInd.getWidth())) {
+                    mListLayoutManager.blockScrolling();
                 }
             }
         }
-        return (mThisEventNotOnStatusIndicator && super.onInterceptTouchEvent(e));
+        return super.onInterceptTouchEvent(e);
+    }
+
+    public void setListLayoutManager(ListLayoutManager lm) {
+        mListLayoutManager = lm;
+        setLayoutManager(mListLayoutManager);
     }
 }

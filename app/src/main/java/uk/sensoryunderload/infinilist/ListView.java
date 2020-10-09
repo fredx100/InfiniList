@@ -53,10 +53,10 @@ public class ListView extends AppCompatActivity
 
         ListRecyclerView recyclerView = findViewById(R.id.recycler_view);
 
-        liAdapter = new ListItemAdapter(currentList, this);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setListLayoutManager(new ListLayoutManager(getApplicationContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        liAdapter = new ListItemAdapter(currentList, this);
         recyclerView.setAdapter(liAdapter);
 
         // Setup ItemTouchHelper to handle item dragging
