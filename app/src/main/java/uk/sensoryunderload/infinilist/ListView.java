@@ -33,6 +33,7 @@ public class ListView extends AppCompatActivity
     private ListItemAdapter liAdapter;
     private ItemTouchHelper touchHelper;
     private boolean shownHelp;
+    private boolean saveNeeded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +68,21 @@ public class ListView extends AppCompatActivity
     }
 
     @Override
+    protected void onPause() {
+        if (saveNeeded) {
+            saveLists();
+        }
+        super.onPause();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         if (!shownHelp) {
             showHelp();
             shownHelp = true;
         }
+        saveNeeded = false;
     }
 
     private boolean loadLists() { return loadLists("Main.todo"); }
@@ -117,7 +127,7 @@ public class ListView extends AppCompatActivity
     }
     @Override
     public void save() {
-        saveLists();
+        saveNeeded = true;
     }
     @Override
     public void move(int from, int to) {
@@ -208,7 +218,7 @@ public class ListView extends AppCompatActivity
     private void actionUncheckAll() {
         currentList.uncheckAllChildren();
         liAdapter.notifyDataSetChanged();
-        saveLists();
+        saveNeeded = true;
     }
     private void actionDeleteAll() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -218,7 +228,7 @@ public class ListView extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which) {
                 currentList.getChildren().clear();
                 liAdapter.notifyDataSetChanged();
-                saveLists();
+                saveNeeded = true;
                 dialog.dismiss();
             }
         });
@@ -251,13 +261,13 @@ public class ListView extends AppCompatActivity
         } else if (list.getParent() == currentList) {
             liAdapter.notifyItemChanged(currentList.indexOf(list));
         }
-        saveLists();
+        saveNeeded = true;
     }
 
     private void removeItem(int position) {
         currentList.remove(position);
         liAdapter.notifyItemRemoved(position);
-        saveLists();
+        saveNeeded = true;
     }
 
     private void saveLists() { saveLists("Main.todo"); }
@@ -325,7 +335,7 @@ public class ListView extends AppCompatActivity
                         li.readFromDescriptor(pfd.getFileDescriptor());
                         topLevelList = li;
                         currentList = li;
-                        saveLists();
+                        saveNeeded = true;
                         liAdapter.itemList = currentList;
                         liAdapter.notifyDataSetChanged();
                         setTitle();
