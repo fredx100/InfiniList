@@ -40,6 +40,7 @@ class ListCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
         if (origFrom != to) {
             listControlListener.save();
             origFrom = -1;

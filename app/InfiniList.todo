@@ -1,20 +1,15 @@
 [ Features
-  [ Ordering
-    x[ Add manual order grab-icon
-      [ Just use status indicator as dual purpose ]
-    ]
-    [ Allow manual ordering
-      v[ Functionality ]
-      v[ Blocking status toggling ]
-      [ Item decorations left after dragging ]
-    ]
-    [ Add toolbar menu ordering ]
-  ]
   [ Widget
     *[ Create basic implementation ]
     [ Allow selecting list-root from app ]
     [ Manage update triggering from app ]
     [ Config UI ]
+  ]
+  [ Ordering
+    [ Add toolbar menu ordering
+      [ alpha-numeric ]
+      [ random ]
+    ]
   ]
   [ ToolBar menu
     [ Top/home ]
@@ -25,7 +20,7 @@
       [ Replace current list ]
       [ Add as sub-item ]
     ]
-    [ Add search ]
+    ?[ Add search ]
   ]
   [ SSH'ing sublists
     ?[ How to indicate in exported/saved files? ]
@@ -35,24 +30,6 @@
 
   ?[ On AddItem dialog, focus "title" field on open.
     [ Is now focussed, but keyboard doesn't appear until press ]
-  ]
-  [ On force close save state in onSaveInstanceState
-    ?[ Not sure, current behaviour - returning to main list on restart
-    - seems fine. ]
-    [ Must save
-      [ current list
-        v[ ListItem::writeAddress ]
-      ]
-      v[ current scroll position
-        x[ The default version does this for us. Call
-          super.onSaveInstanceState for this. ]
-      ]
-    ]
-    [ onStart or onRestoreInstanceState must act on this
-      v[ Call super.onRestoreInstanceState to restore scroll pos ]
-      [ load address ]
-      v[ go to address ]
-    ]
   ]
 ]
 

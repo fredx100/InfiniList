@@ -6,30 +6,53 @@ package uk.sensoryunderload.infinilist;
 import android.support.v7.widget.AppCompatImageButton;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 
 class StatusIndicator extends AppCompatImageButton {
 
     interface StatusIndicatorListener {
         void incrementStatus();
         StatusFlag getStatus();
+        void startDrag();
+    }
+
+    class GestureTouch extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent event) {
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            if (mStatusIndicatorListener != null)
+                mStatusIndicatorListener.incrementStatus();
+            createDrawableState();
+            return true;
+        }
+
+        @Override
+        public boolean onScroll (MotionEvent e1,
+                                 MotionEvent e2,
+                                 float distanceX,
+                                 float distanceY) {
+            mStatusIndicatorListener.startDrag();
+            return true;
+        }
     }
 
     private StatusIndicatorListener mStatusIndicatorListener;
+    private GestureDetector mTouchDetector;
 
-    StatusIndicator(Context context, AttributeSet attrs) {
+    public StatusIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mTouchDetector = new GestureDetector(context,new GestureTouch());
     }
 
     @Override
-    public boolean performClick() {
-        super.performClick();
-        boolean success = true;
-        if (mStatusIndicatorListener != null)
-            mStatusIndicatorListener.incrementStatus();
-        else
-            success = false;
-        createDrawableState();
-        return success;
+    public boolean onTouchEvent(MotionEvent event) {
+        mTouchDetector.onTouchEvent(event);
+        return true;
     }
 
     void refresh() { createDrawableState(); }

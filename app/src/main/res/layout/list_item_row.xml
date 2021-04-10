@@ -29,6 +29,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@color/colorItemBackground"
+        android:minHeight="41sp"
         android:orientation="vertical">
 
         <TextView
@@ -36,8 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding"
-            android:background="@color/colorItemBackground"
-            android:maxLines="0"
+            android:minHeight="24sp"
             android:textColor="@color/colorItemStrong"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -46,11 +47,10 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorItemBackground"
-            android:lines="0"
-            android:maxLines="0"
+            android:layout_marginBottom="2sp"
+            android:minHeight="16sp"
             android:textColor="@color/colorItemWeak"
-            android:visibility="visible" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 

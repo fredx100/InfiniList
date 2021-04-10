@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
-//import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.MotionEvent;
 import android.widget.TextView;
@@ -41,20 +40,6 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
             subitems = view.findViewById(R.id.subitemCount);
             statusIndicator = view.findViewById(R.id.rowStatus);
 
-            statusIndicator.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent motion) {
-                    boolean returnVal = false;
-
-                    switch (motion.getActionMasked()) {
-                        case MotionEvent.ACTION_DOWN:
-                            listControlListener.startDrag(getViewHolder());
-                            returnVal = false;
-                    }
-
-                    return returnVal;
-                }
-            });
-
             view.setOnCreateContextMenuListener(this);
             statusIndicator.setStatusIndicatorListener(this);
         }
@@ -80,6 +65,10 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
                 return new StatusFlag();
             else
                 return item.getStatus();
+        }
+        @Override
+        public void startDrag() {
+            listControlListener.startDrag(getViewHolder());
         }
 
         void setup() {
