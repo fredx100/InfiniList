@@ -1,8 +1,15 @@
 [ Features
   [ Widget
-    *[ Create basic implementation ]
+    v[ Create basic implementation ]
+    [ Implement Content provider ]
     [ Allow selecting list-root from app ]
     [ Manage update triggering from app ]
+    [ Launch App from tap on widget ]
+    ?[ Add buttons?
+
+      [ launch top-level list ]
+      [ add item ]
+    ]
     [ Config UI ]
   ]
   [ Ordering

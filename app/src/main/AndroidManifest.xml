@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="uk.sensoryunderload.infinilist">
 
+    <permission android:description="uk.sensoryunderload.infinilist.WIDGET_READ"
+            android:label="@string/widget_read_permission_label"
+            android:name="@string/widget_read_permission_name"
+            android:protectionLevel="normal" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -23,14 +28,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name="ListWidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/infinilist_appwidget_info" />
+        </receiver>
+
+        <provider android:authorities="uk.sensoryunderload.infinilist.ListContentProvider"
+          android:enabled="true"
+          android:exported="false"
+          android:directBootAware="false"
+          android:grantUriPermissions="false"
+          android:initOrder=1
+          android:multiprocess="false"
+          android:name="uk.sensoryunderload.infinilist.ListContentProvider"
+          android:process=":ListContentProvider"
+          android:readPermission="uk.sensoryunderload.infinilist.WIDGET_READ"
+          android:syncable="true" >
+        </provider>
     </application>
-
-    <receiver android:name="InfiniListWidgetProvider" >
-        <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-        </intent-filter>
-        <meta-data android:name="android.appwidget.provider"
-            android:resource="@xml/infinilist_appwidget_info" />
-    </receiver>
-
 </manifest>
+

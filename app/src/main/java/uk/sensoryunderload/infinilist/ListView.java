@@ -13,6 +13,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.content.Context;
 import android.content.Intent;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -37,7 +38,7 @@ public class ListView extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        loadLists(); // Sets topLevelList
+        loadList(); // Sets topLevelList
         shownHelp = (topLevelList.size() != 0);
         // Set current list to appropriate sub-list, if appropriate.
         ArrayList<Integer> address = new ArrayList<Integer>();
@@ -85,13 +86,13 @@ public class ListView extends AppCompatActivity
         saveNeeded = false;
     }
 
-    private boolean loadLists() { return loadLists("Main.todo"); }
-    private boolean loadLists(String name) {
+    private boolean loadList() { return loadList("Main.todo", topLevelList, getApplicationContext()); }
+    static boolean loadList(String fileName, ListItem list, Context context) {
         boolean exists = false;
-        File path = getApplicationContext().getFilesDir();
-        File file = new File(path, name);
+        File path = context.getFilesDir();
+        File file = new File(path, fileName);
         if (file.exists()) {
-            topLevelList.readFromFile(file);
+            list.readFromFile(file);
             exists = true;
         }
 

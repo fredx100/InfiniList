@@ -33,4 +33,8 @@
     <string name="help_add_item_body">To add a new item tap the plus icon on the action bar at the top of the screen.</string>
     <string name="help_sub_list_title">Creating a Sub-list</string>
     <string name="help_sub_list_body">To create a sub-list within an item select \"Add Sub-item\" from the item\'s context menu.</string>
+
+    <!-- ContentProvider Permission -->
+    <string name="widget_read_permission_name">Widget-read permission</string>
+    <string name="widget_read_permission_label">Permission for the @string/app_name widget to read the configured list for display.</string>
 </resources>

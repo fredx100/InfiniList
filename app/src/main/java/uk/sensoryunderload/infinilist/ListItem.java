@@ -384,6 +384,19 @@ class ListItem {
         return status;
     }
 
+    String getStatusString() {
+        String statusString = " "
+        if (status.isEqual(STATUS.SUCCESS)) {
+            statusString = "\u2713"
+        } else if (status.isEqual(STATUS.FAIL)) {
+            statusString = "x"
+        } else if (status.isEqual(STATUS.FLAG)) {
+            statusString = "*"
+        } else if (status.isEqual(STATUS.QUERY)) {
+            statusString = "?"
+        }
+    }
+
     ArrayList<ListItem> getChildren() { return children; }
     ListItem getChild(int i) { return children.get(i); }
     int indexOf(ListItem li) { return children.indexOf(li); }
