@@ -385,16 +385,19 @@ class ListItem {
     }
 
     String getStatusString() {
-        String statusString = " "
+        String statusString = " ";
+
         if (status.isEqual(STATUS.SUCCESS)) {
-            statusString = "\u2713"
+            statusString = "\u2713";
         } else if (status.isEqual(STATUS.FAIL)) {
-            statusString = "x"
+            statusString = "x";
         } else if (status.isEqual(STATUS.FLAG)) {
-            statusString = "*"
+            statusString = "*";
         } else if (status.isEqual(STATUS.QUERY)) {
-            statusString = "?"
+            statusString = "?";
         }
+
+        return statusString;
     }
 
     ArrayList<ListItem> getChildren() { return children; }

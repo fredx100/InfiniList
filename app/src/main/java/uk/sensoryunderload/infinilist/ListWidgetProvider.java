@@ -3,8 +3,10 @@ package uk.sensoryunderload.infinilist;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.database.Cursor;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+import android.net.Uri;
 
 public class ListWidgetProvider extends AppWidgetProvider {
     @Override
@@ -13,15 +15,15 @@ public class ListWidgetProvider extends AppWidgetProvider {
                           int[] appWidgetIds) {
         final int N = appWidgetIds.length;
 
-        Cursor result = getContentResolver().query("content://uk.sensoryunderload.infinilist.ListContentProvider/widget",
-                                                   null, null, null, null);
+        Uri uri = Uri.parse("content://uk.sensoryunderload.infinilist.ListContentProvider/widget");
+        Cursor result = context.getContentResolver().query(uri, null, null, null, null);
 
         // Build the string
         if (N > 0) {
-            final M = result.getCount();
+            final int M = result.getCount();
+            StringBuilder sb = new StringBuilder();
             if (M > 0) {
                 String nl = System.getProperty("line.separator");
-                StringBuilder sb = new StringBuilder();
 
                 // Write the list to the textView
                 for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext()) {

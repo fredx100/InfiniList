@@ -35,6 +35,7 @@
     <string name="help_sub_list_body">To create a sub-list within an item select \"Add Sub-item\" from the item\'s context menu.</string>
 
     <!-- ContentProvider Permission -->
-    <string name="widget_read_permission_name">Widget-read permission</string>
-    <string name="widget_read_permission_label">Permission for the @string/app_name widget to read the configured list for display.</string>
+    <string name="widget_read_permission_name">uk.sensoryunderload.infinilist.WIDGET_READ</string>
+    <string name="widget_read_permission_label">Widget-read permission</string>
+    <string name="widget_read_permission_description">Permission for the @string/app_name widget to read the configured list for display.</string>
 </resources>

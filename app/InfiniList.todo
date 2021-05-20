@@ -1,8 +1,13 @@
 [ Features
   [ Widget
     v[ Create basic implementation ]
-    [ Implement Content provider ]
-    [ Allow selecting list-root from app ]
+    v[ Implement Content provider ]
+    [ Allow selecting list-root from app
+      [ Add item to toolbar menu ]
+      [ Update content provider to export selected list ]
+      [ Add guards to add/remove/move code to preserve exported list
+        address ]
+    ]
     [ Manage update triggering from app ]
     [ Launch App from tap on widget ]
     ?[ Add buttons?

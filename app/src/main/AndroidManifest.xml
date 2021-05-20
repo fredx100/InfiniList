@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="uk.sensoryunderload.infinilist">
 
-    <permission android:description="uk.sensoryunderload.infinilist.WIDGET_READ"
-            android:label="@string/widget_read_permission_label"
-            android:name="@string/widget_read_permission_name"
-            android:protectionLevel="normal" />
+    <permission android:description="@string/widget_read_permission_description"
+                android:label="@string/widget_read_permission_label"
+                android:name="@string/widget_read_permission_name"
+                android:protectionLevel="normal" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -42,11 +42,11 @@
           android:exported="false"
           android:directBootAware="false"
           android:grantUriPermissions="false"
-          android:initOrder=1
+          android:initOrder="1"
           android:multiprocess="false"
           android:name="uk.sensoryunderload.infinilist.ListContentProvider"
           android:process=":ListContentProvider"
-          android:readPermission="uk.sensoryunderload.infinilist.WIDGET_READ"
+          android:readPermission="@string/widget_read_permission_name"
           android:syncable="true" >
         </provider>
     </application>

@@ -1,55 +1,72 @@
 package uk.sensoryunderload.infinilist;
 
-import android.appwidget.AppWidgetManager;
+import android.content.ContentProvider;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 
 public class ListContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
-        ...
+        return true;
     }
 
     @Override
-    public Cursor query (Uri uri,
+    public Cursor query (@NonNull Uri uri,
                          String[] projection,
-                         Bundle queryArgs,
-                         CancellationSignal cancellationSignal) {
+                         String selection,
+                         String[] selectionArgs,
+                         String sortOrder) {
         ListItem list = new ListItem();
-        ListView.loadList ("Main.todo", list, context.getApplicationContext());
+        ListView.loadList("Main.todo", list, getContext());
 
-        MatrixCursor cursor = new MatrixCursor ("Flag", "Name", "SubItemCount");
-        cur
+        final int listLength = list.size();
+        String[] columnNames = {"Flag", "Name", "SubItemCount"};
+        MatrixCursor cursor = new MatrixCursor(columnNames, listLength);
 
         // Write the list to the textView
-        final int listLength = list.size();
         ListItem child;
-        ListItem.StatusFlag status = child.getStatus();
+        Object[] row = {null, null, null};
         for (int j = 0; j < listLength; ++j) {
             child = list.getChild(j);
-            cursor.addRow(child.getStatusString(), child.getTitle(), child.size());
+            row[0] = child.getStatusString();
+            row[1] = child.getTitle();
+            row[2] = child.size();
+            cursor.addRow(row);
         }
 
         return cursor;
     }
 
     @Override
-    public Uri insert (Uri uri, ContentValues values) {
+    public Uri insert (@NonNull Uri uri, ContentValues values) {
         // notifyChange();
+        return Uri.EMPTY;
     }
 
     @Override
-    public int update (Uri uri, ContentValues values, Bundle extras) {
+    public int delete(@NonNull Uri uri,
+                      String selection,
+                      String[] selectionArgs) {
         // notifyChange();
+        return 0;
     }
 
     @Override
-    public int delete (Uri uri, Bundle extras) {
+    public int update(@NonNull Uri uri,
+                      ContentValues values,
+                      String selection,
+                      String[] selectionArgs) {
         // notifyChange();
+        return 0;
     }
 
     @Override
-    public String getType (Uri uri) {
+    public String getType (@NonNull Uri uri) {
         //return "vnd.android.cursor.item/vnd.sensoryunderload.list" // For single records
-        return "vnd.android.cursor.dir/vnd.sensoryunderload.list" // For multiple records
+        return "vnd.android.cursor.dir/vnd.sensoryunderload.list"; // For multiple records
     }
 }
 
