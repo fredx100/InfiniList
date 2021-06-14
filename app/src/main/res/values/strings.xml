@@ -4,6 +4,7 @@
     <!-- action bar menu items -->
     <string name="action_uncheck_all">Uncheck All</string>
     <string name="action_delete_all">Delete All</string>
+    <string name="action_mark_widget">Link to Widget</string>
     <string name="action_import">Import</string>
     <string name="action_export">Export</string>
     <string name="action_settings">Settings</string>
@@ -13,6 +14,7 @@
     <string name="item_editsub">Edit Item</string>
     <string name="item_addsub">Add Sub-Item</string>
     <string name="item_delete">Delete Item</string>
+    <string name="item_mark_sub_widget">Link Sub-list to Widget</string>
 
     <!-- Add/Edit dialog labels -->
     <string name="title">Title</string>

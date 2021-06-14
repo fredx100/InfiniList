@@ -11,4 +11,7 @@
     <item
         android:id="@+id/delete"
         android:title="@string/item_delete" />
+    <item
+        android:id="@+id/mark_sub_widget"
+        android:title="@string/item_mark_sub_widget" />
 </menu>

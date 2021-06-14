@@ -3,12 +3,31 @@
     v[ Create basic implementation ]
     v[ Implement Content provider ]
     [ Allow selecting list-root from app
-      [ Add item to toolbar menu ]
-      [ Update content provider to export selected list ]
+      v[ Add item to toolbar menu to select widget list ]
+      v[ Add filing code to save exported list address ]
+      v[ Update content provider to export selected list ]
       [ Add guards to add/remove/move code to preserve exported list
-        address ]
+        address
+
+        *[ TEST updateWidgetAddress
+
+          [ Inserting before ancestor list ]
+          [ removing before ancestor list ]
+          [ inserting and removing before ancestor list ]
+          [ changing within sub-list ]
+          [ changing specified list ]
+          [ removing ancestor ]
+          [ removing specified list ]
+        ]
+      ]
+      [ Update help to explain widgetAddress ]
+      [ Enable user to check (name of?) widgetAddress ]
     ]
-    [ Manage update triggering from app ]
+    [ Manage update triggering from app
+
+      [ In item edit ]
+      [ In updateWidgetAddress (see TODO) ]
+    ]
     [ Launch App from tap on widget ]
     ?[ Add buttons?
 

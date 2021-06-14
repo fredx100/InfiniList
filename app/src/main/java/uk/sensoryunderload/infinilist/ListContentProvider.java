@@ -21,6 +21,7 @@ public class ListContentProvider extends ContentProvider {
                          String sortOrder) {
         ListItem list = new ListItem();
         ListView.loadList("Main.todo", list, getContext());
+        list = list.goToAddress(widgetAddress);
 
         final int listLength = list.size();
         String[] columnNames = {"Flag", "Name", "SubItemCount"};

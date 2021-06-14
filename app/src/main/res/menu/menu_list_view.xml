@@ -20,6 +20,10 @@
         android:title="@string/action_delete_all"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_mark_widget"
+        android:title="@string/action_mark_widget"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_import"
         android:title="@string/action_import"
         app:showAsAction="never" />
