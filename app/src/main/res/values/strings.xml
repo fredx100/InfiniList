@@ -35,6 +35,8 @@
     <string name="help_add_item_body">To add a new item tap the plus icon on the action bar at the top of the screen.</string>
     <string name="help_sub_list_title">Creating a Sub-list</string>
     <string name="help_sub_list_body">To create a sub-list within an item select \"Add Sub-item\" from the item\'s context menu.</string>
+    <string name="help_widget_title">Widget List</string>
+    <string name="help_widget_body">To set which list is displayed in a widget either select \"Link Sub=list to Widget\" from the list\'s context menu or select \"Link to Widget\" from the app menu when the list is displayed.</string>
 
     <!-- ContentProvider Permission -->
     <string name="widget_read_permission_name">uk.sensoryunderload.infinilist.WIDGET_READ</string>

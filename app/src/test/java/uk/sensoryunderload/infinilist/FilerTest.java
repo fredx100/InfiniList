@@ -54,11 +54,11 @@ public class FilerTest {
             assertTrue(top.getChildren().get(3).getChildren().size() == 3);
 
             // Status flags
-            assertTrue(top.getStatus().equalTo (STATUS.NONE));
-            assertTrue(top.getChildren().get(1).getChildren().get(0).getStatus().equalTo (STATUS.FAIL));
-            assertTrue(top.getChildren().get(2).getStatus().equalTo (STATUS.SUCCESS));
-            assertTrue(top.getChildren().get(3).getChildren().get(0).getStatus().equalTo (STATUS.FLAG));
-            assertTrue(top.getChildren().get(3).getChildren().get(1).getStatus().equalTo (STATUS.QUERY));
+            assertTrue(top.getStatus().isEqual (STATUS.NONE));
+            assertTrue(top.getChildren().get(1).getChildren().get(0).getStatus().isEqual (STATUS.FAIL));
+            assertTrue(top.getChildren().get(2).getStatus().isEqual (STATUS.SUCCESS));
+            assertTrue(top.getChildren().get(3).getChildren().get(0).getStatus().isEqual (STATUS.FLAG));
+            assertTrue(top.getChildren().get(3).getChildren().get(1).getStatus().isEqual (STATUS.QUERY));
 
             // Title contents
             assertEquals(top.getTitle(),

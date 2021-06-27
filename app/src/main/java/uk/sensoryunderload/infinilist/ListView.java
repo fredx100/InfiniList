@@ -17,7 +17,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.OutputStreamWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ListView extends AppCompatActivity
                       implements ListItemAdapter.ListControlListener {
@@ -38,7 +48,7 @@ public class ListView extends AppCompatActivity
     private ArrayList<Integer> widgetAddress = new ArrayList<Integer>();
     private boolean widgetAddressChanged;
 
-    // Settings key values
+    // Setting key values
     private static final String WIDGET_ADDRESS = "WidgetAddress";
 
     @Override
@@ -67,7 +77,7 @@ public class ListView extends AppCompatActivity
 
         registerForContextMenu(recyclerView);
 
-        loadWidgetAddress();
+        loadSettings(this, widgetAddress);
     }
 
     @Override
@@ -104,7 +114,7 @@ public class ListView extends AppCompatActivity
 
         return exists;
     }
-    static boolean loadSettings(Context context) {
+    static boolean loadSettings(Context context, ArrayList<Integer> widgetAddress) {
         boolean exists = false;
         File path = context.getFilesDir();
         File file = new File(path, "settings");
@@ -115,12 +125,10 @@ public class ListView extends AppCompatActivity
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(file));
 
-                //List<Integer> myList = new ArrayList<Integer>();
-                String line = reader.readLine();
-                (key, value) = line.split(':');
-                switch (key) {
+                String[] line = reader.readLine().split(":");
+                switch (line[0]) {
                     case WIDGET_ADDRESS :
-                        readWidgetAddress(value);
+                        readWidgetAddress(line[1], widgetAddress);
                         break;
                 }
 
@@ -135,12 +143,15 @@ public class ListView extends AppCompatActivity
         return exists;
     }
 
-    static void readWidgetAddress(String value) {
-        for (String token : value.split(' ')) {
-            try {
-                widgetAddress.add (token);
-            } catch (NumberFormatException e) {
-                Log.e("INFLIST-LOG", "(widgetAddress) " + token + " is not a number");
+    static void readWidgetAddress(String value, ArrayList<Integer> widgetAddress) {
+        if (widgetAddress != null) {
+            widgetAddress.clear();
+            for (String token : value.split(" ")) {
+                try {
+                    widgetAddress.add (Integer.parseInt(token));
+                } catch (NumberFormatException e) {
+                    Log.e("INFLIST-LOG", "(widgetAddress) " + token + " is not a number");
+                }
             }
         }
     }
@@ -298,7 +309,7 @@ public class ListView extends AppCompatActivity
         alert.show();
     }
     void actionMarkWidget(ListItem list) {
-        if (list.length() == 0) {
+        if (list.size() == 0) {
             Toast.makeText(this, "Refused: the list is empty.", Toast.LENGTH_LONG).show();
         } else {
             widgetAddress = list.getAddress();
@@ -342,7 +353,7 @@ public class ListView extends AppCompatActivity
         topLevelList.writeToFile(file);
     }
     private void saveWidgetAddress() {
-        StringBuilder sb = new StringBuilder;
+        StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (Integer i : widgetAddress) {
             if (!first)
@@ -356,31 +367,41 @@ public class ListView extends AppCompatActivity
         File path = getApplicationContext().getFilesDir();
         File file = new File(path, "settings");
         Charset charset = Charset.forName("ISO-8859-1");
+        ArrayList<String> newLines = new ArrayList<String>();
 
         try {
-            List<String> lines = Files.readAllLines(file, charset);
+            if (file.exists()) {
+                FileInputStream fis = new FileInputStream(file);
+                BufferedReader br = new BufferedReader(new InputStreamReader(fis, charset));
 
-            // Remove existing setting
-            Iterator<String> it = lines.iterator();
-            while (it.hasNext()) {
-                String line = it.next();
-                (fileKey, fileValue) = line.split(':');
-                if (fileKey == key) {
-                    it.remove();
+                String line = null;
+                String[] values;
+                do {
+                    line = br.readLine();
+                    values = line.split(":");
+                    if (values[0] != key) {
+                        newLines.add(line);
+                    }
+                } while (line != null);
             }
 
             // Append new setting
-            lines += key + ':' + value;
+            newLines.add(key + ":" + value);
 
-            Files.write(file, lines, charset);
+            FileOutputStream fos = new FileOutputStream(file);
+            OutputStreamWriter osw = new OutputStreamWriter(fos, charset);
+            String nl = System.getProperty("line.separator");
+            for (String newLine : newLines) {
+                osw.write(newLine + nl);
+            }
         } catch (IOException e) {
             Log.e("INFLIST-LOG", "Error writing " + key + " to disk", e);
         }
     }
 
-    private void updateWidgetAddress (ArrayList<Integer> changedListAddress,
-                                      int insertedAt, int removedFrom) {
-        widgetAddressChanged = updateWidgetAddress (widgetAddress, changedListAddress, insertedAt, removedFrom);
+    void updateWidgetAddress (ArrayList<Integer> changedAddress,
+                              int insertedAt, int removedFrom) {
+        widgetAddressChanged = updateWidgetAddress (widgetAddress, changedAddress, insertedAt, removedFrom);
     }
 
     // An element has been insertedAt and/or removedFrom the respective
@@ -388,51 +409,53 @@ public class ListView extends AppCompatActivity
     // list at address changedAddress. Update address as necessary.
     //
     // Return true if address changed, false otherwise.
-    private boolean updateWidgetAddress (ArrayList<Integer> address,
-                                         ArrayList<Integer> changedAddress,
-                                         int insertedAt, int removedFrom) {
-        boolean changed = false;
+    static boolean updateWidgetAddress (ArrayList<Integer> address,
+                                        ArrayList<Integer> changedAddress,
+                                        int insertedAt, int removedFrom) {
+        boolean addressChanged = false;
 
-        if (changedListAddress.length() <= address.length()) {
+        if (changedAddress.size() <= address.size()) {
             boolean intersects = true;
 
             intersects = true;
-            for (Integer i; i < changedListAddress.length(); ++i) {
-                if (changedListAddress[i] != address[i]) {
+            for (int i = 0; i < changedAddress.size(); ++i) {
+                if (changedAddress.get(i) != address.get(i)) {
                     intersects = false;
                     break;
                 }
             }
 
-            boolean addressChanged = (changedListAddress.length() != address.length());
+            if (intersects) {
+                boolean listChanged = (changedAddress.size() == address.size());
 
-            if (addressChanged) {
-                // TODO: Broadcast that list has changed.
-            } else {
-                // Check to see whether list address must change
-                if (removedFrom == address[changedListAddress.length()]) {
-                    // Target list deleted!
-                    address = ();
-                    changed = true;
+                if (listChanged) {
+                    // TODO: Broadcast that list has changed.
                 } else {
-                    Integer existing = address[changedListAddress.length()];
-                    Integer difference = 0;
-                    if ((insertedAt != -1) && (insertedAt < existing)) {
-                        ++difference;
-                    }
-                    if ((removedFrom != -1) && (removedFrom < existing)) {
-                        --difference;
-                    }
+                    // Check to see whether list address must change
+                    if (removedFrom == address.get(changedAddress.size())) {
+                        // Target list deleted!
+                        address.clear();
+                        addressChanged = true;
+                    } else {
+                        Integer existing = address.get(changedAddress.size());
+                        Integer difference = 0;
+                        if ((insertedAt != -1) && (insertedAt <= existing)) {
+                            ++difference;
+                        }
+                        if ((removedFrom != -1) && (removedFrom < existing)) {
+                            --difference;
+                        }
 
-                    if (difference != 0) {
-                        address[changedListAddress.length()] += difference;
-                        changed = true;
+                        if (difference != 0) {
+                            address.set(changedAddress.size(), address.get(changedAddress.size()) + difference);
+                            addressChanged = true;
+                        }
                     }
                 }
             }
         }
 
-        return changed;
+        return addressChanged;
     }
 
     private static final int EXPORT_REQUEST_CODE = 9987; // random!

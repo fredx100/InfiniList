@@ -62,4 +62,18 @@
         android:layout_height="wrap_content"
         android:text="@string/help_sub_list_body" />
 
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/fab_margin"
+        android:text="@string/help_widget_title"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/help_widget_body" />
+
 </LinearLayout>

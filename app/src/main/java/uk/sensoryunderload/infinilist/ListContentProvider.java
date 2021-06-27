@@ -2,12 +2,16 @@ package uk.sensoryunderload.infinilist;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+
 public class ListContentProvider extends ContentProvider {
+
     @Override
     public boolean onCreate() {
         return true;
@@ -19,8 +23,11 @@ public class ListContentProvider extends ContentProvider {
                          String selection,
                          String[] selectionArgs,
                          String sortOrder) {
+        ArrayList<Integer> widgetAddress = new ArrayList<Integer>();
         ListItem list = new ListItem();
-        ListView.loadList("Main.todo", list, getContext());
+        Context context = getContext();
+        ListView.loadSettings(context, widgetAddress);
+        ListView.loadList("Main.todo", list, context);
         list = list.goToAddress(widgetAddress);
 
         final int listLength = list.size();
