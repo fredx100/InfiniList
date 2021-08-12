@@ -1,3 +1,11 @@
 A list app with infinitely nestable lists.
 
-Items have a title and description, and may have one of a number of "checked" states (or not). Any item may have an arbitrary number of sub-items.
+This app allows nested lists. That is, a list item may have its own sub-list. Further, items in any sub-list can have their own sub-list. It's lists all the way down!
+
+Items have a title and description, and may have one of a number of "checked" states.
+
+Features:
+<ul>
+<li>Nested lists!</li>
+<li>Human readable list export.</li>
+</ul>

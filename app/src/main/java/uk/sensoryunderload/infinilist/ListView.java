@@ -538,6 +538,7 @@ public class ListView extends AppCompatActivity
         if (importIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(importIntent, IMPORT_REQUEST_CODE);
         }
+        saveNeeded = true;
     }
 
     private void exportLists() {
