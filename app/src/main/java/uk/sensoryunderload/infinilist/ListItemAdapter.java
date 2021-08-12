@@ -15,6 +15,7 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
         void descend(int pos);
         void save();
         void move(int from, int to);
+        void notifyStatusChange(int itemIndex);
         void startDrag(RecyclerView.ViewHolder viewHolder);
     }
 
@@ -57,6 +58,7 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
         @Override
         public void incrementStatus() {
             item.getStatus().cycle();
+            listControlListener.notifyStatusChange (getAdapterPosition());
             listControlListener.save();
         }
         @Override

@@ -1,5 +1,7 @@
 package uk.sensoryunderload.infinilist;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.app.Activity;
@@ -20,12 +22,14 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -45,6 +49,7 @@ public class ListView extends AppCompatActivity
     private ItemTouchHelper touchHelper;
     private boolean shownHelp;
     private boolean saveNeeded;
+    private Boolean widgetUpdateNeeded;
     private ArrayList<Integer> widgetAddress = new ArrayList<Integer>();
     private boolean widgetAddressChanged;
 
@@ -77,7 +82,7 @@ public class ListView extends AppCompatActivity
 
         registerForContextMenu(recyclerView);
 
-        loadSettings(this, widgetAddress);
+        loadSettings(getApplicationContext(), widgetAddress);
     }
 
     @Override
@@ -87,6 +92,10 @@ public class ListView extends AppCompatActivity
         }
         if (widgetAddressChanged) {
             saveWidgetAddress();
+            widgetUpdateNeeded = true;
+        }
+        if (widgetUpdateNeeded) {
+            broadcastWidgetUpdate();
         }
         super.onPause();
     }
@@ -99,6 +108,7 @@ public class ListView extends AppCompatActivity
             shownHelp = true;
         }
         saveNeeded = false;
+        widgetUpdateNeeded = false;
         widgetAddressChanged = false;
     }
 
@@ -125,11 +135,14 @@ public class ListView extends AppCompatActivity
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(file));
 
-                String[] line = reader.readLine().split(":");
-                switch (line[0]) {
-                    case WIDGET_ADDRESS :
-                        readWidgetAddress(line[1], widgetAddress);
-                        break;
+                String line = reader.readLine();
+                if ((line != null) && !line.equals("")) {
+                    String[] values = line.split(":");
+                    switch (values[0]) {
+                        case WIDGET_ADDRESS :
+                            readWidgetAddress(values[1], widgetAddress);
+                            break;
+                    }
                 }
 
                 reader.close();
@@ -196,6 +209,10 @@ public class ListView extends AppCompatActivity
     @Override
     public void startDrag(RecyclerView.ViewHolder viewHolder) {
         touchHelper.startDrag (viewHolder);
+    }
+    @Override
+    public void notifyStatusChange(int itemIndex) {
+        updateWidgetAddress (currentList.getAddress(), itemIndex, itemIndex);
     }
 
     private void setTitle() {
@@ -283,6 +300,7 @@ public class ListView extends AppCompatActivity
     }
     private void actionUncheckAll() {
         currentList.uncheckAllChildren();
+        updateWidgetAddress (currentList.getAddress(), -1, -1);
         liAdapter.notifyDataSetChanged();
         saveNeeded = true;
     }
@@ -292,6 +310,10 @@ public class ListView extends AppCompatActivity
         alert.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                ArrayList<Integer> address = currentList.getAddress();
+                for (int i = 0; i < currentList.getChildren().size(); ++i) {
+                    updateWidgetAddress (address, -1, i);
+                }
                 currentList.getChildren().clear();
                 liAdapter.notifyDataSetChanged();
                 saveNeeded = true;
@@ -337,6 +359,13 @@ public class ListView extends AppCompatActivity
             liAdapter.notifyItemChanged(currentList.indexOf(list));
         }
         saveNeeded = true;
+
+        // Notify widget of changes.
+        if (append) {
+            updateWidgetAddress (list.getAddress(), -1, -1);
+        } else {
+            updateWidgetAddress (list.getParent().getAddress(), -1, -1);
+        }
     }
 
     private void removeItem(int position) {
@@ -366,7 +395,7 @@ public class ListView extends AppCompatActivity
     private void saveSetting(String key, String value) {
         File path = getApplicationContext().getFilesDir();
         File file = new File(path, "settings");
-        Charset charset = Charset.forName("ISO-8859-1");
+        Charset charset = StandardCharsets.ISO_8859_1;
         ArrayList<String> newLines = new ArrayList<String>();
 
         try {
@@ -378,22 +407,26 @@ public class ListView extends AppCompatActivity
                 String[] values;
                 do {
                     line = br.readLine();
-                    values = line.split(":");
-                    if (values[0] != key) {
-                        newLines.add(line);
+                    if ((line != null) && !line.equals("")) {
+                        values = line.split(":");
+                        if (!values[0].equals(key)) {
+                            newLines.add(line);
+                        }
                     }
                 } while (line != null);
+
+                fis.close();
             }
 
             // Append new setting
             newLines.add(key + ":" + value);
 
-            FileOutputStream fos = new FileOutputStream(file);
-            OutputStreamWriter osw = new OutputStreamWriter(fos, charset);
+            FileWriter fw = new FileWriter(file);
             String nl = System.getProperty("line.separator");
             for (String newLine : newLines) {
-                osw.write(newLine + nl);
+                fw.write(newLine + nl);
             }
+            fw.close();
         } catch (IOException e) {
             Log.e("INFLIST-LOG", "Error writing " + key + " to disk", e);
         }
@@ -401,14 +434,33 @@ public class ListView extends AppCompatActivity
 
     void updateWidgetAddress (ArrayList<Integer> changedAddress,
                               int insertedAt, int removedFrom) {
-        widgetAddressChanged = updateWidgetAddress (widgetAddress, changedAddress, insertedAt, removedFrom);
+        if (changedAddress.size() == widgetAddress.size()) {
+            // If the address lengths match then the address of the
+            // widget list cannot change. Instead, we check whether
+            // the list displayed in the widget has been changed and
+            // should be updated.
+            boolean addressesMatch = true;
+            for (int i = 0; i < widgetAddress.size(); ++i) {
+                if (changedAddress.get(i) != widgetAddress.get(i)) {
+                    addressesMatch = false;
+                    break;
+                }
+            }
+            widgetUpdateNeeded |= addressesMatch;
+        } else {
+            widgetAddressChanged = updateWidgetAddress (widgetAddress, changedAddress, insertedAt, removedFrom);
+        }
     }
 
     // An element has been insertedAt and/or removedFrom the respective
     // list positions (insertedAd == -1 => nothing inserted, etc.) in
     // list at address changedAddress. Update address as necessary.
     //
-    // Return true if address changed, false otherwise.
+    // The object widgetUpdateNeeded is set to true if the list
+    // displayed in the widget has changed.
+    //
+    // Return true if the address of the widget list is changed, false
+    // otherwise.
     static boolean updateWidgetAddress (ArrayList<Integer> address,
                                         ArrayList<Integer> changedAddress,
                                         int insertedAt, int removedFrom) {
@@ -417,7 +469,6 @@ public class ListView extends AppCompatActivity
         if (changedAddress.size() <= address.size()) {
             boolean intersects = true;
 
-            intersects = true;
             for (int i = 0; i < changedAddress.size(); ++i) {
                 if (changedAddress.get(i) != address.get(i)) {
                     intersects = false;
@@ -426,15 +477,18 @@ public class ListView extends AppCompatActivity
             }
 
             if (intersects) {
-                boolean listChanged = (changedAddress.size() == address.size());
+                boolean lengthsDiffer = (changedAddress.size() != address.size());
 
-                if (listChanged) {
-                    // TODO: Broadcast that list has changed.
-                } else {
+                if (lengthsDiffer) {
                     // Check to see whether list address must change
                     if (removedFrom == address.get(changedAddress.size())) {
-                        // Target list deleted!
-                        address.clear();
+                        if (insertedAt == -1) {
+                            // Target list deleted!
+                            address.clear();
+                        } else {
+                            // Target list moved.
+                            address.set(changedAddress.size(), insertedAt);
+                        }
                         addressChanged = true;
                     } else {
                         Integer existing = address.get(changedAddress.size());
@@ -456,6 +510,19 @@ public class ListView extends AppCompatActivity
         }
 
         return addressChanged;
+    }
+
+    // Broadcast that widget list has changed and the widget should be
+    // updated.
+    private void broadcastWidgetUpdate() {
+        Intent intent = new Intent(this, ListWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
+        // since it seems the onUpdate() is only fired on that:
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                    .getAppWidgetIds(new ComponentName(getApplication(), ListWidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 
     private static final int EXPORT_REQUEST_CODE = 9987; // random!
@@ -517,6 +584,7 @@ public class ListView extends AppCompatActivity
                         topLevelList = li;
                         currentList = li;
                         saveNeeded = true;
+                        widgetUpdateNeeded = true;
                         liAdapter.itemList = currentList;
                         liAdapter.notifyDataSetChanged();
                         setTitle();
@@ -558,13 +626,6 @@ public class ListView extends AppCompatActivity
                 }
             }
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle state) {
-        // TODO: save list data.
-        // How to demark which list we're on?
-        super.onSaveInstanceState(state);
     }
 
     ListItem goToAddress(ArrayList<Integer> address) {

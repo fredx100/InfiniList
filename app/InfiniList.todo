@@ -23,10 +23,11 @@
       v[ Update help to explain widgetAddress ]
       ?[ Enable user to check (name of?) widgetAddress ]
     ]
-    [ Manage update triggering from app
+    v[ Manage update triggering from app
 
-      [ In item edit ]
-      [ In updateWidgetAddress (see TODO) ]
+      v[ In item edit ]
+      v[ In updateWidgetAddress (see TODO) ]
+      [ Test ]
     ]
     [ Launch App from tap on widget ]
     ?[ Add buttons?

@@ -24,13 +24,14 @@ public class ListContentProvider extends ContentProvider {
                          String[] selectionArgs,
                          String sortOrder) {
         ArrayList<Integer> widgetAddress = new ArrayList<Integer>();
-        ListItem list = new ListItem();
-        Context context = getContext();
+        ListItem listTop = new ListItem();
+        ListItem listWidget;
+        Context context = getContext().getApplicationContext();
         ListView.loadSettings(context, widgetAddress);
-        ListView.loadList("Main.todo", list, context);
-        list = list.goToAddress(widgetAddress);
+        ListView.loadList("Main.todo", listTop, context);
+        listWidget= listTop.goToAddress(widgetAddress);
 
-        final int listLength = list.size();
+        final int listLength = listWidget.size();
         String[] columnNames = {"Flag", "Name", "SubItemCount"};
         MatrixCursor cursor = new MatrixCursor(columnNames, listLength);
 
@@ -38,7 +39,7 @@ public class ListContentProvider extends ContentProvider {
         ListItem child;
         Object[] row = {null, null, null};
         for (int j = 0; j < listLength; ++j) {
-            child = list.getChild(j);
+            child = listWidget.getChild(j);
             row[0] = child.getStatusString();
             row[1] = child.getTitle();
             row[2] = child.size();
