@@ -29,7 +29,19 @@
       v[ In updateWidgetAddress (see TODO) ]
       [ Test ]
     ]
-    [ Launch App from tap on widget ]
+    *[ Vertical scrolling of widget
+
+      Widget looks okay but no data displayed. Why? Check through
+      remoteview examples again?
+    ]
+    *[ Launch App from tap on widget
+
+      This is commented out at present as previously it prevented the
+      widget from being added to the desktop. This might have been to do
+      with the use of a Constraint layout in the remote view (which
+      isn't supported). The layout has been swapped out for one which is
+      supported.
+    ]
     ?[ Add buttons?
 
       [ launch top-level list ]

@@ -6,8 +6,8 @@ android {
         applicationId "uk.sensoryunderload.infinilist"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.0.6"
+        versionCode 8
+        versionName "1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

@@ -43,6 +43,10 @@ import java.util.Iterator;
 
 public class ListView extends AppCompatActivity
                       implements ListItemAdapter.ListControlListener {
+    public static final String OPEN_LIST_ACTION = "uk.sensoryunderload.infinilist.widget.OPEN_LIST_ACTION";
+    public static final String ADD_ITEM_ACTION = "uk.sensoryunderload.infinilist.widget.ADD_ITEM_ACTION";
+    public static final String OPEN_TOP_LIST_ACTION = "uk.sensoryunderload.infinilist.widget.OPEN_TOP_LIST_ACTION";
+
     private ListItem topLevelList = new ListItem("InfiniList","");
     private ListItem currentList;
     private ListItemAdapter liAdapter;
@@ -61,6 +65,11 @@ public class ListView extends AppCompatActivity
         loadList(); // Sets topLevelList
         shownHelp = (topLevelList.size() != 0);
         currentList = topLevelList;
+        loadSettings(getApplicationContext(), widgetAddress);
+        Intent intent = getIntent();
+        if (intent.getAction().equals(OPEN_LIST_ACTION)) {
+            currentList = goToAddress(widgetAddress);
+        }
         setTitle();
 
         super.onCreate(savedInstanceState);
@@ -81,8 +90,6 @@ public class ListView extends AppCompatActivity
         touchHelper.attachToRecyclerView(recyclerView);
 
         registerForContextMenu(recyclerView);
-
-        loadSettings(getApplicationContext(), widgetAddress);
     }
 
     @Override
@@ -138,10 +145,12 @@ public class ListView extends AppCompatActivity
                 String line = reader.readLine();
                 if ((line != null) && !line.equals("")) {
                     String[] values = line.split(":");
-                    switch (values[0]) {
-                        case WIDGET_ADDRESS :
-                            readWidgetAddress(values[1], widgetAddress);
-                            break;
+                    if (values.length > 1) {
+                        switch (values[0]) {
+                            case WIDGET_ADDRESS :
+                                readWidgetAddress(values[1], widgetAddress);
+                                break;
+                        }
                     }
                 }
 
@@ -149,6 +158,8 @@ public class ListView extends AppCompatActivity
             } catch(FileNotFoundException e){
                 exists = false;
             } catch(IOException e){
+                exists = false;
+            } catch (Exception e) {
                 exists = false;
             }
         }

@@ -1,55 +1,38 @@
 package uk.sensoryunderload.infinilist;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
+import android.content.Intent;
 import android.widget.RemoteViews;
+import android.util.Log;
 
 public class ListWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate (Context context,
                           AppWidgetManager appWidgetManager,
                           int[] appWidgetIds) {
-        final int N = appWidgetIds.length;
+        // Attach the remote adaptor to each of the widgets
+        for (int appWidgetId : appWidgetIds) {
+            Log.d("INFLIST-LOG", "Updating widget " + appWidgetId);
+            // Create the intent which references the list widget
+            // service.
+            Intent intent = new Intent(context, ListViewWidgetService.class);
+            RemoteViews rv = new RemoteViews(context.getPackageName(),
+                                             R.layout.infinilist_appwidget);
+            rv.setRemoteAdapter(R.id.widgetListView, intent);
 
-        // Build the string
-        if (N > 0) {
-            Uri uri = Uri.parse("content://uk.sensoryunderload.infinilist.ListContentProvider/widget");
-            Cursor result = context.getContentResolver().query(uri, null, null, null, null);
+//            // Attach the OPEN_LIST_ACTION (via an intent) to the list
+//            // view.
+//            Intent openIntent = new Intent(context, ListView.class);
+//            openIntent.setAction(ListView.OPEN_LIST_ACTION);
+//            PendingIntent openPendingIntent = PendingIntent.getActivity(context, 0,
+//                                                                        openIntent, 0);
+//            rv.setOnClickPendingIntent(R.id.widgetListView, openPendingIntent);
 
-            if (result != null) {
-                final int M = result.getCount();
-                StringBuilder sb = new StringBuilder();
-                if (M > 0) {
-                    String nl = System.getProperty("line.separator");
-
-                    // Write the list to the textView
-                    for (result.moveToFirst(); !result.isAfterLast(); result.moveToNext()) {
-                        sb.append(result.getString(0)).append(" ").append(result.getString(1));
-                        int subItems = result.getInt(2);
-                        if (subItems != 0) {
-                            sb.append(" (").append(subItems).append(")");
-                        }
-                        sb.append(nl);
-                    }
-                } else {
-                    sb.append("<list empty>");
-                }
-
-                result.close();
-
-                // Perform this loop procedure for each App Widget that belongs to this provider
-                for (int appWidgetId : appWidgetIds) {
-                    // Get the layout for the App Widget
-                    RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.infinilist_appwidget);
-                    views.setTextViewText(R.id.widgetTextView, sb.toString());
-
-                    // Tell the AppWidgetManager to perform an update on the current app widget
-                    appWidgetManager.updateAppWidget(appWidgetId, views);
-                }
-            }
+            appWidgetManager.updateAppWidget(appWidgetId, rv);
         }
     }
 }
+
