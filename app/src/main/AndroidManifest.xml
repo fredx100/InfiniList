@@ -32,10 +32,14 @@
         <receiver android:name="ListWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="uk.sensoryunderload.infinilist.ListWidgetProvider.ACTION_WIDGET_REFRESH" />
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/infinilist_appwidget_info" />
         </receiver>
+
+        <service android:name=".ListViewWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <provider android:authorities="uk.sensoryunderload.infinilist.ListContentProvider"
           android:enabled="true"

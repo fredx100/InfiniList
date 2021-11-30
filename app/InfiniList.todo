@@ -2,7 +2,7 @@
   [ Widget
     v[ Create basic implementation ]
     v[ Implement Content provider ]
-    [ Allow selecting list-root from app
+    v[ Allow selecting list-root from app
       v[ Add item to toolbar menu to select widget list ]
       v[ Add filing code to save exported list address ]
       v[ Update content provider to export selected list ]
@@ -21,7 +21,6 @@
         ]
       ]
       v[ Update help to explain widgetAddress ]
-      ?[ Enable user to check (name of?) widgetAddress ]
     ]
     v[ Manage update triggering from app
 
@@ -29,19 +28,15 @@
       v[ In updateWidgetAddress (see TODO) ]
       [ Test ]
     ]
-    *[ Vertical scrolling of widget
-
-      Widget looks okay but no data displayed. Why? Check through
-      remoteview examples again?
-    ]
+    v[ Vertical scrolling of widget ]
     *[ Launch App from tap on widget
 
       This is commented out at present as previously it prevented the
-      widget from being added to the desktop. This might have been to do
-      with the use of a Constraint layout in the remote view (which
-      isn't supported). The layout has been swapped out for one which is
-      supported.
+      widget from being displayed.
     ]
+  ]
+  [ Widget v2
+    [ Enable user to check (name of?) widgetAddress ]
     ?[ Add buttons?
 
       [ launch top-level list ]

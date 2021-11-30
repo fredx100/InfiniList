@@ -3,12 +3,14 @@ package uk.sensoryunderload.infinilist;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 import android.util.Log;
 
 public class ListWidgetProvider extends AppWidgetProvider {
+    static public String ACTION_WIDGET_REFRESH = "refreshListWidgets";
     @Override
     public void onUpdate (Context context,
                           AppWidgetManager appWidgetManager,
@@ -33,6 +35,16 @@ public class ListWidgetProvider extends AppWidgetProvider {
 
             appWidgetManager.updateAppWidget(appWidgetId, rv);
         }
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (ACTION_WIDGET_REFRESH.equals(intent.getAction())) {
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            int[] ids = appWidgetManager.getAppWidgetIds(new ComponentName(context, ListWidgetProvider.class));
+            appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.widgetListView);
+        }
+        super.onReceive(context, intent);
     }
 }
 
