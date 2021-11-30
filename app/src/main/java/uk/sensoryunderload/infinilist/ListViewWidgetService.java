@@ -20,7 +20,6 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     private static final Uri URI = Uri.parse("content://uk.sensoryunderload.infinilist.ListContentProvider/widget");
     private final Context mContext;
     private Cursor mCursor;
-    private int testInt;
 
     public ListViewRemoteViewsFactory(Context context) {
         mContext = context;
@@ -29,7 +28,6 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     @Override
     public void onCreate() {
         mCursor = mContext.getContentResolver().query(URI, null, null, null, null);
-        testInt = mCursor.getCount();
     }
 
     @Override
@@ -86,6 +84,5 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
     @Override
     public void onDataSetChanged() {
         mCursor = mContext.getContentResolver().query(URI, null, null, null, null);
-        testInt = mCursor.getCount();
     }
 }
