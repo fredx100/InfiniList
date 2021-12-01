@@ -29,11 +29,17 @@
       [ Test ]
     ]
     v[ Vertical scrolling of widget ]
+    v[ Tweak widget layout
+
+      [ Reduce inter-item padding ]
+      [ Increase text size ]
+    ]
     *[ Launch App from tap on widget
 
       This is commented out at present as previously it prevented the
       widget from being displayed.
     ]
+    [ Set widget list from context menu ]
   ]
   [ Widget v2
     [ Enable user to check (name of?) widgetAddress ]
