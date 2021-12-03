@@ -289,7 +289,7 @@ public class ListView extends AppCompatActivity
             case R.id.editsub:
                 actionEditItem(currentList.getChild(pos));
                 break;
-            case R.id.mark_sub_widget :
+            case R.id.mark_sub_widget:
                 actionMarkWidget(currentList.getChild(pos));
                 break;
         }

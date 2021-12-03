@@ -6,11 +6,13 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.widget.RemoteViews;
 import android.util.Log;
 
 public class ListWidgetProvider extends AppWidgetProvider {
     static public String ACTION_WIDGET_REFRESH = "refreshListWidgets";
+    static public String EXTRA_ITEM = "itemIndex";
     @Override
     public void onUpdate (Context context,
                           AppWidgetManager appWidgetManager,
@@ -25,13 +27,15 @@ public class ListWidgetProvider extends AppWidgetProvider {
                                              R.layout.infinilist_appwidget);
             rv.setRemoteAdapter(R.id.widgetListView, intent);
 
-//            // Attach the OPEN_LIST_ACTION (via an intent) to the list
-//            // view.
-//            Intent openIntent = new Intent(context, ListView.class);
-//            openIntent.setAction(ListView.OPEN_LIST_ACTION);
-//            PendingIntent openPendingIntent = PendingIntent.getActivity(context, 0,
-//                                                                        openIntent, 0);
-//            rv.setOnClickPendingIntent(R.id.widgetListView, openPendingIntent);
+            // Attach the OPEN_LIST_ACTION (via an intent) to the list
+            // view.
+            Intent openIntent = new Intent(context, ListView.class);
+            openIntent.setAction(ListView.OPEN_LIST_ACTION);
+            openIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId,
+                                                                    openIntent, 0);
+            rv.setOnClickPendingIntent(R.id.widgetFreeSpaceButton, pendingIntent);
+            rv.setPendingIntentTemplate(R.id.widgetListView, pendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetId, rv);
         }

@@ -1,46 +1,4 @@
 [ Features
-  [ Widget
-    v[ Create basic implementation ]
-    v[ Implement Content provider ]
-    v[ Allow selecting list-root from app
-      v[ Add item to toolbar menu to select widget list ]
-      v[ Add filing code to save exported list address ]
-      v[ Update content provider to export selected list ]
-      v[ Add guards to add/remove/move code to preserve exported list
-        address
-
-        v[ TEST updateWidgetAddress
-
-          v[ Inserting before ancestor list ]
-          v[ removing before ancestor list ]
-          v[ inserting and removing before ancestor list ]
-          v[ changing within sub-list ]
-          v[ changing specified list ]
-          v[ removing ancestor ]
-          v[ removing specified list ]
-        ]
-      ]
-      v[ Update help to explain widgetAddress ]
-    ]
-    v[ Manage update triggering from app
-
-      v[ In item edit ]
-      v[ In updateWidgetAddress (see TODO) ]
-      [ Test ]
-    ]
-    v[ Vertical scrolling of widget ]
-    v[ Tweak widget layout
-
-      [ Reduce inter-item padding ]
-      [ Increase text size ]
-    ]
-    *[ Launch App from tap on widget
-
-      This is commented out at present as previously it prevented the
-      widget from being displayed.
-    ]
-    [ Set widget list from context menu ]
-  ]
   [ Widget v2
     [ Enable user to check (name of?) widgetAddress ]
     ?[ Add buttons?

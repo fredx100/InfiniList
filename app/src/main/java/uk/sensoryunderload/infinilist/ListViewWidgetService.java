@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.util.Log;
@@ -57,6 +58,13 @@ class ListViewRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactor
                 rv.setTextViewText(R.id.widgetSubitemCount, "");
             }
         }
+
+        // Set the fill-intent
+        Bundle extras = new Bundle();
+        extras.putInt(ListWidgetProvider.EXTRA_ITEM, position);
+        Intent fillInIntent = new Intent();
+        fillInIntent.putExtras(extras);
+        rv.setOnClickFillInIntent(R.id.widgetItemHorizLayout, fillInIntent);
 
         return rv;
     }

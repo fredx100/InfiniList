@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/widgetLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/rounded_rect"
     android:orientation="vertical">
 
     <ListView
         android:id="@+id/widgetListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/rounded_rect"
+        android:layout_height="wrap_content"
         android:divider="@null"
         android:dividerHeight="0dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false" />
+
+    <Button
+        android:id="@+id/widgetFreeSpaceButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent" />
 
 </LinearLayout>
