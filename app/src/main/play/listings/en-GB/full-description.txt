@@ -7,5 +7,6 @@ Items have a title and description, and may have one of a number of "checked" st
 Features:
 <ul>
 <li>Nested lists!</li>
-<li>Human readable list export.</li>
+<li>Home screen widget</li>
+<li>Human readable list export</li>
 </ul>

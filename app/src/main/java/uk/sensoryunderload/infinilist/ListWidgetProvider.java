@@ -11,7 +11,6 @@ import android.widget.RemoteViews;
 import android.util.Log;
 
 public class ListWidgetProvider extends AppWidgetProvider {
-    static public String ACTION_WIDGET_REFRESH = "refreshListWidgets";
     static public String EXTRA_ITEM = "itemIndex";
     @Override
     public void onUpdate (Context context,
@@ -38,17 +37,8 @@ public class ListWidgetProvider extends AppWidgetProvider {
             rv.setPendingIntentTemplate(R.id.widgetListView, pendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetId, rv);
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widgetListView);
         }
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        if (ACTION_WIDGET_REFRESH.equals(intent.getAction())) {
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            int[] ids = appWidgetManager.getAppWidgetIds(new ComponentName(context, ListWidgetProvider.class));
-            appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.widgetListView);
-        }
-        super.onReceive(context, intent);
     }
 }
 

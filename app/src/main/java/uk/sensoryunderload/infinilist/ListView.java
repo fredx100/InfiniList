@@ -70,12 +70,12 @@ public class ListView extends AppCompatActivity
         if (intent.getAction().equals(OPEN_LIST_ACTION)) {
             currentList = goToAddress(widgetAddress);
         }
-        setTitle();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle();
 
         ListRecyclerView recyclerView = findViewById(R.id.recycler_view);
 
@@ -527,7 +527,10 @@ public class ListView extends AppCompatActivity
     // updated.
     private void broadcastWidgetUpdate() {
         Intent intent = new Intent(this, ListWidgetProvider.class);
-        intent.setAction(ListWidgetProvider.ACTION_WIDGET_REFRESH);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getApplication())
+                        .getAppWidgetIds(new ComponentName(getApplication(), ListWidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intent);
     }
 

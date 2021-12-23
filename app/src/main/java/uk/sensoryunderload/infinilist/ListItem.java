@@ -349,12 +349,15 @@ class ListItem {
     }
 
     ListItem goToAddress(ArrayList<Integer> address) {
-        if (address.isEmpty()) {
+        return goToAddress(address, 0);
+    }
+
+    ListItem goToAddress(ArrayList<Integer> address, int index) {
+        if (index >= address.size()) {
             return this;
         } else {
-            ListItem child = children.get(address.get(0));
-            address.remove(0);
-            return child.goToAddress(address);
+            ListItem child = children.get(address.get(index));
+            return child.goToAddress(address, index + 1);
         }
     }
 
