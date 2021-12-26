@@ -15,7 +15,7 @@ public class FilerTest {
     public void WriteTest() {
         ListItem top = new ListItem ("Main list", "This is the main list. It may or may not contain others");
         top.add(new ListItem("Item 1 [oh really?]", ""));
-        ListItem i2 = new ListItem("Item 2", "This one has children");
+        ListItem i2 = new ListItem("Item 2", "This one only has children");
         i2.add(new ListItem("Multi-line\ntitle", "", new StatusFlag(STATUS.FAIL)));
         i2.add(new ListItem("Item 2.1", "Yada [yada]"));
         i2.add(new ListItem("Item 2.2", ""));
@@ -26,6 +26,7 @@ public class FilerTest {
         i4.add(new ListItem("Item 4.1", "Yada yada", new StatusFlag(STATUS.QUERY)));
         i4.add(new ListItem("Item 4.2", ""));
         top.add(i4);
+        ListItem i5 = new ListItem("Item 2", "This one only\n\nhas children");
 
         String outputDirName = "TestOutput";
         File directory = new File(outputDirName);
@@ -71,7 +72,7 @@ public class FilerTest {
                          "Multi-line\ntitle");
 
             // Content... contents
-            assertEquals(top.getChildren().get(1).getContent(), "This one has children");
+            assertEquals(top.getChildren().get(1).getContent(), "This one only has children");
             assertEquals(top.getChildren().get(1).getChildren().get(0).getContent(), "");
             assertEquals(top.getChildren().get(1).getChildren().get(1).getContent(), "Yada [yada]");
         }

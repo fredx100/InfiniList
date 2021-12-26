@@ -132,7 +132,7 @@ class ListItem {
             // Write content
             if (!content.isEmpty()) {
                 StringBuilder sb = new StringBuilder();
-                Scanner s = new Scanner(content).useDelimiter("nl");
+                Scanner s = new Scanner(content).useDelimiter(nl);
                 while (s.hasNext()) {
                     sb.append(newIndent);
                     sb.append(s.next().replaceAll("([\\[\\]])","\\\\$1"));
