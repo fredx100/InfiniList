@@ -10,15 +10,19 @@
         android:id="@+id/inputTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:capitalize="sentences"
         android:ems="10"
         android:hint="@string/title"
-        android:inputType="textPersonName" />
+        android:inputType="textCapSentences" />
 
     <EditText
         android:id="@+id/inputDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:capitalize="sentences"
         android:ems="10"
         android:hint="@string/description"
-        android:inputType="textPersonName" />
+        android:inputType="textMultiLine|text|textCapSentences|textAutoComplete"
+        android:maxLines="4"
+        android:singleLine="false" />
 </LinearLayout>
