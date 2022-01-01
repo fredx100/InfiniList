@@ -209,7 +209,7 @@ public class ListView extends AppCompatActivity
     }
     @Override
     public void save() {
-        saveNeeded = true;
+        saveOnPause();
     }
     @Override
     public void move(int from, int to) {
@@ -313,7 +313,7 @@ public class ListView extends AppCompatActivity
         currentList.uncheckAllChildren();
         updateWidgetAddress (currentList.getAddress(), -1, -1);
         liAdapter.notifyDataSetChanged();
-        saveNeeded = true;
+        saveOnPause();
     }
     private void actionDeleteAll() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -327,7 +327,7 @@ public class ListView extends AppCompatActivity
                 }
                 currentList.getChildren().clear();
                 liAdapter.notifyDataSetChanged();
-                saveNeeded = true;
+                saveOnPause();
                 dialog.dismiss();
             }
         });
@@ -369,7 +369,7 @@ public class ListView extends AppCompatActivity
         } else if (list.getParent() == currentList) {
             liAdapter.notifyItemChanged(currentList.indexOf(list));
         }
-        saveNeeded = true;
+        saveOnPause();
 
         // Notify widget of changes.
         if (append) {
@@ -383,9 +383,11 @@ public class ListView extends AppCompatActivity
         currentList.remove(position);
         liAdapter.notifyItemRemoved(position);
         updateWidgetAddress (currentList.getAddress(), -1, position);
-        saveNeeded = true;
+        saveOnPause();
     }
 
+    private void saveOnPause() { saveNeeded = true; }
+    private void saveNow() { saveLists(); }
     private void saveLists() { saveLists("Main.todo"); }
     private void saveLists(String name) {
         File path = getApplicationContext().getFilesDir();
@@ -547,7 +549,6 @@ public class ListView extends AppCompatActivity
         if (importIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(importIntent, IMPORT_REQUEST_CODE);
         }
-        saveNeeded = true;
     }
 
     private void exportLists() {
@@ -593,13 +594,16 @@ public class ListView extends AppCompatActivity
                         li.readFromDescriptor(pfd.getFileDescriptor());
                         topLevelList = li;
                         currentList = li;
-                        saveNeeded = true;
-                        widgetUpdateNeeded = true;
                         liAdapter.itemList = currentList;
                         liAdapter.notifyDataSetChanged();
                         setTitle();
                         // Let the document provider know you're done by closing the pfd.
                         pfd.close();
+                        // Postponed saves/widget updates doesn't work as the app is
+                        // "Resumed" after the dialog closes (which clears the relevant
+                        // variables). Do the actual saving/updating here.
+                        saveNow();
+                        broadcastWidgetUpdate();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
