@@ -16,14 +16,24 @@
     <string name="item_delete">Delete Item</string>
     <string name="item_mark_sub_widget">Link Sub-list to Widget</string>
 
+    <!-- Dialog labels -->
+    <string name="dialogPositiveButton">Ok</string>
+    <string name="dialogNegativeButton">Cancel</string>
+
     <!-- Add/Edit dialog labels -->
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="editTitle_add">Add Item</string>
     <string name="editTitle_edit">Edit Item</string>
     <string name="editPositiveButton_add">Add</string>
-    <string name="editPositiveButton_edit">Ok</string>
-    <string name="editNegativeButton">Cancel</string>
+
+    <!-- Delete dialog labels -->
+    <string name="delete_all">Delete ALL Items?</string>
+    <plurals name="delete_with_children">
+        <item quantity="one">Delete Item with Sub-Item?</item>
+        <item quantity="other">Delete Item with %d Sub-Items?</item>
+    </plurals>
+
 
     <!-- Help text -->
     <string name="help_title">Help</string>

@@ -1,45 +1,39 @@
 package uk.sensoryunderload.infinilist;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
-import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-import android.content.Context;
-import android.content.Intent;
-import android.content.DialogInterface;
-import android.net.Uri;
-import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.FileWriter;
-import java.io.OutputStreamWriter;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Date;
 
 public class ListView extends AppCompatActivity
                       implements ListItemAdapter.ListControlListener {
@@ -155,11 +149,7 @@ public class ListView extends AppCompatActivity
                 }
 
                 reader.close();
-            } catch(FileNotFoundException e){
-                exists = false;
-            } catch(IOException e){
-                exists = false;
-            } catch (Exception e) {
+            } catch(Exception e){
                 exists = false;
             }
         }
@@ -317,8 +307,8 @@ public class ListView extends AppCompatActivity
     }
     private void actionDeleteAll() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Delete ALL Items?");
-        alert.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+        alert.setTitle(getString(R.string.delete_all));
+        alert.setPositiveButton(getString(R.string.dialogPositiveButton), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<Integer> address = currentList.getAddress();
@@ -332,7 +322,7 @@ public class ListView extends AppCompatActivity
             }
         });
 
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(getString(R.string.dialogNegativeButton), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -380,10 +370,35 @@ public class ListView extends AppCompatActivity
     }
 
     private void removeItem(int position) {
-        currentList.remove(position);
-        liAdapter.notifyItemRemoved(position);
-        updateWidgetAddress (currentList.getAddress(), -1, position);
-        saveOnPause();
+        int childCount = currentList.getChild(position).size();
+        if (childCount > 0) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle(getResources().getQuantityString(R.plurals.delete_with_children, childCount, childCount));
+            alert.setPositiveButton(getString(R.string.dialogPositiveButton), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    currentList.remove(position);
+                    liAdapter.notifyItemRemoved(position);
+                    updateWidgetAddress (currentList.getAddress(), -1, position);
+                    saveOnPause();
+                    dialog.dismiss();
+                }
+            });
+
+            alert.setNegativeButton(getString(R.string.dialogNegativeButton), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            alert.show();
+        } else {
+            currentList.remove(position);
+            liAdapter.notifyItemRemoved(position);
+            updateWidgetAddress (currentList.getAddress(), -1, position);
+            saveOnPause();
+        }
     }
 
     private void saveOnPause() { saveNeeded = true; }
@@ -454,7 +469,7 @@ public class ListView extends AppCompatActivity
             // should be updated.
             boolean addressesMatch = true;
             for (int i = 0; i < widgetAddress.size(); ++i) {
-                if (changedAddress.get(i) != widgetAddress.get(i)) {
+                if (!changedAddress.get(i).equals(widgetAddress.get(i))) {
                     addressesMatch = false;
                     break;
                 }
@@ -483,7 +498,7 @@ public class ListView extends AppCompatActivity
             boolean intersects = true;
 
             for (int i = 0; i < changedAddress.size(); ++i) {
-                if (changedAddress.get(i) != address.get(i)) {
+                if (!changedAddress.get(i).equals(address.get(i))) {
                     intersects = false;
                     break;
                 }
@@ -633,8 +648,6 @@ public class ListView extends AppCompatActivity
                         // Let the document provider know you're done by closing the pfd.
                         pfd.close();
                     }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

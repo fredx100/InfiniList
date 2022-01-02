@@ -59,7 +59,7 @@ public class EditItemFragment extends DialogFragment {
             inputTitle.requestFocus();
         } else {
             // An Edit dialog
-            okButtonText = R.string.editPositiveButton_edit;
+            okButtonText = R.string.dialogPositiveButton;
             inputTitle.setText(list.getTitle());
             inputDescription.setText(list.getContent());
         }
@@ -74,7 +74,7 @@ public class EditItemFragment extends DialogFragment {
                                                    append);
             }
         });
-        builder.setNegativeButton(R.string.editNegativeButton, new android.content.DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.dialogNegativeButton, new android.content.DialogInterface.OnClickListener() {
             @Override
             public void onClick(android.content.DialogInterface dialog, int which) {
                 dialog.cancel();
