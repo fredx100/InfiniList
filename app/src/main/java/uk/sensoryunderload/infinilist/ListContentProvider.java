@@ -28,22 +28,27 @@ public class ListContentProvider extends ContentProvider {
         ListItem listWidget;
         Context context = getContext().getApplicationContext();
         ListView.loadSettings(context, widgetAddress);
-        ListView.loadList("Main.todo", listTop, context);
-        listWidget= listTop.goToAddress(widgetAddress);
 
-        final int listLength = listWidget.size();
+        MatrixCursor cursor;
         String[] columnNames = {"Flag", "Name", "SubItemCount"};
-        MatrixCursor cursor = new MatrixCursor(columnNames, listLength);
+        if (ListView.loadList("Main.todo", listTop, context)) {
+            listWidget = listTop.goToAddress(widgetAddress);
 
-        // Write the list to the textView
-        ListItem child;
-        Object[] row = {null, null, null};
-        for (int j = 0; j < listLength; ++j) {
-            child = listWidget.getChild(j);
-            row[0] = child.getStatusString();
-            row[1] = child.getTitle();
-            row[2] = child.size();
-            cursor.addRow(row);
+            final int listLength = listWidget.size();
+            cursor = new MatrixCursor(columnNames, listLength);
+
+            // Write the list to the textView
+            ListItem child;
+            Object[] row = {null, null, null};
+            for (int j = 0; j < listLength; ++j) {
+                child = listWidget.getChild(j);
+                row[0] = child.getStatusString();
+                row[1] = child.getTitle();
+                row[2] = child.size();
+                cursor.addRow(row);
+            }
+        } else {
+            cursor = new MatrixCursor(columnNames, 0);
         }
 
         return cursor;
