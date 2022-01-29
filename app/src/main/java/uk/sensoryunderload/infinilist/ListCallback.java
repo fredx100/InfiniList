@@ -1,7 +1,7 @@
 package uk.sensoryunderload.infinilist;
 
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 // new ItemTouchHelper.Callback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
 

@@ -3,7 +3,7 @@
 
 package uk.sensoryunderload.infinilist;
 
-import android.support.v7.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatImageButton;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.GestureDetector;

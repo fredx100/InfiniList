@@ -2,11 +2,10 @@ package uk.sensoryunderload.infinilist;
 
 import android.app.Dialog;
 import android.app.AlertDialog;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.AppCompatEditText;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.widget.AppCompatEditText;
 import android.view.View;
 import android.os.Bundle;
-import java.util.ArrayList;
 
 public class HelpFragment extends DialogFragment {
     @Override

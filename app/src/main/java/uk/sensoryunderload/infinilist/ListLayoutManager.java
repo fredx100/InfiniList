@@ -1,7 +1,7 @@
 package uk.sensoryunderload.infinilist;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class ListLayoutManager extends LinearLayoutManager {
     boolean mScrollBlocked;
