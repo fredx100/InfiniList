@@ -204,7 +204,7 @@ public class ListView extends AppCompatActivity
     @Override
     public void move(int from, int to) {
         currentList.move(from, to);
-        updateWidgetAddress (currentList.getAddress(), to, from);
+        updateWidget (currentList.getAddress(), to, from);
         liAdapter.notifyItemMoved(from, to);
     }
     @Override
@@ -213,7 +213,7 @@ public class ListView extends AppCompatActivity
     }
     @Override
     public void notifyStatusChange(int itemIndex) {
-        updateWidgetAddress (currentList.getAddress(), itemIndex, itemIndex);
+        updateWidget (currentList.getAddress(), itemIndex, itemIndex);
     }
 
     private void setTitle() {
@@ -301,7 +301,7 @@ public class ListView extends AppCompatActivity
     }
     private void actionUncheckAll() {
         currentList.uncheckAllChildren();
-        updateWidgetAddress (currentList.getAddress(), -1, -1);
+        updateWidget (currentList.getAddress(), -1, -1);
         liAdapter.notifyDataSetChanged();
         saveOnPause();
     }
@@ -313,7 +313,7 @@ public class ListView extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<Integer> address = currentList.getAddress();
                 for (int i = 0; i < currentList.getChildren().size(); ++i) {
-                    updateWidgetAddress (address, -1, i);
+                    updateWidget (address, -1, i);
                 }
                 currentList.getChildren().clear();
                 liAdapter.notifyDataSetChanged();
@@ -363,9 +363,9 @@ public class ListView extends AppCompatActivity
 
         // Notify widget of changes.
         if (append) {
-            updateWidgetAddress (list.getAddress(), -1, -1);
+            updateWidget (list.getAddress(), list.size() - 1, -1);
         } else {
-            updateWidgetAddress (list.getParent().getAddress(), -1, -1);
+            updateWidget (list.getParent().getAddress(), -1, -1);
         }
     }
 
@@ -379,7 +379,7 @@ public class ListView extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int which) {
                     currentList.remove(position);
                     liAdapter.notifyItemRemoved(position);
-                    updateWidgetAddress (currentList.getAddress(), -1, position);
+                    updateWidget (currentList.getAddress(), -1, position);
                     saveOnPause();
                     dialog.dismiss();
                 }
@@ -396,7 +396,7 @@ public class ListView extends AppCompatActivity
         } else {
             currentList.remove(position);
             liAdapter.notifyItemRemoved(position);
-            updateWidgetAddress (currentList.getAddress(), -1, position);
+            updateWidget (currentList.getAddress(), -1, position);
             saveOnPause();
         }
     }
@@ -460,9 +460,20 @@ public class ListView extends AppCompatActivity
         }
     }
 
-    void updateWidgetAddress (ArrayList<Integer> changedAddress,
+    // An element has been insertedAt and/or removedFrom the respective
+    // list positions (insertedAt == -1 => nothing inserted, etc.) in
+    // list at address changedAddress. Update address as necessary.
+    //
+    // widgetUpdateNeeded is set to true if the list displayed in the
+    // widget has changed.
+    //
+    // widgetAddressChanged is set to true if the widget address has
+    // changed.
+    void updateWidget (ArrayList<Integer> changedAddress,
                               int insertedAt, int removedFrom) {
-        if (changedAddress.size() == widgetAddress.size()) {
+        boolean changedLengthMatches = (changedAddress.size() == widgetAddress.size());
+        boolean changedLength1More = (changedAddress.size() == (widgetAddress.size() + 1));
+        if (changedLengthMatches || changedLength1More) {
             // If the address lengths match then the address of the
             // widget list cannot change. Instead, we check whether
             // the list displayed in the widget has been changed and
@@ -474,52 +485,48 @@ public class ListView extends AppCompatActivity
                     break;
                 }
             }
-            widgetUpdateNeeded |= addressesMatch;
+            if (addressesMatch) {
+                boolean subItemCountChanged = ((insertedAt == -1) != (removedFrom == -1));
+                widgetUpdateNeeded |= (changedLengthMatches || subItemCountChanged);
+            }
         } else {
             widgetAddressChanged = updateWidgetAddress (widgetAddress, changedAddress, insertedAt, removedFrom);
         }
     }
 
-    // An element has been insertedAt and/or removedFrom the respective
-    // list positions (insertedAd == -1 => nothing inserted, etc.) in
-    // list at address changedAddress. Update address as necessary.
-    //
-    // The object widgetUpdateNeeded is set to true if the list
-    // displayed in the widget has changed.
-    //
     // Return true if the address of the widget list is changed, false
     // otherwise.
-    static boolean updateWidgetAddress (ArrayList<Integer> address,
+    static boolean updateWidgetAddress (ArrayList<Integer> widgetAddress,
                                         ArrayList<Integer> changedAddress,
                                         int insertedAt, int removedFrom) {
         boolean addressChanged = false;
 
-        if (changedAddress.size() <= address.size()) {
+        if (changedAddress.size() <= widgetAddress.size()) {
             boolean intersects = true;
 
             for (int i = 0; i < changedAddress.size(); ++i) {
-                if (!changedAddress.get(i).equals(address.get(i))) {
+                if (!changedAddress.get(i).equals(widgetAddress.get(i))) {
                     intersects = false;
                     break;
                 }
             }
 
             if (intersects) {
-                boolean lengthsDiffer = (changedAddress.size() != address.size());
+                boolean lengthsDiffer = (changedAddress.size() != widgetAddress.size());
 
                 if (lengthsDiffer) {
                     // Check to see whether list address must change
-                    if (removedFrom == address.get(changedAddress.size())) {
+                    if (removedFrom == widgetAddress.get(changedAddress.size())) {
                         if (insertedAt == -1) {
                             // Target list deleted!
-                            address.clear();
+                            widgetAddress.clear();
                         } else {
                             // Target list moved.
-                            address.set(changedAddress.size(), insertedAt);
+                            widgetAddress.set(changedAddress.size(), insertedAt);
                         }
                         addressChanged = true;
                     } else {
-                        Integer existing = address.get(changedAddress.size());
+                        Integer existing = widgetAddress.get(changedAddress.size());
                         Integer difference = 0;
                         if ((insertedAt != -1) && (insertedAt <= existing)) {
                             ++difference;
@@ -529,7 +536,7 @@ public class ListView extends AppCompatActivity
                         }
 
                         if (difference != 0) {
-                            address.set(changedAddress.size(), address.get(changedAddress.size()) + difference);
+                            widgetAddress.set(changedAddress.size(), widgetAddress.get(changedAddress.size()) + difference);
                             addressChanged = true;
                         }
                     }
