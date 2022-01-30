@@ -48,7 +48,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2sp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:minHeight="16sp"
+            android:singleLine="false"
             android:textColor="@color/colorItemWeak"
             android:textSize="14sp" />
 
