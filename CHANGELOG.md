@@ -2,6 +2,7 @@
 * Fix #9: Deleting item with sublist doesn't require confirmation.
 * Fix: list-import doesn't get saved.
 * Fix #12: sub-item counts in widget are not updated.
+* Only display first line of description.
 
 # 1.1.0
 * Added widget to project.
