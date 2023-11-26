@@ -411,6 +411,8 @@ class ListItem {
 
     void setParent(ListItem li) { parent = li; }
 
+    void insert(ListItem li) { li.setParent(this); children.add(0, li); }
+
     void add(ListItem li) { li.setParent(this); children.add(li); }
 
     void remove(int pos) { if ((pos >= 0) && (pos < children.size())) children.remove(pos); }

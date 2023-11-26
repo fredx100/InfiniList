@@ -278,6 +278,12 @@ public class ListView extends AppCompatActivity
             case R.id.editsub:
                 actionEditItem(currentList.getChild(pos));
                 break;
+            case R.id.move_to_top:
+                move(pos, 0);
+                break;
+            case R.id.move_to_bottom:
+                move(pos, currentList.size() - 1);
+                break;
             case R.id.mark_sub_widget:
                 actionMarkWidget(currentList.getChild(pos));
                 break;
@@ -340,18 +346,27 @@ public class ListView extends AppCompatActivity
         }
     }
 
-    // If append then append a new ListItem to list, else modify list.
-    void editItem(ListItem list, String title, String content, boolean append) {
-        if (append) {
-            list.add(new ListItem (title, content));
+    // If "add" then add a new ListItem to list (at start or end
+    // depending on "atStart"), else modify list.
+    void editItem(ListItem list, String title, String content, boolean add, boolean atStart) {
+        if (add) {
+            if (atStart) {
+                list.insert(new ListItem (title, content));
+            } else {
+                list.add(new ListItem (title, content));
+            }
         } else {
             list.setTitle(title);
             list.setContent(content);
         }
 
         if (list == currentList) {
-            if (append) {
-                liAdapter.notifyItemInserted(currentList.size() - 1);
+            if (add) {
+                if (atStart) {
+                    liAdapter.notifyItemInserted(0);
+                } else {
+                    liAdapter.notifyItemInserted(currentList.size() - 1);
+                }
             } else {
                 setTitle();
             }
@@ -361,8 +376,12 @@ public class ListView extends AppCompatActivity
         saveOnPause();
 
         // Notify widget of changes.
-        if (append) {
-            updateWidget (list.getAddress(), list.size() - 1, -1);
+        if (add) {
+            if (atStart) {
+                updateWidget (list.getAddress(), 0, -1);
+            } else {
+                updateWidget (list.getAddress(), list.size() - 1, -1);
+            }
         } else {
             updateWidget (list.getParent().getAddress(), -1, -1);
         }
@@ -469,7 +488,7 @@ public class ListView extends AppCompatActivity
     // widgetAddressChanged is set to true if the widget address has
     // changed.
     void updateWidget (ArrayList<Integer> changedAddress,
-                              int insertedAt, int removedFrom) {
+                       int insertedAt, int removedFrom) {
         boolean changedLengthMatches = (changedAddress.size() == widgetAddress.size());
         boolean changedLength1More = (changedAddress.size() == (widgetAddress.size() + 1));
         if (changedLengthMatches || changedLength1More) {
