@@ -1,4 +1,7 @@
 [ Features
+  [ undo ]
+  [ Copy/Cut/Paste - relies on selections ]
+  [ Dark theme - relies on options ]
   [ Widget v2
     ?[ title? ]
     [ Enable user to check (name of?) widgetAddress ]

@@ -49,6 +49,7 @@ public class ListView extends AppCompatActivity
     private Boolean widgetUpdateNeeded;
     private ArrayList<Integer> widgetAddress = new ArrayList<Integer>();
     private boolean widgetAddressChanged;
+    private ListRecyclerView recyclerView;
 
     // Setting key values
     private static final String WIDGET_ADDRESS = "WidgetAddress";
@@ -70,7 +71,7 @@ public class ListView extends AppCompatActivity
         setSupportActionBar(toolbar);
         setTitle();
 
-        ListRecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
 
         recyclerView.setListLayoutManager(new ListLayoutManager(getApplicationContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -268,6 +269,7 @@ public class ListView extends AppCompatActivity
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         int pos = liAdapter.retrievePosition();
+        boolean handled = true;
         switch (item.getItemId()) {
             case R.id.delete:
                 removeItem(pos);
@@ -287,9 +289,22 @@ public class ListView extends AppCompatActivity
             case R.id.mark_sub_widget:
                 actionMarkWidget(currentList.getChild(pos));
                 break;
+            default:
+                handled = super.onContextItemSelected(item);
         }
-        return super.onContextItemSelected(item);
+
+        return handled;
     }
+
+    @Override
+    public void onContextMenuClosed(Menu menu) {
+        int pos = liAdapter.retrievePosition();
+        ListItemAdapter.ListItemViewHolder viewHolder = (ListItemAdapter.ListItemViewHolder) recyclerView.findViewHolderForAdapterPosition(pos);
+        if (viewHolder != null) {
+            viewHolder.deHighlight();
+        }
+    }
+
     // https://developer.android.com/guide/topics/ui/dialogs#java
     // Launches the "Add Item" dialog.
     private void actionAddItem(ListItem list) {
