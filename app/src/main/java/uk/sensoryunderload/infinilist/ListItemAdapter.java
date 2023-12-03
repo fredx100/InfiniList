@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListItemViewHolder> {
@@ -29,6 +30,7 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
                  content,
                  subitems;
         StatusIndicator statusIndicator;
+        LinearLayout row;
         private ListItem item;
         private ListControlListener listControlListener;
 
@@ -39,6 +41,7 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
             content = view.findViewById(R.id.content);
             subitems = view.findViewById(R.id.subitemCount);
             statusIndicator = view.findViewById(R.id.rowStatus);
+            row = view.findViewById(R.id.row);
 
             view.setOnCreateContextMenuListener(this);
             statusIndicator.setStatusIndicatorListener(this);
@@ -48,8 +51,12 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            highlight();
+
             menu.add(Menu.NONE, R.id.editsub, Menu.NONE, R.string.item_editsub);
             menu.add(Menu.NONE, R.id.addsub, Menu.NONE, R.string.item_addsub);
+            menu.add(Menu.NONE, R.id.move_to_top, Menu.NONE, R.string.item_move_to_top);
+            menu.add(Menu.NONE, R.id.move_to_bottom, Menu.NONE, R.string.item_move_to_bottom);
             menu.add(Menu.NONE, R.id.delete, Menu.NONE, R.string.item_delete);
             menu.add(Menu.NONE, R.id.mark_sub_widget, Menu.NONE, R.string.item_mark_sub_widget);
         }
@@ -99,6 +106,17 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
         }
         private void setupStatusIndicator() {
             statusIndicator.refresh();
+        }
+
+        public void highlight() {
+            row.setBackgroundColor(itemView.getResources().getColor(R.color.colorItemSelectedBackground));
+            title.setTextColor(itemView.getResources().getColor(R.color.colorItemSelectedStrong));
+            content.setTextColor(itemView.getResources().getColor(R.color.colorItemSelectedWeak));
+        }
+        public void deHighlight() {
+            row.setBackgroundColor(itemView.getResources().getColor(R.color.colorItemBackground));
+            title.setTextColor(itemView.getResources().getColor(R.color.colorItemStrong));
+            content.setTextColor(itemView.getResources().getColor(R.color.colorItemWeak));
         }
     }
 

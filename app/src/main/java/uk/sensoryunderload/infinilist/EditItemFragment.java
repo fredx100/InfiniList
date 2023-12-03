@@ -4,20 +4,21 @@ import android.app.Dialog;
 import android.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import android.view.View;
 import android.os.Bundle;
 import java.util.ArrayList;
 
 public class EditItemFragment extends DialogFragment {
     // https://developer.android.com/guide/topics/ui/dialogs#java
-    // Here, if "append" is true, then list is the list to be appended
+    // Here, if "add" is true, then list is the list to be appended
     // to, else, "list" is the item to be edited.
-    public static EditItemFragment newInstance(ListItem list, boolean append) {
+    public static EditItemFragment newInstance(ListItem list, boolean add) {
         EditItemFragment f = new EditItemFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
-        args.putChar("mode", append ? 'A' : 'E');
+        args.putChar("mode", add ? 'A' : 'E');
         args.putString("itemAddress", list.getAddressString());
         f.setArguments(args);
 
@@ -27,8 +28,8 @@ public class EditItemFragment extends DialogFragment {
     //public Dialog onCreateDialog(final ListView lv) {
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        char appendChar = getArguments().getChar("mode"); // "A" => append, "E" => edit
-        final boolean append = (appendChar == 'A'); // true => append, false => edit
+        char addChar = getArguments().getChar("mode"); // "A" => add, "E" => edit
+        final boolean add = (addChar == 'A'); // true => add, false => edit
         String addressString = getArguments().getString("itemAddress");
         ArrayList<Integer> address = new ArrayList<Integer>();
         if (!addressString.isEmpty()) {
@@ -40,7 +41,7 @@ public class EditItemFragment extends DialogFragment {
         final ListItem list = ((ListView)getActivity()).goToAddress(address);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        if (append) {
+        if (add) {
             builder.setTitle(R.string.editTitle_add);
         } else {
             builder.setTitle(R.string.editTitle_edit);
@@ -52,9 +53,10 @@ public class EditItemFragment extends DialogFragment {
         builder.setView(view);
         final AppCompatEditText inputTitle = view.findViewById(R.id.inputTitle);
         final AppCompatEditText inputDescription = view.findViewById(R.id.inputDescription);
+        final AppCompatCheckBox checkBoxAtTop = view.findViewById(R.id.checkBoxAtTop);
 
         int okButtonText = R.string.editPositiveButton_add;
-        if (append) {
+        if (add) {
             // An Add dialog
             inputTitle.requestFocus();
         } else {
@@ -62,6 +64,7 @@ public class EditItemFragment extends DialogFragment {
             okButtonText = R.string.dialogPositiveButton;
             inputTitle.setText(list.getTitle());
             inputDescription.setText(list.getContent());
+            checkBoxAtTop.setVisibility(View.GONE);
         }
 
         // Set up the buttons
@@ -71,7 +74,7 @@ public class EditItemFragment extends DialogFragment {
                 ((ListView)getActivity()).editItem(list,
                                                    inputTitle.getText().toString(),
                                                    inputDescription.getText().toString(),
-                                                   append);
+                                                   add, checkBoxAtTop.isChecked());
             }
         });
         builder.setNegativeButton(R.string.dialogNegativeButton, new android.content.DialogInterface.OnClickListener() {

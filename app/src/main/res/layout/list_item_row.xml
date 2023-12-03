@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/colorItemBackground"
+        android:background="@android:color/transparent"
         android:minHeight="41sp"
         android:orientation="vertical">
 
@@ -38,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding"
+            android:background="@android:color/transparent"
             android:minHeight="24sp"
             android:textColor="@color/colorItemStrong"
             android:textSize="18sp"
@@ -48,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2sp"
+            android:background="@android:color/transparent"
             android:ellipsize="end"
             android:maxLines="1"
             android:minHeight="16sp"

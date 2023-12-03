@@ -4,8 +4,13 @@
     <color name="colorPrimaryDark">#206020</color>
 
     <color name="colorItemBackground">#fff</color>
-    <color name="colorItemWeak">#cccccc</color>
-    <color name="colorItemStrong">#888888</color>
+    <color name="colorItemWeak">#ccc</color>
+    <color name="colorItemStrong">#888</color>
+
+    <color name="colorItemSelectedBackground">#eee</color>
+    <color name="colorItemSelectedWeak">#bbb</color>
+    <color name="colorItemSelectedStrong">#777</color>
+
     <color name="colorComplete">#007000</color>
     <color name="colorFail">#900000</color>
 </resources>

@@ -25,4 +25,10 @@
         android:inputType="textMultiLine|text|textCapSentences|textAutoComplete"
         android:maxLines="4"
         android:singleLine="false" />
+
+    <CheckBox
+        android:id="@+id/checkBoxAtTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/attop" />
 </LinearLayout>

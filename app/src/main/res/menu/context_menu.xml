@@ -9,6 +9,12 @@
         android:id="@+id/addsub"
         android:title="@string/item_addsub" />
     <item
+        android:id="@+id/move_to_top"
+        android:title="@string/item_move_to_top" />
+    <item
+        android:id="@+id/move_to_bottom"
+        android:title="@string/item_move_to_bottom" />
+    <item
         android:id="@+id/delete"
         android:title="@string/item_delete" />
     <item
