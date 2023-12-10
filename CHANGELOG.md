@@ -1,3 +1,8 @@
+# 1.2.0
+* Added "Move to top/bottom" context menu commands.
+* Added "At top" checkbox to Add Item dialog.
+* Highlight item when its context menu is shown.
+
 # 1.1.1
 * Fix #9: Deleting item with sublist doesn't require confirmation.
 * Fix: list-import doesn't get saved.
