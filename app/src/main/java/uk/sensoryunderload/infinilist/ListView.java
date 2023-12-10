@@ -269,6 +269,14 @@ public class ListView extends AppCompatActivity
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         int pos = liAdapter.retrievePosition();
+
+        // Remove highlight. This must be done here in case current item
+        // is moved/recycled and lost prior to onContextMenuClosed.
+        ListItemAdapter.ListItemViewHolder viewHolder = (ListItemAdapter.ListItemViewHolder) recyclerView.findViewHolderForAdapterPosition(pos);
+        if (viewHolder != null) {
+            viewHolder.deHighlight();
+        }
+
         boolean handled = true;
         switch (item.getItemId()) {
             case R.id.delete:
@@ -299,6 +307,10 @@ public class ListView extends AppCompatActivity
     @Override
     public void onContextMenuClosed(Menu menu) {
         int pos = liAdapter.retrievePosition();
+
+        // Remove highlight. This must be done here in case context menu
+        // is backed-out-of with no action taken (i.e.
+        // onContextItemSelected is not triggered).
         ListItemAdapter.ListItemViewHolder viewHolder = (ListItemAdapter.ListItemViewHolder) recyclerView.findViewHolderForAdapterPosition(pos);
         if (viewHolder != null) {
             viewHolder.deHighlight();
