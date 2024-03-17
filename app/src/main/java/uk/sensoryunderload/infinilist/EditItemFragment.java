@@ -84,6 +84,9 @@ public class EditItemFragment extends DialogFragment {
             }
         });
 
-        return builder.create();
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside (false);
+
+        return dialog;
     }
 }
