@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuInflater;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -42,6 +43,7 @@ public class ListView extends AppCompatActivity
 
     private ListItem topLevelList = new ListItem("InfiniList","");
     private ListItem currentList;
+    private ListItem copiedList = new ListItem("Copied List", "");
     private ListItemAdapter liAdapter;
     private ItemTouchHelper touchHelper;
     private boolean shownHelp;
@@ -178,6 +180,12 @@ public class ListView extends AppCompatActivity
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+      menu.findItem(R.id.action_paste).setEnabled(!copiedList.isEmpty());
+      return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public void onBackPressed() {
         if (currentList.hasParent()) {
             currentList = currentList.getParent();
@@ -215,6 +223,14 @@ public class ListView extends AppCompatActivity
     public void notifyStatusChange(int itemIndex) {
         updateWidget (currentList.getAddress(), itemIndex, itemIndex);
     }
+    @Override
+    public MenuInflater getMainMenuInflater() {
+      return this.getMenuInflater();
+    }
+    @Override
+    public ListItem getCopiedList() {
+      return copiedList;
+    }
 
     private void setTitle() {
         if (getSupportActionBar() != null) {
@@ -248,6 +264,10 @@ public class ListView extends AppCompatActivity
 
             case R.id.action_delete_all :
                 actionDeleteAll();
+                break;
+
+            case R.id.action_paste :
+                actionPaste(currentList);
                 break;
 
             case R.id.action_mark_widget :
@@ -293,6 +313,14 @@ public class ListView extends AppCompatActivity
                 break;
             case R.id.move_to_bottom:
                 move(pos, currentList.size() - 1);
+                break;
+            case R.id.copy :
+                ArrayList<Integer> positionAsList = new ArrayList<Integer>();
+                positionAsList.add(pos);
+                copy(currentList, positionAsList);
+                break;
+            case R.id.paste_into :
+                actionPaste(currentList.getChild(pos));
                 break;
             case R.id.mark_sub_widget:
                 actionMarkWidget(currentList.getChild(pos));
@@ -371,6 +399,22 @@ public class ListView extends AppCompatActivity
             widgetAddressChanged = true;
             Toast.makeText(this, "Accepted.", Toast.LENGTH_LONG).show();
         }
+    }
+    void actionPaste(ListItem targetList) {
+      int oldSize = targetList.size();
+      for (ListItem copiedItem : copiedList.getChildren()) {
+        targetList.add (new ListItem(copiedItem));
+      }
+
+      // Decide which items to refresh
+      if (targetList == currentList) {
+        // We've appended to the currently displayed list
+        liAdapter.notifyItemRangeInserted(oldSize, copiedList.size());
+      } else {
+        // We've appended to a sublist of the current list.
+        liAdapter.notifyItemChanged(currentList.getChildren().indexOf(targetList));
+      }
+      copiedList.clear();
     }
 
     // If "add" then add a new ListItem to list (at start or end
@@ -709,5 +753,13 @@ public class ListView extends AppCompatActivity
 
     ListItem goToAddress(ArrayList<Integer> address) {
         return topLevelList.goToAddress(address);
+    }
+
+    // Copy references to the selected items into copiedList
+    void copy(ListItem containingList, ArrayList<Integer> items) {
+      copiedList.clear();
+      for (Integer i : items) {
+        copiedList.add(containingList.getChild(i));
+      }
     }
 }

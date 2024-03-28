@@ -23,6 +23,7 @@ enum STATUS {
 class StatusFlag {
     private int val;
 
+    StatusFlag(StatusFlag s) { set(s); }
     StatusFlag(STATUS s) { set(s); }
     StatusFlag() { val = STATUS.NONE.getValue(); }
 
@@ -40,22 +41,32 @@ class ListItem {
     private ArrayList<ListItem> children;
 
     ListItem(String _title, String _content, StatusFlag _sFlag) {
-        title = _title;
-        content = _content;
-        status = _sFlag;
-        children = new java.util.ArrayList<>();
+      title = _title;
+      content = _content;
+      status = _sFlag;
+      children = new java.util.ArrayList<>();
     }
     ListItem(String _title, String _content) {
-        title = _title;
-        content = _content;
-        status = new StatusFlag();
-        children = new java.util.ArrayList<>();
+      title = _title;
+      content = _content;
+      status = new StatusFlag();
+      children = new java.util.ArrayList<>();
+    }
+    // Performs a deep copy of "other"
+    ListItem(ListItem other) {
+      title = other.title;
+      content = other.content;
+      status = new StatusFlag(other.status);
+      children = new java.util.ArrayList<>();
+      for (ListItem otherItem : other.getChildren()) {
+        add(new ListItem(otherItem));
+      }
     }
     ListItem() {
-        title = "";
-        content = "";
-        status = new StatusFlag();
-        children = new java.util.ArrayList<>();
+      title = "";
+      content = "";
+      status = new StatusFlag();
+      children = new java.util.ArrayList<>();
     }
 
     void writeToFile(File file) {
@@ -417,6 +428,8 @@ class ListItem {
 
     void remove(int pos) { if ((pos >= 0) && (pos < children.size())) children.remove(pos); }
 
+    void clear() { children.clear(); }
+
     void move(int from, int to) {
         if ((from != to) &&
             (from >= 0) && (from < children.size()) &&
@@ -445,4 +458,6 @@ class ListItem {
             children.get(i).setStatus(STATUS.NONE);
         }
     }
+
+    boolean isEmpty() { return children.isEmpty(); }
 }

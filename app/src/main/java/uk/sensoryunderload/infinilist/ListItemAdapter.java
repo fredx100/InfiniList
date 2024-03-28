@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
         void move(int from, int to);
         void notifyStatusChange(int itemIndex);
         void startDrag(RecyclerView.ViewHolder viewHolder);
+        MenuInflater getMainMenuInflater();
+        ListItem getCopiedList();
     }
 
     ListItem itemList; // The list being displayed
@@ -51,14 +54,12 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            highlight();
+          highlight();
 
-            menu.add(Menu.NONE, R.id.editsub, Menu.NONE, R.string.item_editsub);
-            menu.add(Menu.NONE, R.id.addsub, Menu.NONE, R.string.item_addsub);
-            menu.add(Menu.NONE, R.id.move_to_top, Menu.NONE, R.string.item_move_to_top);
-            menu.add(Menu.NONE, R.id.move_to_bottom, Menu.NONE, R.string.item_move_to_bottom);
-            menu.add(Menu.NONE, R.id.delete, Menu.NONE, R.string.item_delete);
-            menu.add(Menu.NONE, R.id.mark_sub_widget, Menu.NONE, R.string.item_mark_sub_widget);
+          listControlListener.getMainMenuInflater().inflate(R.menu.context_menu, menu);
+
+          menu.findItem(R.id.paste_into)
+              .setEnabled(!listControlListener.getCopiedList().isEmpty());
         }
 
         // StatusIndicatorListener

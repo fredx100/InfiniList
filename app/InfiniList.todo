@@ -1,6 +1,16 @@
 [ Features
+  *[ Copy/Cut/Paste - relies on selections
+
+    v[ v1 - one item at a time
+
+      v[ copy ]
+      v[ paste ]
+      v[ dissable paste if no copy list avail ]
+      v[ test ]
+    ]
+    [ v2 - selection ]
+  ]
   [ undo ]
-  [ Copy/Cut/Paste - relies on selections ]
   [ Dark theme - relies on options ]
   [ Widget v2
     ?[ title? ]

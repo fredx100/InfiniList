@@ -31,6 +31,10 @@
         android:id="@+id/action_export"
         android:title="@string/action_export"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_paste"
+        android:title="@string/action_paste"
+        app:showAsAction="never" />
 <!--    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
