@@ -11,10 +11,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.selection.SelectionTracker;
+import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.selection.StableIdKeyProvider;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +43,7 @@ public class ListView extends AppCompatActivity
     public static final String OPEN_LIST_ACTION = "uk.sensoryunderload.infinilist.widget.OPEN_LIST_ACTION";
     public static final String ADD_ITEM_ACTION = "uk.sensoryunderload.infinilist.widget.ADD_ITEM_ACTION";
     public static final String OPEN_TOP_LIST_ACTION = "uk.sensoryunderload.infinilist.widget.OPEN_TOP_LIST_ACTION";
+    private static final String SELECTION_TRACKER_URI = "my-selection-uri";
 
     private ListItem topLevelList = new ListItem("InfiniList","");
     private ListItem currentList;
@@ -52,6 +56,7 @@ public class ListView extends AppCompatActivity
     private ArrayList<Integer> widgetAddress = new ArrayList<Integer>();
     private boolean widgetAddressChanged;
     private ListRecyclerView recyclerView;
+    private SelectionTracker selectionTracker;
 
     // Setting key values
     private static final String WIDGET_ADDRESS = "WidgetAddress";
@@ -86,6 +91,23 @@ public class ListView extends AppCompatActivity
         touchHelper.attachToRecyclerView(recyclerView);
 
         registerForContextMenu(recyclerView);
+
+        // Setup selection tracker
+        selectionTracker = new SelectionTracker.Builder<Long>(
+            SELECTION_TRACKER_URI,
+            recyclerView,
+            new StableIdKeyProvider(recyclerView),
+            new ListItemDetailsLookup(recyclerView),
+            StorageStrategy.createLongStorage()).build();
+
+        if (savedInstanceState != null) {
+          selectionTracker.onRestoreInstanceState(savedInstanceState);
+        }
+    }
+
+    protected void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+      selectionTracker.onSaveInstanceState(outState);
     }
 
     @Override
@@ -230,6 +252,10 @@ public class ListView extends AppCompatActivity
     @Override
     public ListItem getCopiedList() {
       return copiedList;
+    }
+    @Override
+    public boolean isSelected(int pos) {
+      return selectionTracker.isSelected((long) pos);
     }
 
     private void setTitle() {

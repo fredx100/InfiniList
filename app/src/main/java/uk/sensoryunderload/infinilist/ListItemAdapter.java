@@ -20,6 +20,7 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
         void startDrag(RecyclerView.ViewHolder viewHolder);
         MenuInflater getMainMenuInflater();
         ListItem getCopiedList();
+        boolean isSelected(int pos);
     }
 
     ListItem itemList; // The list being displayed
@@ -29,101 +30,117 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
     class ListItemViewHolder extends RecyclerView.ViewHolder
                              implements OnCreateContextMenuListener,
                                         StatusIndicator.StatusIndicatorListener {
-        TextView title,
-                 content,
-                 subitems;
-        StatusIndicator statusIndicator;
-        LinearLayout row;
-        private ListItem item;
-        private ListControlListener listControlListener;
+      TextView title,
+               content,
+               subitems;
+      StatusIndicator statusIndicator;
+      View mView;
+      LinearLayout row;
+      private ListItem item;
+      private ListControlListener listControlListener;
 
-        ListItemViewHolder(View view, ListControlListener lCL) {
-            super(view);
-            this.listControlListener = lCL;
-            title = view.findViewById(R.id.title);
-            content = view.findViewById(R.id.content);
-            subitems = view.findViewById(R.id.subitemCount);
-            statusIndicator = view.findViewById(R.id.rowStatus);
-            row = view.findViewById(R.id.row);
+      ListItemViewHolder(View view, ListControlListener lCL) {
+        super(view);
+        this.listControlListener = lCL;
+        mView = view;
+        title = view.findViewById(R.id.title);
+        content = view.findViewById(R.id.content);
+        subitems = view.findViewById(R.id.subitemCount);
+        statusIndicator = view.findViewById(R.id.rowStatus);
+        row = view.findViewById(R.id.row);
 
-            view.setOnCreateContextMenuListener(this);
-            statusIndicator.setStatusIndicatorListener(this);
-        }
+        view.setOnCreateContextMenuListener(this);
+        statusIndicator.setStatusIndicatorListener(this);
+      }
 
-        private RecyclerView.ViewHolder getViewHolder() { return this; }
+      private RecyclerView.ViewHolder getViewHolder() { return this; }
 
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-          highlight();
+      @Override
+      public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        highlight();
 
-          listControlListener.getMainMenuInflater().inflate(R.menu.context_menu, menu);
+        listControlListener.getMainMenuInflater().inflate(R.menu.context_menu, menu);
 
-          menu.findItem(R.id.paste_into)
-              .setEnabled(!listControlListener.getCopiedList().isEmpty());
-        }
+        menu.findItem(R.id.paste_into)
+          .setEnabled(!listControlListener.getCopiedList().isEmpty());
+      }
 
-        // StatusIndicatorListener
-        @Override
-        public void incrementStatus() {
-            item.getStatus().cycle();
-            listControlListener.notifyStatusChange (getAdapterPosition());
-            listControlListener.save();
-        }
-        @Override
-        public StatusFlag getStatus() {
-            if (item == null)
-                return new StatusFlag();
-            else
-                return item.getStatus();
-        }
-        @Override
-        public void startDrag() {
-            listControlListener.startDrag(getViewHolder());
-        }
+      // StatusIndicatorListener
+      @Override
+      public void incrementStatus() {
+        item.getStatus().cycle();
+        listControlListener.notifyStatusChange (getAdapterPosition());
+        listControlListener.save();
+      }
+      @Override
+      public StatusFlag getStatus() {
+        if (item == null)
+          return new StatusFlag();
+        else
+          return item.getStatus();
+      }
+      @Override
+      public void startDrag() {
+        listControlListener.startDrag(getViewHolder());
+      }
 
-        void setup() {
-            setupText();
-            setupSubitemCount();
-            setupStatusIndicator();
-        }
+      void setup() {
+        setupText();
+        setupSubitemCount();
+        setupStatusIndicator();
+      }
 
-        private void setupText() {
-            title.setText(item.getTitle());
-            content.setText(item.getContent());
+      private void setupText() {
+        title.setText(item.getTitle());
+        content.setText(item.getContent());
+      }
+      private void setupSubitemCount() {
+        subitems.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            listControlListener.descend (getAdapterPosition());
+          }
+        });
+        if (item.size() == 0) {
+          subitems.setVisibility(View.GONE);
+        } else {
+          subitems.setVisibility(View.VISIBLE);
+          subitems.setText(Integer.toString(item.size()));
         }
-        private void setupSubitemCount() {
-            subitems.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listControlListener.descend (getAdapterPosition());
-                }
-            });
-            if (item.size() == 0) {
-                subitems.setVisibility(View.GONE);
-            } else {
-                subitems.setVisibility(View.VISIBLE);
-                subitems.setText(Integer.toString(item.size()));
-            }
-        }
-        private void setupStatusIndicator() {
-            statusIndicator.refresh();
-        }
+      }
+      private void setupStatusIndicator() {
+        statusIndicator.refresh();
+      }
 
-        public void highlight() {
-            row.setBackgroundColor(itemView.getResources().getColor(R.color.colorItemSelectedBackground));
-            title.setTextColor(itemView.getResources().getColor(R.color.colorItemSelectedStrong));
-            content.setTextColor(itemView.getResources().getColor(R.color.colorItemSelectedWeak));
+      public void highlight() {
+        row.setBackgroundColor(itemView.getResources().getColor(R.color.colorItemContextActivatedBackground));
+        title.setTextColor(itemView.getResources().getColor(R.color.colorItemSelectedStrong));
+        content.setTextColor(itemView.getResources().getColor(R.color.colorItemSelectedWeak));
+      }
+      public void deHighlight() {
+        if (listControlListener.isSelected(position)) {
+          row.setBackgroundColor(itemView.getResources().getColor(R.color.colorItemSelectedBackground));
+        } else {
+          row.setBackgroundColor(itemView.getResources().getColor(R.color.colorItemBackground));
         }
-        public void deHighlight() {
-            row.setBackgroundColor(itemView.getResources().getColor(R.color.colorItemBackground));
-            title.setTextColor(itemView.getResources().getColor(R.color.colorItemStrong));
-            content.setTextColor(itemView.getResources().getColor(R.color.colorItemWeak));
+        title.setTextColor(itemView.getResources().getColor(R.color.colorItemStrong));
+        content.setTextColor(itemView.getResources().getColor(R.color.colorItemWeak));
+      }
+
+      public void setActivated(boolean activated) {
+        mView.setActivated(activated);
+        if (activated) {
+          row.setBackgroundColor(itemView.getResources().getColor(R.color.colorItemSelectedBackground));
+        } else {
+          row.setBackgroundColor(itemView.getResources().getColor(R.color.colorItemBackground));
         }
+      }
     }
 
     ListItemAdapter(ListItem itemList, ListControlListener lCL) {
         this.itemList = itemList;
         this.listControlListener = lCL;
+        setHasStableIds(true);
     }
 
     @Override
@@ -136,28 +153,35 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
 
     @Override
     public void onBindViewHolder(final ListItemViewHolder holder, int pos) {
-        holder.item = itemList.getChild(pos);
+      holder.item = itemList.getChild(pos);
 
-        holder.setup();
+      holder.setup();
+      holder.setActivated(listControlListener.isSelected(pos));
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                storePosition(holder.getAdapterPosition());
-                return false;
-            }
-        });
+      holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+          storePosition(holder.getAdapterPosition());
+          return false;
+        }
+      });
     }
 
     private void storePosition(int pos) {
-        position = pos;
+      position = pos;
     }
     int retrievePosition() {
-        return position;
+      return position;
     }
 
     @Override
     public int getItemCount() {
         return itemList.size();
     }
+
+    @Override
+    public long getItemId(int position) {
+      return (long) position;
+    }
 }
+

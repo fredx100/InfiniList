@@ -11,6 +11,8 @@
     <color name="colorItemSelectedWeak">#bbb</color>
     <color name="colorItemSelectedStrong">#777</color>
 
+    <color name="colorItemContextActivatedBackground">#eee</color>
+
     <color name="colorComplete">#007000</color>
     <color name="colorFail">#900000</color>
 </resources>
