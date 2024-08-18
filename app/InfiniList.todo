@@ -1,48 +1,4 @@
 [ Features
-  v[ Copy/Cut/Paste - relies on selections
-
-    v[ v1 - one item at a time
-
-      v[ copy ]
-      v[ paste ]
-      v[ dissable paste if no copy list avail ]
-      v[ test ]
-    ]
-    v[ v2 - selection
-
-      v[ Add "Select" context menu item ]
-      v[ ListView.beginSelectionMode
-
-        v[ Select calling item ]
-        v[ Enable predicate ]
-        v[ Begin ActionMode ]
-      ]
-      v[ ListView.endSelectionMode
-
-        v[ Disable predicate ]
-        v[ End ActionMode ]
-      ]
-      v[ Act on menu clicks ]
-      v[ Set title when item selected ]
-      v[ update liAdapter to display tagged status ]
-      v[ Dissable descending ]
-      v[ Modify context menu in selection mode ]
-      v[ "back" to exit select mode doesn't de-highlight items ]
-      v[ Delete selection doesn't work when multiple selected ]
-      v[ Toast popup on batch copy ]
-      v[ Add cut ]
-      v[ Delete (from context menu) in selection mode selects the following item ]
-      v[ Hide action menu while action mode active ]
-      v[ Cancelling a multi-delete ends selection mode (and moves view)
-        prior to confirm/cancel being selected ]
-      v[ Dissable dragging unless supported ]
-      x[ "paste into" followed by back leads to "Copied list" ]
-      v[ Harmonise icons
-
-        [ Delete should be a white outline ]
-      ]
-    ]
-  ]
   [ Safer filing (re #13)
 
     Save files have been truncated.
