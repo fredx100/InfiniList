@@ -1,4 +1,5 @@
 # 1.2.0
+* Added selection-mode and actions, including cut/paste.
 * Added "Move to top/bottom" context menu commands.
 * Added "At top" checkbox to Add Item dialog.
 * Highlight item when its context menu is shown.

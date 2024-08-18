@@ -20,6 +20,14 @@
     <string name="item_paste_into">Paste Into Item</string>
     <string name="item_delete">Delete Item</string>
     <string name="item_mark_sub_widget">Link Sub-list to Widget</string>
+    <string name="item_select">Select Item</string>
+    <string name="item_deselect">Deselect Item</string>
+
+    <!-- selection action mode menu items -->
+    <string name="selection_delete">Delete Selection</string>
+    <string name="selection_copy">Copy Selection</string>
+    <string name="selection_cut">Cut Selection</string>
+    <string name="selection_title">Selection (%d/%d)</string>
 
     <!-- Dialog labels -->
     <string name="dialogPositiveButton">Ok</string>
@@ -40,6 +48,13 @@
         <item quantity="other">Delete Item with %d Sub-Items?</item>
     </plurals>
 
+    <!-- Toast strings -->
+    <string name="toast_widget_accepted">Accepted</string>
+    <string name="toast_widget_refused">Refused: the list is empty</string>
+    <string name="toast_cant_descend_in_sel_mode">This action is dissabled in select mode</string>
+    <string name="toast_copied_in_sel_mode">Copied %d items</string>
+    <string name="toast_file_open_intent_failed">Can\'t find a file browser</string>
+    <string name="toast_export">Exporting to %s</string>
 
     <!-- Help text -->
     <string name="help_title">Help</string>

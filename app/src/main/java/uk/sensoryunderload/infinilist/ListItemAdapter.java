@@ -20,6 +20,10 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
         void startDrag(RecyclerView.ViewHolder viewHolder);
         MenuInflater getMainMenuInflater();
         ListItem getCopiedList();
+
+        // Selection Related
+        boolean inSelectionMode();
+        void    toggleSelect(int pos);
         boolean isSelected(int pos);
     }
 
@@ -63,6 +67,10 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
 
         menu.findItem(R.id.paste_into)
           .setEnabled(!listControlListener.getCopiedList().isEmpty());
+        if (listControlListener.isSelected(position)) {
+          menu.findItem(R.id.select)
+            .setTitle(v.getContext().getString(R.string.item_deselect));
+        }
       }
 
       // StatusIndicatorListener
@@ -127,9 +135,9 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
         content.setTextColor(itemView.getResources().getColor(R.color.colorItemWeak));
       }
 
-      public void setActivated(boolean activated) {
-        mView.setActivated(activated);
-        if (activated) {
+      public void setSelected(boolean selected) {
+        mView.setActivated(selected);
+        if (selected) {
           row.setBackgroundColor(itemView.getResources().getColor(R.color.colorItemSelectedBackground));
         } else {
           row.setBackgroundColor(itemView.getResources().getColor(R.color.colorItemBackground));
@@ -140,7 +148,6 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
     ListItemAdapter(ListItem itemList, ListControlListener lCL) {
         this.itemList = itemList;
         this.listControlListener = lCL;
-        setHasStableIds(true);
     }
 
     @Override
@@ -156,8 +163,16 @@ final class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIte
       holder.item = itemList.getChild(pos);
 
       holder.setup();
-      holder.setActivated(listControlListener.isSelected(pos));
+      holder.setSelected(listControlListener.isSelected(pos));
 
+      holder.itemView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          if (listControlListener.inSelectionMode()) {
+            listControlListener.toggleSelect(holder.getAdapterPosition());
+          }
+        }
+      });
       holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {

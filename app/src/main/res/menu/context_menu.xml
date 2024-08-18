@@ -15,14 +15,17 @@
         android:id="@+id/move_to_bottom"
         android:title="@string/item_move_to_bottom" />
     <item
+        android:id="@+id/delete"
+        android:title="@string/item_delete" />
+    <item
+        android:id="@+id/select"
+        android:title="@string/item_select" />
+    <item
         android:id="@+id/copy"
         android:title="@string/item_copy" />
     <item
         android:id="@+id/paste_into"
         android:title="@string/item_paste_into" />
-    <item
-        android:id="@+id/delete"
-        android:title="@string/item_delete" />
     <item
         android:id="@+id/mark_sub_widget"
         android:title="@string/item_mark_sub_widget" />
