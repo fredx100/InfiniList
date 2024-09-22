@@ -913,7 +913,7 @@ public class ListView extends AppCompatActivity
   void copy(ListItem containingList, ArrayList<Integer> items) {
     copiedList.clear();
     for (Integer i : items) {
-      copiedList.add(containingList.getChild(i));
+      copiedList.add(new ListItem(containingList.getChild(i)));
     }
   }
 
