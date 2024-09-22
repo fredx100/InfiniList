@@ -21,7 +21,8 @@
             android:name=".ListView"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="uk.sensoryunderload.infinilist.ListView.OPEN_LIST_ACTION" />
@@ -29,7 +30,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="ListWidgetProvider" >
+        <receiver android:name="ListWidgetProvider"
+                  android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

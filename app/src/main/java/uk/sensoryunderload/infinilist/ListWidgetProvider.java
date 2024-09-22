@@ -32,7 +32,7 @@ public class ListWidgetProvider extends AppWidgetProvider {
             openIntent.setAction(ListView.OPEN_LIST_ACTION);
             openIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId,
-                                                                    openIntent, 0);
+                                                                    openIntent, PendingIntent.FLAG_IMMUTABLE);
             rv.setOnClickPendingIntent(R.id.widgetFreeSpaceButton, pendingIntent);
             rv.setPendingIntentTemplate(R.id.widgetListView, pendingIntent);
 

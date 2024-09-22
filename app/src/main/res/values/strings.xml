@@ -27,7 +27,7 @@
     <string name="selection_delete">Delete Selection</string>
     <string name="selection_copy">Copy Selection</string>
     <string name="selection_cut">Cut Selection</string>
-    <string name="selection_title">Selection (%d/%d)</string>
+    <string name="selection_title">Selection (%1$d/%2$d)</string>
 
     <!-- Dialog labels -->
     <string name="dialogPositiveButton">Ok</string>
