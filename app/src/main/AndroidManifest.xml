@@ -7,7 +7,8 @@
                 android:name="@string/widget_read_permission_name"
                 android:protectionLevel="normal" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+                     android:maxSdkVersion="29" />
 
     <application
         android:allowBackup="true"

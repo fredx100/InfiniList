@@ -829,9 +829,7 @@ public class ListView extends AppCompatActivity
     saveIntent.putExtra(Intent.EXTRA_TITLE, fileName);
 
     // Verify that the intent will resolve to an activity
-    if (saveIntent.resolveActivity(getPackageManager()) != null) {
-      startActivityForResult(saveIntent, EXPORT_REQUEST_CODE);
-    }
+    startActivityForResult(saveIntent, EXPORT_REQUEST_CODE);
   }
 
   @Override
