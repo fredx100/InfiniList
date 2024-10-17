@@ -53,7 +53,6 @@
     <string name="toast_widget_refused">Refused: the list is empty</string>
     <string name="toast_cant_descend_in_sel_mode">This action is dissabled in select mode</string>
     <string name="toast_copied_in_sel_mode">Copied %d items</string>
-    <string name="toast_file_open_intent_failed">Can\'t find a file browser</string>
     <string name="toast_export">Exporting to %s</string>
 
     <!-- Help text -->

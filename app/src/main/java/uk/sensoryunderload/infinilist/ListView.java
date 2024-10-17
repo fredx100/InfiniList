@@ -810,10 +810,7 @@ public class ListView extends AppCompatActivity
     importIntent.setAction(Intent.ACTION_GET_CONTENT);
     importIntent.setType("*/*");
 
-    // Verify that the intent will resolve to an activity
-    if (importIntent.resolveActivity(getPackageManager()) != null) {
-      startActivityForResult(importIntent, IMPORT_REQUEST_CODE);
-    }
+    startActivityForResult(importIntent, IMPORT_REQUEST_CODE);
   }
 
   private void exportLists() {
@@ -828,7 +825,6 @@ public class ListView extends AppCompatActivity
     saveIntent.addCategory(Intent.CATEGORY_OPENABLE);
     saveIntent.putExtra(Intent.EXTRA_TITLE, fileName);
 
-    // Verify that the intent will resolve to an activity
     startActivityForResult(saveIntent, EXPORT_REQUEST_CODE);
   }
 
@@ -840,8 +836,6 @@ public class ListView extends AppCompatActivity
       } else if (requestCode == IMPORT_REQUEST_CODE) {
         importFromFile(resultData);
       }
-    } else {
-      Toast.makeText(this, getString(R.string.toast_file_open_intent_failed), Toast.LENGTH_LONG).show();
     }
   }
 

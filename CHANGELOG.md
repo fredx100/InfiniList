@@ -1,5 +1,10 @@
-# 1.2.1
+# 1.2.2
 * Added @sebastien46's monochrome icon.
+* Fixed file import.
+* Removed spurious failure notice when export/import backed out of.
+
+# 1.2.1
+* Fixed file export.
 
 # 1.2.0
 * Added selection-mode and actions, including cut/paste.
