@@ -877,11 +877,6 @@ public class ListView extends AppCompatActivity
     if (resultData != null) {
       Uri uri = resultData.getData();
       if (uri != null) {
-        String lps = uri.getLastPathSegment();
-        if (lps != null) {
-          Toast.makeText(this, getString(R.string.toast_export, lps.substring(lps.indexOf(':') + 1)), Toast.LENGTH_LONG).show();
-        }
-
         try {
           ParcelFileDescriptor pfd = getContentResolver().
             openFileDescriptor(uri, "w");
@@ -890,8 +885,10 @@ public class ListView extends AppCompatActivity
             // Let the document provider know you're done by closing the pfd.
             pfd.close();
           }
+          Toast.makeText(this, getString(R.string.toast_export), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
           e.printStackTrace();
+          Toast.makeText(this, getString(R.string.toast_export_failed), Toast.LENGTH_LONG).show();
         }
       }
     }
