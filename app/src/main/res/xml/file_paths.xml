@@ -1,0 +1,4 @@
+<paths>
+  <files-path path="." name="root" />
+  <files-path path="shared/" name="shared" />
+</paths>

@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/editsub"
-        android:title="@string/item_editsub" />
+        android:id="@+id/edit"
+        android:title="@string/item_edit" />
     <item
         android:id="@+id/addsub"
         android:title="@string/item_addsub" />
@@ -14,7 +14,7 @@
     <item
         android:id="@+id/move_to_bottom"
         android:title="@string/item_move_to_bottom" />
-    <item
+   <item
         android:id="@+id/delete"
         android:title="@string/item_delete" />
     <item
@@ -26,6 +26,9 @@
     <item
         android:id="@+id/paste_into"
         android:title="@string/item_paste_into" />
+    <item
+        android:id="@+id/share"
+        android:title="@string/item_share" />
     <item
         android:id="@+id/mark_sub_widget"
         android:title="@string/item_mark_sub_widget" />

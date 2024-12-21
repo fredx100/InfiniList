@@ -15,4 +15,6 @@
 
     <color name="colorComplete">#007000</color>
     <color name="colorFail">#900000</color>
+
+    <color name="white">#fff</color>
 </resources>

@@ -55,6 +55,16 @@
           android:readPermission="@string/widget_read_permission_name"
           android:syncable="true" >
         </provider>
+
+        <provider
+          android:name="androidx.core.content.FileProvider"
+          android:authorities="uk.sensoryunderload.infinilist.fileprovider"
+          android:grantUriPermissions="true"
+          android:exported="false">
+          <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths" />
+        </provider>
     </application>
 </manifest>
 

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -356,6 +357,9 @@ public class ListView extends AppCompatActivity
     switch (id) {
       //            case R.id.action_settings :
       //                break;
+      case R.id.action_share :
+        shareList(currentList);
+        break;
 
       case R.id.action_import :
         importLists();
@@ -412,7 +416,7 @@ public class ListView extends AppCompatActivity
       case R.id.addsub:
         actionAddItem(currentList.getChild(pos));
         break;
-      case R.id.editsub:
+      case R.id.edit:
         actionEditItem(currentList.getChild(pos));
         break;
       case R.id.move_to_top:
@@ -445,6 +449,9 @@ public class ListView extends AppCompatActivity
             liAdapter.notifyItemChanged(pos);
           }
         }
+        break;
+      case R.id.share :
+        shareList(currentList.getChild(pos));
         break;
       default:
         handled = super.onContextItemSelected(item);
@@ -646,11 +653,11 @@ public class ListView extends AppCompatActivity
 
   private void saveOnPause() { saveNeeded = true; }
   private void saveNow() { saveLists(); }
-  private void saveLists() { saveLists("Main.todo"); }
-  private void saveLists(String name) {
+  private void saveLists() { saveList(topLevelList, "Main.todo"); }
+  private void saveList(ListItem list, String name) {
     File path = getApplicationContext().getFilesDir();
     File file = new File(path, name);
-    topLevelList.writeToFile(file);
+    list.writeToFile(file);
   }
   private void saveWidgetAddress() {
     StringBuilder sb = new StringBuilder();
@@ -826,6 +833,31 @@ public class ListView extends AppCompatActivity
     saveIntent.putExtra(Intent.EXTRA_TITLE, fileName);
 
     startActivityForResult(saveIntent, EXPORT_REQUEST_CODE);
+  }
+
+  private void shareList(ListItem item) {
+    String fileName = item.getTitle();
+
+    // Write file to storage
+    File filesDir = getApplicationContext().getFilesDir();
+    File shareDir = new File(filesDir, "shared/");
+    if (!shareDir.exists()) {
+      shareDir.mkdir();
+    }
+    File file = new File(shareDir, "tempShare.todo");
+    item.writeToFile(file);
+
+    Uri fileUri = FileProvider.getUriForFile(getApplicationContext(),
+                                             "uk.sensoryunderload.infinilist.fileprovider",
+                                             file);
+
+    // Create the text message with a string
+    Intent sendIntent = new Intent(Intent.ACTION_SEND);
+    sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    sendIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+    sendIntent.setType("text/plain");
+
+    startActivity(Intent.createChooser(sendIntent, getString(R.string.share_title)));
   }
 
   @Override

@@ -2,6 +2,7 @@
     <string name="app_name">InfiniList</string>
 
     <!-- action bar menu items -->
+    <string name="action_add">New Item</string>
     <string name="action_uncheck_all">Uncheck All</string>
     <string name="action_delete_all">Delete All</string>
     <string name="action_mark_widget">Link to Widget</string>
@@ -12,16 +13,17 @@
     <string name="action_help">Help</string>
 
     <!-- context menu items -->
-    <string name="item_editsub">Edit Item</string>
+    <string name="item_edit">Edit</string>
     <string name="item_addsub">Add Sub-Item</string>
     <string name="item_move_to_top">Move to Top</string>
     <string name="item_move_to_bottom">Move to Bottom</string>
-    <string name="item_copy">Copy Item</string>
-    <string name="item_paste_into">Paste Into Item</string>
-    <string name="item_delete">Delete Item</string>
+    <string name="item_copy">Copy</string>
+    <string name="item_paste_into">Paste Into</string>
+    <string name="item_delete">Delete</string>
     <string name="item_mark_sub_widget">Link Sub-list to Widget</string>
-    <string name="item_select">Select Item</string>
-    <string name="item_deselect">Deselect Item</string>
+    <string name="item_select">Select</string>
+    <string name="item_deselect">Deselect</string>
+    <string name="item_share">Share</string>
 
     <!-- selection action mode menu items -->
     <string name="selection_delete">Delete Selection</string>
@@ -55,6 +57,8 @@
     <string name="toast_copied_in_sel_mode">Copied %d items</string>
     <string name="toast_export">File Exported</string>
     <string name="toast_export_failed">File Export Failed</string>
+
+    <string name="share_title">Share List</string>
 
     <!-- Help text -->
     <string name="help_title">Help</string>

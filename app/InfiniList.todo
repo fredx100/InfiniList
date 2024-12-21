@@ -10,12 +10,20 @@
   ]
   [ Enable sending lists
 
-    [ Export sublist ]
+    v[ Export sublist ]
     [ import options
 
-      [ as subitem in current ]
-      [ replace top level ]
-      [ append to current ]
+      *[ Associate with mimetype ]
+      [ Where to put it?
+        [ A dialog for import
+          [ as subitem in current ]
+          [ replace top level ]
+          [ append to current ]
+        ]
+        [ Open from share selector
+          [ Append to top level? ]
+        ]
+      ]
     ]
   ]
   [ undo ]
