@@ -18,6 +18,7 @@
     <string name="item_move_to_top">Move to Top</string>
     <string name="item_move_to_bottom">Move to Bottom</string>
     <string name="item_copy">Copy</string>
+    <string name="item_cut">Cut</string>
     <string name="item_paste_into">Paste Into</string>
     <string name="item_delete">Delete</string>
     <string name="item_mark_sub_widget">Link Sub-list to Widget</string>
@@ -54,7 +55,10 @@
     <string name="toast_widget_accepted">Accepted</string>
     <string name="toast_widget_refused">Refused: the list is empty</string>
     <string name="toast_cant_descend_in_sel_mode">This action is dissabled in select mode</string>
-    <string name="toast_copied_in_sel_mode">Copied %d items</string>
+    <plurals name="toast_copied">
+        <item quantity="one">Copied 1 item</item>
+        <item quantity="other">Copied %d items</item>
+    </plurals>
     <string name="toast_export">File Exported</string>
     <string name="toast_export_failed">File Export Failed</string>
 

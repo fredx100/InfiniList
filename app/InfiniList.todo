@@ -1,4 +1,5 @@
 [ Features
+  [ Copy doesn't copy text to clipboard ]
   [ Safer filing (re #13)
 
     Save files have been truncated.
@@ -21,7 +22,7 @@
           [ append to current ]
         ]
         [ Open from share selector
-          [ Append to top level? ]
+          v[ Append to top level? ]
         ]
       ]
     ]

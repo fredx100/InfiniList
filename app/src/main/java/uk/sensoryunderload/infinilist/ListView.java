@@ -132,13 +132,15 @@ public class ListView extends AppCompatActivity
             copy(currentList, selection);
             handled = true;
             if (!cut) {
-              Toast.makeText(getApplicationContext(), getString(R.string.toast_copied_in_sel_mode, selection.size()), Toast.LENGTH_LONG).show();
+              Toast.makeText(getApplicationContext(),
+                             getResources().getQuantityString(R.plurals.toast_copied, selection.size(), selection.size()),
+                             Toast.LENGTH_LONG).show();
               break;
             }
           case R.id.delete:
             // delete selection
             if (selection.size() == 1) {
-              removeItem(selection.get(0));
+              removeItem(selection.get(0), cut);
             } else if (!selection.isEmpty()) {
               if (cut) {
                 // No warning on delete as user can paste
@@ -409,10 +411,8 @@ public class ListView extends AppCompatActivity
     }
 
     boolean handled = true;
+    boolean cut = false;
     switch (item.getItemId()) {
-      case R.id.delete:
-        removeItem(pos);
-        break;
       case R.id.addsub:
         actionAddItem(currentList.getChild(pos));
         break;
@@ -425,10 +425,20 @@ public class ListView extends AppCompatActivity
       case R.id.move_to_bottom:
         move(pos, currentList.size() - 1);
         break;
+      case R.id.cut:
+        cut = true;
       case R.id.copy:
         ArrayList<Integer> positionAsList = new ArrayList<Integer>();
         positionAsList.add(pos);
         copy(currentList, positionAsList);
+        if (!cut) {
+          Toast.makeText(getApplicationContext(),
+                         getResources().getQuantityString(R.plurals.toast_copied, 1, 1),
+                         Toast.LENGTH_LONG).show();
+          break;
+        }
+      case R.id.delete:
+        removeItem(pos, cut);
         break;
       case R.id.paste_into:
         actionPaste(currentList.getChild(pos));
@@ -617,9 +627,9 @@ public class ListView extends AppCompatActivity
     }
   }
 
-  private void removeItem(int position) {
+  private void removeItem(int position, boolean force) {
     int childCount = currentList.getChild(position).size();
-    if (childCount > 0) {
+    if (!force && (childCount > 0)) {
       AlertDialog.Builder alert = new AlertDialog.Builder(this);
       alert.setTitle(getResources().getQuantityString(R.plurals.delete_with_children, childCount, childCount));
       alert.setPositiveButton(getString(R.string.dialogPositiveButton), new DialogInterface.OnClickListener() {

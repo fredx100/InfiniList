@@ -24,6 +24,9 @@
         android:id="@+id/copy"
         android:title="@string/item_copy" />
     <item
+        android:id="@+id/cut"
+        android:title="@string/item_cut" />
+    <item
         android:id="@+id/paste_into"
         android:title="@string/item_paste_into" />
     <item
