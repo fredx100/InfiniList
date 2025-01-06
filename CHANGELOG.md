@@ -1,4 +1,5 @@
 # 1.2.2
+* Cut/copy now copy raw text to the clipboard.
 * Added @sebastien46's monochrome icon.
 * Fixed file import.
 * Removed spurious failure notice when export/import backed out of.

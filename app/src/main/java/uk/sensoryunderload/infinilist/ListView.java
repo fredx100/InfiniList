@@ -3,6 +3,8 @@ package uk.sensoryunderload.infinilist;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -946,6 +948,12 @@ public class ListView extends AppCompatActivity
     for (Integer i : items) {
       copiedList.add(new ListItem(containingList.getChild(i)));
     }
+
+    String text = copiedList.toString();
+
+    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+    ClipData clip = ClipData.newPlainText("Copied List", text);
+    clipboard.setPrimaryClip(clip);
   }
 
   // SelectionController implementation

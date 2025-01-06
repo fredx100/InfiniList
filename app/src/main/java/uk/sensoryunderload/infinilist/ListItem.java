@@ -117,7 +117,15 @@ class ListItem {
         }
     }
 
-    private void writeToWriter(OutputStreamWriter target, String indent) throws IOException {
+    public String toString() {
+      StringWriter sw = new StringWriter();
+      try {
+        writeToWriter(sw, "");
+      } catch (IOException e) {}
+      return sw.toString();
+    }
+
+    private void writeToWriter(Writer target, String indent) throws IOException {
         String nl = System.getProperty("line.separator");
         target.write(indent);
         String newIndent = indent + "  "; // For inner content and children

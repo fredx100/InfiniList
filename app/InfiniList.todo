@@ -1,5 +1,4 @@
 [ Features
-  [ Copy doesn't copy text to clipboard ]
   [ Safer filing (re #13)
 
     Save files have been truncated.
