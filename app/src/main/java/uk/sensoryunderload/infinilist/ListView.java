@@ -6,9 +6,11 @@ import android.appwidget.AppWidgetManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
@@ -29,9 +31,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -75,8 +79,13 @@ public class ListView extends AppCompatActivity
     currentList = topLevelList;
     loadSettings(getApplicationContext(), widgetAddress);
     Intent intent = getIntent();
+    String appendedItem = "";
     if (intent.getAction().equals(OPEN_LIST_ACTION)) {
       currentList = goToAddress(widgetAddress);
+    } else if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+      if (importList(intent)) {
+        appendedItem = currentList.getChild(currentList.size() - 1).getTitle();
+      }
     }
 
     super.onCreate(savedInstanceState);
@@ -174,6 +183,10 @@ public class ListView extends AppCompatActivity
 
     if (savedInstanceState != null) {
       selectionTracker.onRestoreInstanceState(savedInstanceState);
+    }
+    if (!appendedItem.isEmpty()) {
+      recyclerView.smoothScrollToPosition(currentList.size() - 1);
+      Toast.makeText(this, getString(R.string.toast_item_appended, appendedItem), Toast.LENGTH_LONG).show();
     }
   }
 
@@ -606,8 +619,10 @@ public class ListView extends AppCompatActivity
       if (add) {
         if (atStart) {
           liAdapter.notifyItemInserted(0);
+          recyclerView.smoothScrollToPosition(0);
         } else {
           liAdapter.notifyItemInserted(currentList.size() - 1);
+          recyclerView.smoothScrollToPosition(currentList.size() - 1);
         }
       } else {
         setTitle();
@@ -840,7 +855,7 @@ public class ListView extends AppCompatActivity
     // Create the text message with a string
     Intent saveIntent = new Intent();
     saveIntent.setAction(Intent.ACTION_CREATE_DOCUMENT);
-    saveIntent.setType("text/todo");
+    saveIntent.setType("text/plain");
     saveIntent.addCategory(Intent.CATEGORY_OPENABLE);
     saveIntent.putExtra(Intent.EXTRA_TITLE, fileName);
 
@@ -888,8 +903,7 @@ public class ListView extends AppCompatActivity
       Uri uri = resultData.getData();
       if (uri != null) {
         try {
-          ParcelFileDescriptor pfd = getContentResolver().
-            openFileDescriptor(uri, "r");
+          ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "r");
           if (pfd != null) {
             ListItem li = new ListItem("InfiniList", "");
             li.readFromDescriptor(pfd.getFileDescriptor());
@@ -966,5 +980,47 @@ public class ListView extends AppCompatActivity
   public void setSelectionTitle(int count) {
     if (actionMode != null)
       actionMode.setTitle(getString(R.string.selection_title, count, currentList.size()));
+  }
+
+  private String getContentName(ContentResolver resolver, Uri uri){
+    Cursor cursor = resolver.query(uri, null, null, null, null);
+    cursor.moveToFirst();
+    int nameIndex = cursor.getColumnIndex(android.provider.MediaStore.MediaColumns.DISPLAY_NAME);
+    if (nameIndex >= 0) {
+        return cursor.getString(nameIndex);
+    } else {
+        return null;
+    }
+  }
+
+  private boolean importList(Intent intent) {
+    String scheme = intent.getScheme();
+    ContentResolver resolver = getContentResolver();
+
+    Uri uri = intent.getData();
+    // Log intent type
+    if (scheme.compareTo(ContentResolver.SCHEME_CONTENT) == 0) {
+      String name = getContentName(resolver, uri);
+      Log.v("tag" , "Content intent detected: " + intent.getAction() + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
+    } else if (scheme.compareTo(ContentResolver.SCHEME_FILE) == 0) {
+      String name = uri.getLastPathSegment();
+      Log.v("tag" , "File intent detected: " + intent.getAction() + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
+    } else if (scheme.compareTo("http") == 0) {
+      String name = uri.getLastPathSegment();
+      Log.v("tag" , "HTTP intent detected: " + intent.getAction() + " : " + intent.getDataString() + " : " + intent.getType() + " : " + name);
+    }
+    InputStream input = null;
+    try {
+      input = resolver.openInputStream(uri);
+    } catch (FileNotFoundException e) {
+      return false;
+    }
+
+    ListItem temp = new ListItem();
+    temp.readFromInputStream(input);
+    currentList.add(temp);
+    saveOnPause();
+    updateWidget (currentList.getAddress(), currentList.size() - 1, -1);
+    return true;
   }
 }

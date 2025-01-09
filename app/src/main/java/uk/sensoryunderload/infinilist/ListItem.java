@@ -207,8 +207,8 @@ class ListItem {
         }
     }
 
-    private void readFromInputStream(FileInputStream fileInputStream) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8));
+    void readFromInputStream(InputStream inputStream) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         readFromBuffer("", br, 0);
 
         try {

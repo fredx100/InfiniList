@@ -61,6 +61,7 @@
     </plurals>
     <string name="toast_export">File Exported</string>
     <string name="toast_export_failed">File Export Failed</string>
+    <string name="toast_item_appended">Appended item "%1$s"</string>
 
     <string name="share_title">Share List</string>
 

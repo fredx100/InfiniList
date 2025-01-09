@@ -13,15 +13,20 @@
     v[ Export sublist ]
     [ import options
 
-      *[ Associate with mimetype ]
+      v[ Associate with mimetype
+
+      Not working from file browser. Search net for solution? ]
       [ Where to put it?
         [ A dialog for import
           [ as subitem in current ]
           [ replace top level ]
           [ append to current ]
         ]
-        [ Open from share selector
-          v[ Append to top level? ]
+        v[ Open from share selector
+          v[ Append to top level?
+
+            [ Scroll to bottom of list to ensure visible ]
+          ]
         ]
       ]
     ]
