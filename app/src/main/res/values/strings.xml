@@ -34,7 +34,7 @@
 
     <!-- Dialog labels -->
     <string name="dialogPositiveButton">Ok</string>
-    <string name="dialogNegativeButton">Cancel</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Add/Edit dialog labels -->
     <string name="title">Title</string>
@@ -50,6 +50,15 @@
         <item quantity="one">Delete Item with Sub-Item?</item>
         <item quantity="other">Delete Item with %d Sub-Items?</item>
     </plurals>
+
+    <!-- Import dialog labels -->
+    <string name="import_title">Import</string>
+    <string name="import_type_question">Do you want the import to\n\t• append a new item, or\n\t• overwrite all existing items?</string>
+    <string name="import_append">Append</string>
+    <string name="import_overwrite">Overwrite</string>
+    <string name="import_overwrite_confirm">Are you sure you want to overwrite?\nThis will delete all existing items.</string>
+    <string name="import_overwrite_yes">Yes Overwrite</string>
+    <string name="import_overwrite_no">No Append</string>
 
     <!-- Toast strings -->
     <string name="toast_widget_accepted">Accepted</string>

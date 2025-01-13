@@ -1,5 +1,7 @@
-# 1.2.2
-* Cut/copy now copy raw text to the clipboard.
+# 1.3.0
+* Added sharing a list.
+* Added appending of imported lists.
+* Cut/copy now also copy raw text to the android clipboard.
 * Added @sebastien46's monochrome icon.
 * Fixed file import.
 * Removed spurious failure notice when export/import backed out of.

@@ -25,7 +25,6 @@ public class EditItemFragment extends DialogFragment {
         return f;
     }
 
-    //public Dialog onCreateDialog(final ListView lv) {
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         char addChar = getArguments().getChar("mode"); // "A" => add, "E" => edit
@@ -77,7 +76,7 @@ public class EditItemFragment extends DialogFragment {
                                                    add, checkBoxAtTop.isChecked());
             }
         });
-        builder.setNegativeButton(R.string.dialogNegativeButton, new android.content.DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new android.content.DialogInterface.OnClickListener() {
             @Override
             public void onClick(android.content.DialogInterface dialog, int which) {
                 dialog.cancel();

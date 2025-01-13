@@ -566,7 +566,7 @@ public class ListView extends AppCompatActivity
       });
     }
 
-    alert.setNegativeButton(getString(R.string.dialogNegativeButton), new DialogInterface.OnClickListener() {
+    alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();
@@ -661,7 +661,7 @@ public class ListView extends AppCompatActivity
         }
       });
 
-      alert.setNegativeButton(getString(R.string.dialogNegativeButton), new DialogInterface.OnClickListener() {
+      alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
           dialog.dismiss();
@@ -746,8 +746,7 @@ public class ListView extends AppCompatActivity
   //
   // widgetAddressChanged is set to true if the widget address has
   // changed.
-  void updateWidget (ArrayList<Integer> changedAddress,
-      int insertedAt, int removedFrom) {
+  void updateWidget (ArrayList<Integer> changedAddress, int insertedAt, int removedFrom) {
     boolean changedLengthMatches = (changedAddress.size() == widgetAddress.size());
     boolean changedLength1More = (changedAddress.size() == (widgetAddress.size() + 1));
     if (changedLengthMatches || changedLength1More) {
@@ -898,6 +897,59 @@ public class ListView extends AppCompatActivity
     }
   }
 
+  private void checkWhetherToAppendOrOverwrite(ListItem li) {
+    boolean overwrite = false;
+    Context context = this;
+
+    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    alert.setTitle(getResources().getString(R.string.import_title));
+    alert.setMessage(getResources().getString(R.string.import_type_question));
+    alert.setPositiveButton(getString(R.string.import_append), new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        importAppend(li);
+      }
+    });
+
+    alert.setNegativeButton(getString(R.string.import_overwrite), new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        AlertDialog.Builder subAlert = new AlertDialog.Builder(context);
+        subAlert.setTitle(getResources().getString(R.string.import_title));
+        subAlert.setMessage(getResources().getString(R.string.import_overwrite_confirm));
+        subAlert.setPositiveButton(getString(R.string.import_overwrite_yes), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            importOverwrite(li);
+          }
+        });
+
+        subAlert.setNegativeButton(getString(R.string.import_overwrite_no), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            importAppend(li);
+          }
+        });
+
+        subAlert.setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+          }
+        });
+
+        subAlert.show();
+      }
+    });
+
+    alert.setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+      }
+    });
+
+    alert.show();
+  }
+
   private void importFromFile(Intent resultData) {
     if (resultData != null) {
       Uri uri = resultData.getData();
@@ -905,26 +957,42 @@ public class ListView extends AppCompatActivity
         try {
           ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "r");
           if (pfd != null) {
-            ListItem li = new ListItem("InfiniList", "");
+            ListItem li = new ListItem();
             li.readFromDescriptor(pfd.getFileDescriptor());
-            topLevelList = li;
-            currentList = li;
-            liAdapter.itemList = currentList;
-            liAdapter.notifyDataSetChanged();
-            setTitle();
-            // Let the document provider know you're done by closing the pfd.
             pfd.close();
-            // Postponed saves/widget updates doesn't work as the app is
-            // "Resumed" after the dialog closes (which clears the relevant
-            // variables). Do the actual saving/updating here.
-            saveNow();
-            broadcastWidgetUpdate();
+
+            if (currentList.isEmpty()) {
+              importOverwrite(li);
+            } else {
+              checkWhetherToAppendOrOverwrite(li);
+            }
           }
         } catch (Exception e) {
           e.printStackTrace();
         }
       }
     }
+  }
+
+  private void importAppend(ListItem li) {
+    currentList.add(li);
+    liAdapter.notifyItemInserted(currentList.size() - 1);
+    updateWidget (currentList.getAddress(), currentList.size() - 1, -1);
+    recyclerView.smoothScrollToPosition(currentList.size() - 1);
+    saveNow();
+  }
+
+  private void importOverwrite(ListItem li) {
+    topLevelList = li;
+    currentList = li;
+    liAdapter.itemList = currentList;
+    liAdapter.notifyDataSetChanged();
+    setTitle();
+    // Postponed saves/widget updates doesn't work as the app is
+    // "Resumed" after the dialog closes (which clears the relevant
+    // variables). Do the actual saving/updating here.
+    broadcastWidgetUpdate();
+    saveNow();
   }
 
   private void exportToFile(Intent resultData) {
